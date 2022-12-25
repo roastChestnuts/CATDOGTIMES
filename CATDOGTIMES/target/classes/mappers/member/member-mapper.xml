@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="memberMapper">
-	<select id="selectCount" resultType="_int">
-		SELECT COUNT(*) FROM MEMBER
+<mapper namespace="com.catdog.times.member.model.mapper.MemberMapper">
+	<sql id="selectMemberSql">
+		SELECT MEMBER_NO,
+		       MEMBER_ID,
+		       MEMBER_PW,
+		       MEMBER_GENDER,
+		       MEMBER_NICKNAME,
+		       MEMBER_EMAIL,
+		       MEMBER_IS,
+		       MEMBER_TYPE,
+		       MEMBER_WARN,
+		       MEMBER_CREATE_DATE,
+		       MODIFY_DATE,
+		       MEMBER_ADDRESS
+		FROM MEMBER
+	</sql>
+	
+	<resultMap type="Member" id="memberResultMap">
+		<id property="no" column="MEMBER_NO" />
+		<result property="id" column="MEMBER_ID"/>
+		<result property="password" column="MEMBER_PW"/>
+		<result property="gender" column="MEMBER_GENDER"/>
+		<result property="nickname" column="MEMBER_NICKNAME"/>
+		<result property="email" column="MEMBER_EMAIL"/>
+		<result property="is" column="MEMBER_IS"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="type" column="MEMBER_TYPE"/>
+		<result property="warn" column="MEMBER_WARN"/>
+		<result property="createDate" column="MEMBER_CREATE_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>		
+		<result property="address" column="MEMBER_ADDRESS"/>		
+	</resultMap>
+	
+	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
+		<include refid="selectMemberSql"/>
+		WHERE MEMBER_ID = #{id} AND MEMBER_IS = 'Y'
 	</select>
 </mapper>
