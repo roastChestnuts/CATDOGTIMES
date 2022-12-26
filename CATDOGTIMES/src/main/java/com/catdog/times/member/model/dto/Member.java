@@ -24,15 +24,15 @@ public class Member {
 	
 	private String email;
 	
-	private String is;
+	private String is; //
 	
 	private String type;
 	
-	private int warn;
+	private int warn; //
 	
-	private Date createDate;
+	private Date createDate; //
 	
-	private Date modifyDate;
+	private Date modifyDate; //
 
 	private String address;
 }

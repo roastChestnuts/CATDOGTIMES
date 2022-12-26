@@ -6,6 +6,7 @@
 		SELECT MEMBER_NO,
 		       MEMBER_ID,
 		       MEMBER_PW,
+		       MEMBER_NAME,
 		       MEMBER_GENDER,
 		       MEMBER_NICKNAME,
 		       MEMBER_EMAIL,
@@ -14,6 +15,7 @@
 		       MEMBER_WARN,
 		       MEMBER_CREATE_DATE,
 		       MODIFY_DATE,
+		       MEMBER_PHOTO,
 		       MEMBER_ADDRESS
 		FROM MEMBER
 	</sql>
@@ -22,20 +24,60 @@
 		<id property="no" column="MEMBER_NO" />
 		<result property="id" column="MEMBER_ID"/>
 		<result property="password" column="MEMBER_PW"/>
+		<result property="name" column="MEMBER_NAME"/>
 		<result property="gender" column="MEMBER_GENDER"/>
-		<result property="nickname" column="MEMBER_NICKNAME"/>
+		<result property="nickName" column="MEMBER_NICKNAME"/>
 		<result property="email" column="MEMBER_EMAIL"/>
 		<result property="is" column="MEMBER_IS"/>
-		<result property="address" column="ADDRESS"/>
 		<result property="type" column="MEMBER_TYPE"/>
 		<result property="warn" column="MEMBER_WARN"/>
 		<result property="createDate" column="MEMBER_CREATE_DATE"/>
-		<result property="modifyDate" column="MODIFY_DATE"/>		
+		<result property="modifyDate" column="MODIFY_DATE"/>
+		<result property="photo" column="MEMBER_PHOTO"/>				
 		<result property="address" column="MEMBER_ADDRESS"/>		
 	</resultMap>
 	
 	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
 		<include refid="selectMemberSql"/>
 		WHERE MEMBER_ID = #{id} AND MEMBER_IS = 'Y'
+	</select>
+	
+	<insert id="insertMember" parameterType="Member"
+			useGeneratedKeys="true" keyColumn="MEMBER_NO" keyProperty="no">
+		INSERT INTO MEMBER (
+			MEMBER_NO,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_NICKNAME,
+	        MEMBER_EMAIL ,
+	        MEMBER_IS,
+	        MEMBER_TYPE,
+	        MEMBER_WARN,
+	        MEMBER_CREATE_DATE,
+	        MODIFY_DATE,
+	        MEMBER_PHOTO,
+	        MEMBER_ADDRESS		
+		) VALUES(
+			SEQ_MEMBER_NO.NEXTVAL,
+			#{id},
+			#{password},
+			#{name},
+			#{gender},
+			#{nickName},
+			#{email} ,
+			'Y',
+			DEFAULT,
+			0,
+			DEFAULT,
+			DEFAULT,
+			DEFAULT,
+			#{address}
+		)	
+	</insert>
+	<!-- 아이디 중복 체크 -->
+	<select id="idCheck" parameterType="String" resultType="int">
+		SELECT COUNT(MEMBER_ID) FROM MEMBER WHERE MEMBER_ID= #{id}
 	</select>
 </mapper>

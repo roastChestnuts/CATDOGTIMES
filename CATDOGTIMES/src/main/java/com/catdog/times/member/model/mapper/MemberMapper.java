@@ -10,4 +10,7 @@ import com.catdog.times.member.model.dto.Member;
 public interface MemberMapper {
 	Member selectMemberById(@Param("id") String id);
 
+	int insertMember(Member member);
+	// 아이디 중복체크
+	public int idCheck(String id);
 }

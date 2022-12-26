@@ -30,14 +30,37 @@ public class MemberServiceImpl implements MemberService {
 		member = this.findMemberById(id);
 		
 		System.out.println(member);
-		//if(member != null && passwordEncoder.matches(password, member.getPassword())) {
-		if(member != null && password.equals(member.getPassword())) {
+		if(member != null && passwordEncoder.matches(password, member.getPassword())) {
 			return member;
 		} else {
 			return null;
 		}
 	}
 
+	@Override
+	@Transactional
+	public int save(Member member) {
+		int result = 0;
+		
+		if(member.getNo() != 0) {
+			//// update
+			//result = mapper.updateMember(member);
+		} else {
+			// insert
+			member.setPassword(passwordEncoder.encode(member.getPassword()));
+			
+			result = mapper.insertMember(member);
+		}
+		
+		return result;
+	}
+	//아이디 중복체크
+	@Override
+	public int idCheck(String id) {
+		int cnt = mapper.idCheck(id);
+		System.out.println("cnt: " + cnt);
+		return cnt;
+	}	
 	
 
 }

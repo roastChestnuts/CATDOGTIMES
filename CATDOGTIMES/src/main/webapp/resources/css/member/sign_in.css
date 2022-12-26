@@ -64,8 +64,8 @@
       margin-bottom: 2rem;
     }
     .login__box {
-      display: grid;
-      grid-template-columns: max-content 1fr;
+      /* display: grid; */
+      display: flex;
       column-gap: 0.5rem;
       padding: 1.125rem 1rem;
       background-color: #fff;
@@ -139,6 +139,16 @@
     .none {
       display: none;
     }
+    
+    .id_ok{
+		color:#008000;
+		display: none;
+	}
+	
+	.id_already{
+		color:#6A82FB; 
+		display: none;
+	}
 
     @keyframes animateLogin {
       0% {

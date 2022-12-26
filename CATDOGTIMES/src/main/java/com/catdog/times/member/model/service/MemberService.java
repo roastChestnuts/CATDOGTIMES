@@ -8,8 +8,9 @@ public interface MemberService {
 	
 	Member login(String id, String password); // 로그인
 
-	//int save(Member member); //회원가입
+	int save(Member member); //회원가입
 
+	public int idCheck(String id);// 아이디 중복체크
 	//Boolean isDuplicateID(String id); //아이디중복체크
 
 	//int delete(int no); //회원삭제
