@@ -149,6 +149,10 @@
 		color:#6A82FB; 
 		display: none;
 	}
+	.id_length{
+		color:#6A82FB; 
+		display: none;
+	}
 
     @keyframes animateLogin {
       0% {
