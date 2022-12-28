@@ -96,4 +96,12 @@ public class MemberController {
 		System.out.println(email);
 		return mailService.joinEmail(email);
 	}
+	//닉네임 중복체크
+	@PostMapping("/member/nickNameCheck")
+	@ResponseBody
+	public int nickNameCheck(@RequestParam("nickName") String nickName) {
+		
+		int cnt = service.nickNameCheck(nickName);
+		return cnt;
+	}
 }

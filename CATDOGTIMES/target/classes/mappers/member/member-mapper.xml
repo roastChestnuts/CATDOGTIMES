@@ -81,4 +81,9 @@
 	<select id="idCheck" parameterType="String" resultType="int">
 		SELECT COUNT(MEMBER_ID) FROM MEMBER WHERE MEMBER_ID= #{id}
 	</select>
+	<!-- 닉네임 중복 체크 -->
+	<select id="nickNameCheck" parameterType="String" resultType="int">
+		SELECT COUNT(MEMBER_NICKNAME) FROM MEMBER WHERE MEMBER_NICKNAME= #{nickName}
+	</select>
+	
 </mapper>

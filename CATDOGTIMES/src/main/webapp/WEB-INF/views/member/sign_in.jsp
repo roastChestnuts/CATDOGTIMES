@@ -14,6 +14,8 @@
   	<script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
   	<!--jQuery-->
   	<script src="${ path }/resources/js/jquery-3.6.0.min.js"></script>
+  	<!-- SweetAlert CSS -->
+  	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -54,7 +56,7 @@
           <h1 class="login__title">회원가입</h1>
           <div class="login__box">
             <i class='bx bx-user login__icon'></i>
-            <input type="text" placeholder="아이디" class="login__input" id="sign_up_id" name="id" onchange="checkId()" onfocus="labelUp(this)" onblur="labelDown(this)">
+            <input type="text" placeholder="아이디" class="login__input" id="sign_up_id" name="id" onchange="checkId()">
             <input type="hidden" name="idCheckValue" value="0" />
           </div>
           <span class="id_length">4~20자 사이 영문자, 숫자로 입력해주세요.</span>
@@ -86,8 +88,11 @@
 
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
-            <input type="text" placeholder="nickname" class="login__input" name="nickName">
+            <input type="text" placeholder="nickname" class="login__input" id="sign_up_nickName" name="nickName" onchange="checkNickName()">
+            <input type="hidden" name="nickNameCheckValue" value="0" />
           </div>
+          <span class="nickname_ok">사용 가능한 닉네임입니다.</span>
+		  <span class="nickname_already">누군가 이 닉네임을 사용하고 있어요.</span>
 
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
@@ -98,7 +103,7 @@
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
             <input type="text" placeholder="인증번호 6자리 입력" class="login__input" id="sign_up_email_check" disabled="disabled" maxlength="6">
-            <input type="button" class="form-control" id="btnEmailCheckNum" value="인증번호확인">
+            <input type="hidden" name="emailCheckValue" value="0" />
           </div>
           <span id="mail-check-warn"></span>
           
@@ -120,12 +125,36 @@
     </div>
    </div>
    
+   <!-- SweetAlert2 JS -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
    <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js?v=<%=System.currentTimeMillis() %>"></script>
    <script type="text/javascript">
+      //닉네임 중복체크
+   	  function checkNickName(){
+   		let nickName = $('#sign_up_nickName').val().trim();
+   		$.ajax({
+	        url:'${ path }/member/nickNameCheck', //Controller에서 요청 받을 주소
+	        type:'post', //POST 방식으로 전달
+	        data:{nickName},
+	        success:function(cnt){ //컨트롤러에서 넘어온 cnt값을 받는다 
+	            if(cnt == 0){ //사용 가능
+	            	$("[name=nickNameCheckValue]").val("1"); 
+	                $('.nickname_ok').css("display","inline-block"); 
+	                $('.nickname_already').css("display", "none");
+	            } else { //이미 존재
+	            	$("[name=nickNameCheckValue]").val("0");
+	                $('.nickname_already').css("display","inline-block");
+	                $('.nickname_ok').css("display", "none");
+	            }
+	        },
+	        error:function(){
+	            alert("에러입니다");
+	        }})
+      }
 	  //아이디 중복체크
 	  function checkId(){
-	    var id = $('#sign_up_id').val().trim(); //id값이 "sign_up_id"인 입력란의 값을 저장
-		var idCheck = /^[a-z]+[a-z0-9]{3,21}$/; //아이디 형식체크 변수
+	    let id = $('#sign_up_id').val().trim(); //id값이 "sign_up_id"인 입력란의 값을 저장
+		let idCheck = /^[a-z]+[a-z0-9]{3,21}$/; //아이디 형식체크 변수
 		if(idCheck.test(id)){ //아이디 길이가 알맞을 때
 		    $.ajax({
 		        url:'${ path }/member/idCheck', //Controller에서 요청 받을 주소
@@ -134,17 +163,15 @@
 		        async:false, //동기식으로 전환
 		        success:function(cnt){ //컨트롤러에서 넘어온 cnt값을 받는다 
 		            if(cnt == 0){ //사용 가능한 아이디
-		            	$("[name=idTest]").val("1"); //id체크 ok
+		            	$("[name=idCheckValue]").val("1"); //id체크 ok
 		                $('.id_ok').css("display","inline-block"); 
 		                $('.id_already').css("display", "none");
 		                $('.id_length').css("display", "none");
 		            } else { //이미 존재하는 아이디
-		            	$("[name=idTest]").val("0");
+		            	$("[name=idCheckValue]").val("0");
 		                $('.id_already').css("display","inline-block");
 		                $('.id_ok').css("display", "none");
 		                $('.id_length').css("display", "none");
-		                alert("아이디를 다시 입력해주세요");
-		                $('#sign_up_id').val('');
 		            }
 		        },
 		        error:function(){
@@ -158,11 +185,26 @@
 			$('.id_ok').css("display", "none");
 			sign_up_id.focus();
 			return false;	
-		}};
-		//이메일 인증
-		$('#btnEmailCheck').click(function() {
+	   }};
+	   //이메일 인증
+	   $('#btnEmailCheck').click(function() {
 			const email = $('#sign_up_email').val(); // 이메일 주소값
 			const checkInput = $('#sign_up_email_check'); // 인증번호 입력칸 
+			var emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			
+			if (email == "") {
+				Swal.fire('이메일을 입력해주세요.')
+				return false;
+			} else if(!emailExpression.test(email)){
+				Swal.fire('이메일 형식에 맞게 입력해주세요.')
+				return false;
+			} else{
+				Swal.fire({
+					icon: 'success',
+					title: '전송완료!',
+					html: '인증번호가 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
+				})
+			}
 			
 			$.ajax({
 				url:'${ path }/member/mailCheck',
@@ -173,7 +215,7 @@
 					code=data;
 					alert('인증번호가 전송되었습니다.')
 				}}); 
-		 }); 
+	   }); 
 
    </script>   
 </body>

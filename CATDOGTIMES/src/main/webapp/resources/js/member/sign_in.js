@@ -86,14 +86,16 @@
 		  if(inputCode === code){
 			 $resultMsg.html('인증번호가 일치합니다.');
 			 $resultMsg.css('color','green');
-			 $('#mail-Check-Btn').attr('disabled',true);
-			 $('#userEamil1').attr('readonly',true);
-			 $('#userEamil2').attr('readonly',true);
-			 $('#userEmail2').attr('onFocus', 'this.initialSelect = this.selectedIndex');
-		     $('#userEmail2').attr('onChange', 'this.selectedIndex = this.initialSelect');
+			 $('#btnEmailCheck').attr('disabled',true);
+			 $('#sign_up_email').attr('readonly',true);
+			 $('#sign_up_email_check').attr('readonly',true);
+			 $('#sign_up_email_check').attr('onFocus', 'this.initialSelect = this.selectedIndex');
+		     $('#sign_up_email_check').attr('onChange', 'this.selectedIndex = this.initialSelect');
+		     $("[name=emailCheckValue]").val("1");
 		  }else{
 			 $resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
 			 $resultMsg.css('color','red');
+			 $("[name=emailCheckValue]").val("0");
 		  }
 		});
     

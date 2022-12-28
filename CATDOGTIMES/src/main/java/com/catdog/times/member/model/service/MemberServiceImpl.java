@@ -58,7 +58,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int idCheck(String id) {
 		int cnt = mapper.idCheck(id);
-		System.out.println("cnt: " + cnt);
+		return cnt;
+	}
+
+	@Override
+	public int nickNameCheck(String nickName) {
+		int cnt = mapper.nickNameCheck(nickName);
 		return cnt;
 	}	
 	

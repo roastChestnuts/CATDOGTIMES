@@ -3,7 +3,6 @@
     *, ::before, ::after {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       padding: 0;
@@ -153,6 +152,15 @@
 		color:#6A82FB; 
 		display: none;
 	}
+	.nickname_ok{
+		color:#008000;
+		display: none;
+	}
+	
+	.nickname_already{
+		color:#ff6060; 
+		display: none;
+	}
 
     @keyframes animateLogin {
       0% {
@@ -203,5 +211,24 @@
       .login__create {
         bottom: -15.5rem;
       }
+      .login__create {
+        overflow:auto;
+        height:800px;
+      }
     }
+	/* 아래의 모든 코드는 영역::코드로 사용 */
+	.login__create::-webkit-scrollbar {
+	    width: 10px;  /* 스크롤바의 너비 */
+	}
+	
+	.login__create::-webkit-scrollbar-thumb {
+	    height: 30%; /* 스크롤바의 길이 */
+	    background: #217af4; /* 스크롤바의 색상 */
+	    
+	    border-radius: 10px;
+	}
+	
+	.login__create::-webkit-scrollbar-track {
+	    background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+	}
 }
