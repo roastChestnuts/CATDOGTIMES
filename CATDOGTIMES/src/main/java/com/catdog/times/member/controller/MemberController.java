@@ -12,6 +12,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.member.model.service.MailSendService;
 import com.catdog.times.member.model.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private MemberService service;
-	
+	@Autowired
+	private MailSendService mailService;
 	
     @GetMapping("/member/login")
     public String loginpage() {
@@ -86,6 +88,12 @@ public class MemberController {
 		
 		int cnt = service.idCheck(id);
 		return cnt;
-		
+	}
+	//이메일 인증
+	@PostMapping("/member/mailCheck")
+	@ResponseBody
+	public String mailCheck(@RequestParam("email") String email) {
+		System.out.println(email);
+		return mailService.joinEmail(email);
 	}
 }

@@ -54,7 +54,7 @@
           <h1 class="login__title">회원가입</h1>
           <div class="login__box">
             <i class='bx bx-user login__icon'></i>
-            <input type="text" placeholder="아이디" class="login__input" id="sign_up_id" name="id" onchange="checkId()">
+            <input type="text" placeholder="아이디" class="login__input" id="sign_up_id" name="id" onchange="checkId()" onfocus="labelUp(this)" onblur="labelDown(this)">
             <input type="hidden" name="idCheckValue" value="0" />
           </div>
           <span class="id_length">4~20자 사이 영문자, 숫자로 입력해주세요.</span>
@@ -69,18 +69,19 @@
 		  
           <div class="login__box">
             <i class='bx bx-lock login__icon'></i>
-            <input type="password" placeholder="비밀번호 확인" class="login__input" id="sign_up_pw2" name="password">
+            <input type="password" placeholder="비밀번호 확인" class="login__input" id="sign_up_pw2">
           </div>
           <span id="pwd_chk2"></span>
 
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
-            <input type="text" placeholder="name" class="login__input" name="name" >
+            <input type="text" placeholder="name" class="login__input" id="sign_up_name" name="name" >
           </div>
-          
+                    
           <div class="login__box">
             <i class='bx bx-lock login__icon'></i>
-            <input type="text" placeholder="gender" class="login__input" name="gender">
+            <label><input type="radio" name="gender" value="M">남자</label>
+            <label><input type="radio" name="gender" value="W">여자</label>
           </div>
 
           <div class="login__box">
@@ -90,9 +91,16 @@
 
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
-            <input type="text" placeholder="Email" class="login__input" name="email">
-            <input type="button" class="form-control" id="emailCheck" value="인증하기">
+            <input type="text" placeholder="Email" class="login__input" id="sign_up_email" name="email">
+            <input type="button" class="form-control" id="btnEmailCheck" value="인증하기">
           </div>
+          
+          <div class="login__box">
+            <i class='bx bx-at login__icon'></i>
+            <input type="text" placeholder="인증번호 6자리 입력" class="login__input" id="sign_up_email_check" disabled="disabled" maxlength="6">
+            <input type="button" class="form-control" id="btnEmailCheckNum" value="인증번호확인">
+          </div>
+          <span id="mail-check-warn"></span>
           
           <div class="login__box">
             <i class='bx bx-lock login__icon'></i>
@@ -112,7 +120,7 @@
     </div>
    </div>
    
-   <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js"></script>
+   <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js?v=<%=System.currentTimeMillis() %>"></script>
    <script type="text/javascript">
 	  //아이디 중복체크
 	  function checkId(){
@@ -151,6 +159,22 @@
 			sign_up_id.focus();
 			return false;	
 		}};
+		//이메일 인증
+		$('#btnEmailCheck').click(function() {
+			const email = $('#sign_up_email').val(); // 이메일 주소값
+			const checkInput = $('#sign_up_email_check'); // 인증번호 입력칸 
+			
+			$.ajax({
+				url:'${ path }/member/mailCheck',
+				type:'post',
+				data:{email},
+				success : function (data) {
+					checkInput.attr('disabled',false);
+					code=data;
+					alert('인증번호가 전송되었습니다.')
+				}}); 
+		 }); 
+
    </script>   
 </body>
 

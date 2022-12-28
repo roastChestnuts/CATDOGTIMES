@@ -42,6 +42,7 @@
 		WHERE MEMBER_ID = #{id} AND MEMBER_IS = 'Y'
 	</select>
 	
+	<!-- 회원가입 -->
 	<insert id="insertMember" parameterType="Member"
 			useGeneratedKeys="true" keyColumn="MEMBER_NO" keyProperty="no">
 		INSERT INTO MEMBER (
