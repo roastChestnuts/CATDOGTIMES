@@ -71,6 +71,24 @@
       margin-top: 1rem;
       border-radius: 0.5rem;
     }
+    .login__box__addr {
+      /* display: grid; */
+      display: flex;
+      width:50%;
+      column-gap: 0.5rem;
+      padding: 1rem 1rem;
+      background-color: #fff;
+      margin-top: 1rem;
+      border-radius: 0.5rem;
+    }
+    .login__box__addr__btn {
+      /* display: grid; */
+      display: flex;
+      width:30%;
+      float: right;
+      height: 49px;
+    }   
+    
     .login__icon {
       font-size: 1.5rem;
       color: #4AD395;

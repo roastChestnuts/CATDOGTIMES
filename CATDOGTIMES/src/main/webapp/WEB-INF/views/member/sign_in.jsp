@@ -82,8 +82,8 @@
                     
           <div class="login__box">
             <i class='bx bx-lock login__icon'></i>
-            <label><input type="radio" name="gender" value="M">남자</label>
-            <label><input type="radio" name="gender" value="W">여자</label>
+            <label><input type="radio" id="male" name="gender" value="M">남자</label>
+            <label><input type="radio" id="female" name="gender" value="W">여자</label>
           </div>
 
           <div class="login__box">
@@ -97,21 +97,31 @@
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
             <input type="text" placeholder="Email" class="login__input" id="sign_up_email" name="email">
-            <input type="button" class="form-control" id="btnEmailCheck" value="인증하기">
+            <input type="button" id="btnEmailCheck" value="인증하기">
           </div>
           
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
             <input type="text" placeholder="인증번호 6자리 입력" class="login__input" id="sign_up_email_check" disabled="disabled" maxlength="6">
-            <input type="hidden" name="emailCheckValue" value="0" />
+            <input type="hidden" id="emailCheckValue" name="emailCheckValue" value="0" />
           </div>
           <span id="mail-check-warn"></span>
           
-          <div class="login__box">
-            <i class='bx bx-lock login__icon'></i>
-            <input type="text" placeholder="address" class="login__input" name="address">
+          <div class="login__box__addr">
+            <input type="text" placeholder="우편번호" class="login__input" name="zipcode" readonly="readonly">
           </div>
-
+          
+          <div class="login__box__addr__btn">
+          	<input type="button" value="주소찾기" onclick="execute_daum_address()">
+          </div>
+          
+          <div class="login__box">
+            <input type="text" placeholder="주소" class="login__input" id="address" name="address" readonly="readonly">
+          </div>
+          
+          <div class="login__box">
+            <input type="text" placeholder="상세주소" class="login__input" name="detailAddress" readonly="readonly">
+          </div>          
           
           <a href="#" class="login__button" onclick="return sign_up()">회원가입</a>
           
@@ -125,6 +135,8 @@
     </div>
    </div>
    
+   <!-- 주소api -->
+   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
    <!-- SweetAlert2 JS -->
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
    <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js?v=<%=System.currentTimeMillis() %>"></script>
@@ -190,7 +202,7 @@
 	   $('#btnEmailCheck').click(function() {
 			const email = $('#sign_up_email').val(); // 이메일 주소값
 			const checkInput = $('#sign_up_email_check'); // 인증번호 입력칸 
-			var emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			let emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 			
 			if (email == "") {
 				Swal.fire('이메일을 입력해주세요.')
@@ -213,10 +225,152 @@
 				success : function (data) {
 					checkInput.attr('disabled',false);
 					code=data;
-					alert('인증번호가 전송되었습니다.')
 				}}); 
 	   }); 
+	   // 인증번호 비교 
+	   // blur -> focus가 벗어나는 경우 발생
+	   $('#sign_up_email_check').blur(function () {
+		  const inputCode = $(this).val();
+		  const $resultMsg = $('#mail-check-warn');
+			
+		  if(inputCode === code){
+			 $resultMsg.html('인증번호가 일치합니다.');
+			 $resultMsg.css('color','green');
+			 $('#btnEmailCheck').attr('disabled',true);
+			 $('#sign_up_email').attr('readonly',true);
+			 $('#sign_up_email_check').attr('readonly',true);
+			 $('#sign_up_email_check').attr('onFocus', 'this.initialSelect = this.selectedIndex');
+		     $('#sign_up_email_check').attr('onChange', 'this.selectedIndex = this.initialSelect');
+		     $("[name=emailCheckValue]").val("1");
+		  }else{
+			 $resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
+			 $resultMsg.css('color','red');
+			 $("[name=emailCheckValue]").val("0");
+		  }
+		});
+	   //회원가입 이벤트
+	   function sign_up() {
+			let memberId = document.getElementById("sign_up_id");
+			let memberPassword = document.getElementById("sign_up_pw1");
+			let memberPassword2 = document.getElementById("sign_up_pw2");
+			let memberName = document.getElementById("sign_up_name");
+			let memberNickName = document.getElementById("sign_up_nickName");
+			let memberEmail = document.getElementById("sign_up_email");
+			let male = document.getElementById("male");
+			let emailCheck = document.getElementById("emailCheckValue");//이메일 인증체크여부 변수
+			let emailCheckNumber = document.getElementById("sign_up_email_check");
+			let memberAddr = document.getElementById("address");
+			
+			
+	   		let idCheck2 = /^[a-z]+[a-z0-9]{3,21}$/; //아이디 형식체크 변수		
+	   		// 비밀번호 체크
+			let passwordCheck2 = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{8,25}$/;
+			// 이메일 형식
+			let emailExpression2 = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			
+			//========[id]아이디 체크==============
+			if (memberId.value == "") { 
+				alert('아이디를 입력하세요.');
+				memberId.focus();
+				return false;	
+			}
+			
+			if (!idCheck2.test(memberId.value)) {
+				alert('아이디는 4~20자 사이 영문자, 숫자로 입력해주세요.');
+				memberId.focus();
+				return false;	
+			}
+			
+			//중복검사 실시 유무
+			if($("[name=idCheckValue]").val() != "1"){
+				alert("이미 사용중인 아이디입니다.");
+				$("#memberId").focus();
+				return false;
+			}
+			//==================================
+			
+			//========[pwd]비밀번호 체크==============
+			if(memberPassword.value == "") {
+				alert('비밀번호를 입력하세요.');
+				memberPassword.focus();
+				return false;
+			}
+			
+			if (!passwordCheck2.test(memberPassword.value)) {
+				alert('비밀번호는 영문자+숫자+특수문자 조합으로 8자리 이상 입력해주세요.');
+				memberPassword.focus();
+				return false;
+			}
+			
+			if (memberPassword2.value != memberPassword.value) {
+				alert('비밀번호가 일치하지 않습니다.');
+				memberPassword2.focus();
+				return false;
+			}
+			//==================================
+			//========[name]이름 체크==============
+			if (memberName.value == "") { 
+				alert('이름을 입력하세요.');
+				memberName.focus();
+				return false;	
+			}
+			//==================================	
+			//========[gender]성별 체크==============	
+			if ($("input[name=gender]:radio:checked").length == 0) {
+				alert('성별을 선택해 주세요.');
+				male.focus();
+				return false;
+			}
+			//==================================
+			//========[nickname]닉네임 체크==============	
+			if (memberNickName.value == "") {
+				alert('닉네임을 입력하세요.');
+				memberNickName.focus();
+				return false;
+			}
+						
+			if($("[name=nickNameCheckValue]").val() == "0"){
+				alert("중복된 닉네임입니다.");
+				$("#memberNickname").focus();
+				return false;
+			}
+			//==================================
+			//========[email]이메일 체크==============
+			if (memberEmail.value == "") {
+				alert('이메일주소를 입력하세요.');
+				memberEmail.focus();
+				return false;
+			} 
+			
+			if (!emailExpression2.test(memberEmail.value)) {
+				alert('이메일 형식에 맞게 입력해주세요.');
+				memberEmail.focus();
+				return false;
+			}
+			
+			if(typeof code !== "undefined" && emailCheckNumber.value !== code){
+				alert('인증번호가 불일치 합니다. 다시 확인해주세요!');
+				emailCheckNumber.focus();
+				return false;
+			} 
+			
+			//이메일 인증 실시 유무
+			if(emailCheck.value == "0"){
+				alert("이메일 인증을 해주세요");
+				return false;
+			}
 
+			//================================== 
+			//========[addr]주소 체크==============
+			if (memberAddr.value == "") { 
+				alert('주소를 입력하세요.');
+				memberAddr.focus();
+				return false;	
+			}
+				
+			//================================== 	
+	  		document.getElementById('login-up').submit();
+	   }
    </script>   
 </body>
 

@@ -35,4 +35,8 @@ public class Member {
 	private Date modifyDate; //
 
 	private String address;
+	
+	private String zipcode;
+	
+	private String detailAddress;
 }

@@ -17,6 +17,8 @@
 		       MODIFY_DATE,
 		       MEMBER_PHOTO,
 		       MEMBER_ADDRESS
+		       MEMBER_ZIPCODE
+		       MEMBER_DETAIL_ADDRESS
 		FROM MEMBER
 	</sql>
 	
@@ -35,6 +37,8 @@
 		<result property="modifyDate" column="MODIFY_DATE"/>
 		<result property="photo" column="MEMBER_PHOTO"/>				
 		<result property="address" column="MEMBER_ADDRESS"/>		
+		<result property="zipcode" column="MEMBER_ZIPCODE"/>		
+		<result property="detailAddress" column="MEMBER_DETAIL_ADDRESS"/>		
 	</resultMap>
 	
 	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
@@ -59,7 +63,9 @@
 	        MEMBER_CREATE_DATE,
 	        MODIFY_DATE,
 	        MEMBER_PHOTO,
-	        MEMBER_ADDRESS		
+	        MEMBER_ADDRESS,		
+	        MEMBER_ZIPCODE,	
+	        MEMBER_DETAIL_ADDRESS		
 		) VALUES(
 			SEQ_MEMBER_NO.NEXTVAL,
 			#{id},
@@ -69,12 +75,14 @@
 			#{nickName},
 			#{email} ,
 			'Y',
-			DEFAULT,
+			0,
 			0,
 			DEFAULT,
 			DEFAULT,
 			DEFAULT,
-			#{address}
+			#{address},
+			#{zipcode},
+			#{detailAddress}
 		)	
 	</insert>
 	<!-- 아이디 중복 체크 -->
