@@ -104,4 +104,13 @@ public class MemberController {
 		int cnt = service.nickNameCheck(nickName);
 		return cnt;
 	}
+	
+    @GetMapping("/member/privacyModal")
+    public String privacyModal() {
+        return "common/privacy";
+    }
+    @GetMapping("/member/termconditionsModal")
+    public String termconditionsModal() {
+        return "common/termconditions";
+    }
 }

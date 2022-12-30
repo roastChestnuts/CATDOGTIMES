@@ -67,8 +67,6 @@
 						
 	  });
 
-
-		
 		//다음 주소 api
 		function execute_daum_address(){
  
@@ -119,4 +117,139 @@
     		}).open();    
  
 		}
+	   //회원가입 이벤트
+	   function sign_up() {
+			let memberId = document.getElementById("sign_up_id");
+			let memberPassword = document.getElementById("sign_up_pw1");
+			let memberPassword2 = document.getElementById("sign_up_pw2");
+			let memberName = document.getElementById("sign_up_name");
+			let memberNickName = document.getElementById("sign_up_nickName");
+			let memberEmail = document.getElementById("sign_up_email");
+			let male = document.getElementById("male");
+			let emailCheck = document.getElementById("emailCheckValue");//이메일 인증체크여부 변수
+			let emailCheckNumber = document.getElementById("sign_up_email_check");
+			let memberAddr = document.getElementById("address");
+			let privacyCheck = document.getElementById("privacy_check");
+			let termconditionsCheck = document.getElementById("termconditions_check");
+			
+	   		let idCheck2 = /^[a-z]+[a-z0-9]{3,21}$/; //아이디 형식체크 변수		
+	   		// 비밀번호 체크
+			let passwordCheck2 = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{8,25}$/;
+			// 이메일 형식
+			let emailExpression2 = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			
+			//========[id]아이디 체크==============
+			if (memberId.value == "") { 
+				alert('아이디를 입력하세요.');
+				memberId.focus();
+				return false;	
+			}
+			
+			if (!idCheck2.test(memberId.value)) {
+				alert('아이디는 4~20자 사이 영문자, 숫자로 입력해주세요.');
+				memberId.focus();
+				return false;	
+			}
+			
+			//중복검사 실시 유무
+			if($("[name=idCheckValue]").val() != "1"){
+				alert("이미 사용중인 아이디입니다.");
+				$("#memberId").focus();
+				return false;
+			}
+			//==================================
+			
+			//========[pwd]비밀번호 체크==============
+			if(memberPassword.value == "") {
+				alert('비밀번호를 입력하세요.');
+				memberPassword.focus();
+				return false;
+			}
+			
+			if (!passwordCheck2.test(memberPassword.value)) {
+				alert('비밀번호는 영문자+숫자+특수문자 조합으로 8자리 이상 입력해주세요.');
+				memberPassword.focus();
+				return false;
+			}
+			
+			if (memberPassword2.value != memberPassword.value) {
+				alert('비밀번호가 일치하지 않습니다.');
+				memberPassword2.focus();
+				return false;
+			}
+			//==================================
+			//========[name]이름 체크==============
+			if (memberName.value == "") { 
+				alert('이름을 입력하세요.');
+				memberName.focus();
+				return false;	
+			}
+			//==================================	
+			//========[gender]성별 체크==============	
+			if ($("input[name=gender]:radio:checked").length == 0) {
+				alert('성별을 선택해 주세요.');
+				male.focus();
+				return false;
+			}
+			//==================================
+			//========[nickname]닉네임 체크==============	
+			if (memberNickName.value == "") {
+				alert('닉네임을 입력하세요.');
+				memberNickName.focus();
+				return false;
+			}
+						
+			if($("[name=nickNameCheckValue]").val() == "0"){
+				alert("중복된 닉네임입니다.");
+				$("#memberNickname").focus();
+				return false;
+			}
+			//==================================
+			//========[email]이메일 체크==============
+			if (memberEmail.value == "") {
+				alert('이메일주소를 입력하세요.');
+				memberEmail.focus();
+				return false;
+			} 
+			
+			if (!emailExpression2.test(memberEmail.value)) {
+				alert('이메일 형식에 맞게 입력해주세요.');
+				memberEmail.focus();
+				return false;
+			}
+			
+			if(typeof code !== "undefined" &&  emailCheckNumber.value !== code){
+				alert('인증번호가 불일치 합니다. 다시 확인해주세요!');
+				emailCheckNumber.focus();
+				return false;
+			} 
+			
+			//이메일 인증 실시 유무
+			if(emailCheck.value == "0"){
+				alert("이메일 인증을 해주세요");
+				return false;
+			}
+			//================================== 
+			//========[addr]주소 체크==============
+			if (memberAddr.value == "") { 
+				alert('주소를 입력하세요.');
+				memberAddr.focus();
+				return false;	
+			}
+			//==================================
+			//========개인정보수집 동의 체크==============
+			if (!privacy_check.checked) {
+				Swal.fire('개인정보수집에 동의해주세요.')
+				privacy_check.focus();
+				return false;
+			} 
+		
+			if (!termconditions_check.checked) {
+				Swal.fire('이용약관에 동의해주세요.')
+				termconditions_check.focus();
+				return false;
+			}
+			//==================================
+	  		document.getElementById('login-up').submit();
+	   }
     

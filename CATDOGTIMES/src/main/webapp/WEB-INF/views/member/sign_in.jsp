@@ -12,13 +12,35 @@
 	<link href="${ path }/resources/css/member/sign_in.css?after" rel="stylesheet">
 	<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   	<script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+  	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
   	<!--jQuery-->
   	<script src="${ path }/resources/js/jquery-3.6.0.min.js"></script>
+  	<!-- bootstrap JS -->
+  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   	<!-- SweetAlert CSS -->
   	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 </head>
 
 <body>
+
+	<!-- 개인정보처리방침, 이용약관 모달 -->
+	<div class="modal fade" id="informModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="ModalLabel"> </h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body modal-dialog-scrollable" id="privacy-modal-body">
+	      	<!-- 여기 외부 jsp 내용 들어감 -->
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
   <div class="login">
     <div class="login__content">
@@ -121,8 +143,12 @@
           
           <div class="login__box">
             <input type="text" placeholder="상세주소" class="login__input" name="detailAddress" readonly="readonly">
-          </div>          
-          
+          </div>     
+          <div class="checkbox mb-2 mt-4">     
+               <input type="checkbox" id="privacy_check" required> <b>(필수)</b>개인정보수집에 동의합니다. <a id="privacy" data-bs-toggle="modal" data-bs-target="#informModal" role="button" style="margin-left: 20px; color:grey;" onclick="privacyCall()">보기</a>
+               <br>
+               <input type="checkbox" id="termconditions_check" required> <b>(필수)</b>이용약관에 동의합니다. <a id="termconditions" data-bs-toggle="modal" data-bs-target="#informModal" role="button" style="margin-left: 52px; color:grey;" onclick="termconditionsCall()">보기</a>  
+          </div>
           <a href="#" class="login__button" onclick="return sign_up()">회원가입</a>
           
           <div>
@@ -135,12 +161,27 @@
     </div>
    </div>
    
+   
+
+   
    <!-- 주소api -->
    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
    <!-- SweetAlert2 JS -->
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
    <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js?v=<%=System.currentTimeMillis() %>"></script>
    <script type="text/javascript">
+   	
+      //개인정보처리방침 모달 내부 jsp호출
+	  function privacyCall(){
+		  document.getElementById("ModalLabel").innerHTML = "개인정보처리방침";	  
+		  $(".modal-body").load("${path}/member/privacyModal");
+	  }
+	  //이용약관 모달 내부 jsp호출
+ 	  function termconditionsCall(){
+		  document.getElementById("ModalLabel").innerHTML = "홈페이지 표준 이용약관";
+		  $(".modal-body").load("${path}/member/termconditionsModal");
+	  } 
+	 
       //닉네임 중복체크
    	  function checkNickName(){
    		let nickName = $('#sign_up_nickName').val().trim();
@@ -248,132 +289,9 @@
 			 $("[name=emailCheckValue]").val("0");
 		  }
 		});
-	   //회원가입 이벤트
-	   function sign_up() {
-			let memberId = document.getElementById("sign_up_id");
-			let memberPassword = document.getElementById("sign_up_pw1");
-			let memberPassword2 = document.getElementById("sign_up_pw2");
-			let memberName = document.getElementById("sign_up_name");
-			let memberNickName = document.getElementById("sign_up_nickName");
-			let memberEmail = document.getElementById("sign_up_email");
-			let male = document.getElementById("male");
-			let emailCheck = document.getElementById("emailCheckValue");//이메일 인증체크여부 변수
-			let emailCheckNumber = document.getElementById("sign_up_email_check");
-			let memberAddr = document.getElementById("address");
-			
-			
-	   		let idCheck2 = /^[a-z]+[a-z0-9]{3,21}$/; //아이디 형식체크 변수		
-	   		// 비밀번호 체크
-			let passwordCheck2 = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{8,25}$/;
-			// 이메일 형식
-			let emailExpression2 = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-			
-			//========[id]아이디 체크==============
-			if (memberId.value == "") { 
-				alert('아이디를 입력하세요.');
-				memberId.focus();
-				return false;	
-			}
-			
-			if (!idCheck2.test(memberId.value)) {
-				alert('아이디는 4~20자 사이 영문자, 숫자로 입력해주세요.');
-				memberId.focus();
-				return false;	
-			}
-			
-			//중복검사 실시 유무
-			if($("[name=idCheckValue]").val() != "1"){
-				alert("이미 사용중인 아이디입니다.");
-				$("#memberId").focus();
-				return false;
-			}
-			//==================================
-			
-			//========[pwd]비밀번호 체크==============
-			if(memberPassword.value == "") {
-				alert('비밀번호를 입력하세요.');
-				memberPassword.focus();
-				return false;
-			}
-			
-			if (!passwordCheck2.test(memberPassword.value)) {
-				alert('비밀번호는 영문자+숫자+특수문자 조합으로 8자리 이상 입력해주세요.');
-				memberPassword.focus();
-				return false;
-			}
-			
-			if (memberPassword2.value != memberPassword.value) {
-				alert('비밀번호가 일치하지 않습니다.');
-				memberPassword2.focus();
-				return false;
-			}
-			//==================================
-			//========[name]이름 체크==============
-			if (memberName.value == "") { 
-				alert('이름을 입력하세요.');
-				memberName.focus();
-				return false;	
-			}
-			//==================================	
-			//========[gender]성별 체크==============	
-			if ($("input[name=gender]:radio:checked").length == 0) {
-				alert('성별을 선택해 주세요.');
-				male.focus();
-				return false;
-			}
-			//==================================
-			//========[nickname]닉네임 체크==============	
-			if (memberNickName.value == "") {
-				alert('닉네임을 입력하세요.');
-				memberNickName.focus();
-				return false;
-			}
-						
-			if($("[name=nickNameCheckValue]").val() == "0"){
-				alert("중복된 닉네임입니다.");
-				$("#memberNickname").focus();
-				return false;
-			}
-			//==================================
-			//========[email]이메일 체크==============
-			if (memberEmail.value == "") {
-				alert('이메일주소를 입력하세요.');
-				memberEmail.focus();
-				return false;
-			} 
-			
-			if (!emailExpression2.test(memberEmail.value)) {
-				alert('이메일 형식에 맞게 입력해주세요.');
-				memberEmail.focus();
-				return false;
-			}
-			
-			if(typeof code !== "undefined" && emailCheckNumber.value !== code){
-				alert('인증번호가 불일치 합니다. 다시 확인해주세요!');
-				emailCheckNumber.focus();
-				return false;
-			} 
-			
-			//이메일 인증 실시 유무
-			if(emailCheck.value == "0"){
-				alert("이메일 인증을 해주세요");
-				return false;
-			}
 
-			//================================== 
-			//========[addr]주소 체크==============
-			if (memberAddr.value == "") { 
-				alert('주소를 입력하세요.');
-				memberAddr.focus();
-				return false;	
-			}
-				
-			//================================== 	
-	  		document.getElementById('login-up').submit();
-	   }
    </script>   
 </body>
-
 
 
 </html>

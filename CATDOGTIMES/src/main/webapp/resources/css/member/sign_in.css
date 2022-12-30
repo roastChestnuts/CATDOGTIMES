@@ -73,20 +73,17 @@
     }
     .login__box__addr {
       /* display: grid; */
-      display: flex;
-      width:50%;
+      display: inline-block;
+      width:60%;
       column-gap: 0.5rem;
-      padding: 1rem 1rem;
+      padding: 1.125rem 1rem;
       background-color: #fff;
       margin-top: 1rem;
       border-radius: 0.5rem;
     }
     .login__box__addr__btn {
-      /* display: grid; */
-      display: flex;
-      width:30%;
-      float: right;
-      height: 49px;
+      display: inline-block;
+      width:20%;
     }   
     
     .login__icon {
@@ -193,7 +190,7 @@
     }
     @media screen and (min-width: 576px) {
       .login__forms {
-        width: 348px;
+        width: 400px;
         justify-self: center;
       }
     }
