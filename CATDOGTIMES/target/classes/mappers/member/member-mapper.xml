@@ -16,8 +16,8 @@
 		       MEMBER_CREATE_DATE,
 		       MODIFY_DATE,
 		       MEMBER_PHOTO,
-		       MEMBER_ADDRESS
-		       MEMBER_ZIPCODE
+		       MEMBER_ADDRESS,
+		       MEMBER_ZIPCODE,
 		       MEMBER_DETAIL_ADDRESS
 		FROM MEMBER
 	</sql>
@@ -39,6 +39,7 @@
 		<result property="address" column="MEMBER_ADDRESS"/>		
 		<result property="zipcode" column="MEMBER_ZIPCODE"/>		
 		<result property="detailAddress" column="MEMBER_DETAIL_ADDRESS"/>		
+		<result property="snsId" column="MEMBER_SNS_ID"/>		
 	</resultMap>
 	
 	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
@@ -92,6 +93,52 @@
 	<!-- 닉네임 중복 체크 -->
 	<select id="nickNameCheck" parameterType="String" resultType="int">
 		SELECT COUNT(MEMBER_NICKNAME) FROM MEMBER WHERE MEMBER_NICKNAME= #{nickName}
+	</select>
+	
+	<!-- 카카오 회원가입 -->
+	<insert id="kakaoInsert">
+	    INSERT INTO MEMBER (
+			MEMBER_NO,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_NICKNAME,
+	        MEMBER_EMAIL ,
+	        MEMBER_IS,
+	        MEMBER_TYPE,
+	        MEMBER_WARN,
+	        MEMBER_CREATE_DATE,
+	        MODIFY_DATE,
+	        MEMBER_SNS_ID
+	    ) VALUES(
+			SEQ_MEMBER_NO.NEXTVAL,
+			#{id},
+			#{password},
+			#{nickName},
+			#{gender},
+			#{nickName},
+			#{email} ,
+			'Y',
+			0,
+			0,
+			DEFAULT,
+			DEFAULT,
+		    #{snsId}
+	    )
+	</insert>
+	
+	<!-- 카카오 회원 로그인 -->
+	<select id="kakaoSelect" parameterType="String" resultMap="memberResultMap">
+		SELECT MEMBER_NO
+		  FROM MEMBER
+		 WHERE MEMBER_SNS_ID = #{snsId}
+	</select>
+	
+	<select id="findMemberBySnsId" parameterType="String" resultType="String">
+		SELECT MEMBER_ID 
+		  FROM MEMBER 
+		 WHERE MEMBER_SNS_ID = #{snsId}
 	</select>
 	
 </mapper>

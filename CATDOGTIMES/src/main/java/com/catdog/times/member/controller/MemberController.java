@@ -1,10 +1,17 @@
 package com.catdog.times.member.controller;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -12,8 +19,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.member.model.service.KaKaoServiceImpl;
 import com.catdog.times.member.model.service.MailSendService;
 import com.catdog.times.member.model.service.MemberService;
+import com.catdog.times.member.model.service.SnsService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,8 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private MemberService service;
+	
 	@Autowired
 	private MailSendService mailService;
+	
+	@Autowired
+	@Qualifier("kaKaoServiceImpl")
+    private SnsService kakaoService;
 	
     @GetMapping("/member/login")
     public String loginpage() {
@@ -113,4 +127,51 @@ public class MemberController {
     public String termconditionsModal() {
         return "common/termconditions";
     }
+    
+	// 카카오 로그인
+    @GetMapping("/member/kakaoLogin")
+    public String redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
+        // 접속토큰 get
+        String kakaoToken = kakaoService.getReturnAccessToken(code);
+
+        // 접속자 정보 get
+        Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
+        log.info("result:: " + result);
+        String snsId = (String) result.get("id");
+        String nickName = (String) result.get("nickname");
+        String email = (String) result.get("email");
+        String pw = snsId;
+        String gender = "female".equals((String)result.get("gender")) ? "W" : "M";
+        
+        // 분기
+        Member member = new Member();
+        
+        // 일치하는 snsId 없을 시 회원가입
+        System.out.println("snsId : " + service.kakaoLogin(snsId));
+        if (service.kakaoLogin(snsId) == null) {
+            log.warn("카카오로 회원가입");
+            member.setId(email);
+            member.setEmail(email);
+            member.setPassword(pw);
+            member.setNickName(nickName);
+            member.setSnsId(snsId);
+            member.setGender(gender);
+            service.kakaoJoin(member);
+
+            session.setAttribute("loginMember", member);
+        } else {
+        	// 일치하는 snsId가 있으면 멤버객체에 담음.
+            log.warn("카카오로 로그인");
+            String MemberId = service.findMemberBySnsId(snsId);
+            Member dto = service.findMemberById(MemberId);
+            log.warn("member:: " + dto);
+            session.setAttribute("loginMember", dto);
+        }
+        
+        /* 로그아웃 처리 시, 사용할 토큰 값 */
+        session.setAttribute("kakaoToken", kakaoToken);
+
+        return "redirect:/";
+    }
 }
+

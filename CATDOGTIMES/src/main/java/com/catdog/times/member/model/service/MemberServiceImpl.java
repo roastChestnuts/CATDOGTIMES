@@ -8,8 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.member.model.mapper.MemberMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Service
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -60,12 +63,30 @@ public class MemberServiceImpl implements MemberService {
 		int cnt = mapper.idCheck(id);
 		return cnt;
 	}
-
+	//닉네임 체크
 	@Override
 	public int nickNameCheck(String nickName) {
 		int cnt = mapper.nickNameCheck(nickName);
 		return cnt;
 	}	
 	
+	//카카오로그인
+    @Override
+    public void kakaoJoin(Member member) {
+        mapper.kakaoInsert(member);
+        String memberId = member.getId();
+        log.info("userid:: " + memberId);
+    }
 
+    @Override
+    public Member kakaoLogin(String memberSnsId) {
+        log.info("snsId:: " + memberSnsId);
+        return mapper.kakaoSelect(memberSnsId);
+    }
+
+    @Override
+    public String findMemberBySnsId(String memberSnsId) {
+        log.info("snsId:: " + memberSnsId);
+        return mapper.findMemberBySnsId(memberSnsId);
+    }
 }

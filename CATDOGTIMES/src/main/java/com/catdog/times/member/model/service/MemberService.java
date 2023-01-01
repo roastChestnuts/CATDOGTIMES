@@ -14,7 +14,11 @@ public interface MemberService {
 
 	public int nickNameCheck(String nickName);// 닉네임 중복체크
 	
-	//Boolean isDuplicateID(String id); //아이디중복체크
-
+	void kakaoJoin(Member member);
+	
+	Member kakaoLogin(String memberSnsId);
+	
+	String findMemberBySnsId(String memberSnsId);
+	
 	//int delete(int no); //회원삭제
 }

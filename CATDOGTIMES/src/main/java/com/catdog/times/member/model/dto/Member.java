@@ -39,4 +39,6 @@ public class Member {
 	private String zipcode;
 	
 	private String detailAddress;
+	
+	private String snsId;
 }

@@ -33,7 +33,18 @@
 		document.getElementById('login-in').submit();
 	  }
 	  
-      
+      //카카오 로그인
+      $(document).ready(function(){
+	      Kakao.init('16ecd052b98a49fd46f3dd4e10e38c83');
+	      Kakao.isInitialized();
+	  });
+	
+	  function loginKakao() {
+	      Kakao.Auth.authorize({ 
+	      redirectUri: 'http://localhost:8088/times/member/kakaoLogin' 
+	      }); // 등록한 리다이렉트uri 입력
+	  }
+	 
   	  
   	  // 유효성 검사(이메일, 패스워드)
 	  $(document).ready(function () {		

@@ -15,4 +15,13 @@ public interface MemberMapper {
 	public int idCheck(String id);
 	// 닉네임 중복체크
 	public int nickNameCheck(String nickName);
+	
+	// 카카오 회원가입
+    void kakaoInsert(Member member);
+    
+    //snsId로 회원정보 조회
+    Member kakaoSelect(String memberSnsId);
+
+    //snsId로 회원 아이디찾기
+    String findMemberBySnsId(String memberSnsId);
 }

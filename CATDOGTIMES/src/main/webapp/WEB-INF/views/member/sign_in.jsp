@@ -68,7 +68,7 @@
             <span class="login__signin login__signin--signup" id="sign-up">회원가입</span>
           </div>
           <div class="login__social">
-          	<a href="#" class="login__social--icon"><iconify-icon icon="ri:kakao-talk-fill" width="32"/></a>
+          	<a href="#" class="login__social--icon" onclick="loginKakao()"><iconify-icon icon="ri:kakao-talk-fill" width="32"/></a>
             <a href="#" class="login__social--icon"><iconify-icon icon="simple-icons:naver"/></a>
          </div>
         </form>
@@ -163,7 +163,8 @@
    
    
 
-   
+   <!-- kakao JS -->
+   <script src = "https://developers.kakao.com/sdk/js/kakao.js"></script>
    <!-- 주소api -->
    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
    <!-- SweetAlert2 JS -->
