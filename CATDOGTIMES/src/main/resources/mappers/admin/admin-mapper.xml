@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catdog.times.admin.model.mapper.AdminMapper">
+	
+	<!-- 게시글 정보 resultMap -->
+	<resultMap type="AdminDTO" id="boardListResultMap">
+		<result property="postContent" column="POST_CONTENT"></result>
+		<result property="postCreateDate" column="POST_CREATE_DATE"></result>
+		<result property="memberId" column="MEMBER_ID"></result>
+		<result property="postId" column="POST_ID"></result>
+	</resultMap>
+	
+	<!-- 댓글 정보 resultMap -->
+	<resultMap type="AdminDTO" id="replyListResultMap">
+		<result property="replyContent" column="REPLY_CONTENT"></result>
+		<result property="replyCreatedDate" column="REPLY_CREATED_DATE"></result>
+		<result property="memberId" column="MEMBER_ID"></result>
+		<result property="replyId" column="REPLY_ID"></result>
+	</resultMap>
+	
+	<!-- 회원 정보 resultMap -->
+	<resultMap type="AdminDTO" id="memberResultMap">
+		<result property="memberNo" column="MEMBER_NO"></result>
+		<result property="memberId" column="MEMBER_ID"></result>
+		<result property="memberName" column="MEMBER_NAME"></result>
+		<result property="memberNickName" column="MEMBER_NICKNAME"></result>
+		<result property="memberType" column="MEMBER_TYPE"></result>
+		<result property="memberCreateDate" column="MEMBER_CREATE_DATE"></result>
+		<result property="memberWarn" column="MEMBER_WARN"></result>
+		<result property="memberIs" column="MEMBER_IS"></result>
+	</resultMap>
+	
+	
+	<!-- 게시글 정보 조회 리스트 -->
+	<select id="selectBoardList" resultMap="boardListResultMap">
+	SELECT
+		A.POST_ID AS POST_ID 
+	    ,A.POST_CONTENT AS POST_CONTENT 
+	    ,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI') AS POST_CREATE_DATE 
+	    ,B.MEMBER_ID AS MEMBER_ID 
+	FROM
+	    POST A
+	  	LEFT OUTER JOIN MEMBER B
+	    ON A.MEMBER_NO = B.MEMBER_NO
+	ORDER BY A.POST_CREATE_DATE DESC
+	</select>
+	
+	<!-- 댓글 정보 조회 리스트  -->
+	<select id="selectReplyList" resultMap="replyListResultMap">
+	SELECT
+		A.REPLY_ID AS REPLY_ID
+	    ,A.REPLY_CONTENT AS REPLY_CONTENT 
+	    ,TO_CHAR(A.REPLY_CREATED_DATE, 'YYYY-MM-DD HH24:MI') AS REPLY_CREATED_DATE
+	    ,B.MEMBER_ID AS MEMBER_ID
+	FROM
+	    REPLY A
+	  	LEFT OUTER JOIN MEMBER B
+	    ON A.MEMBER_NO = B.MEMBER_NO
+	ORDER BY A.REPLY_CREATED_DATE DESC
+	</select>
+	
+	<!-- 회원 정보 조회 리스트 -->
+	<select id="selectMemberList" resultMap="memberResultMap">
+		SELECT 
+		     MEMBER_NO AS MEMBER_NO
+		     ,MEMBER_ID AS MEMBER_ID
+		     ,MEMBER_NAME AS MEMBER_NAME
+		     ,MEMBER_NICKNAME  AS MEMBER_NICKNAME
+		     ,CASE WHEN MEMBER_TYPE = 1 THEN '관리자'
+		           WHEN MEMBER_TYPE = 2 THEN '비활성회원'
+		           ELSE '일반회원' END AS MEMBER_TYPE
+		     ,TO_CHAR(MEMBER_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS MEMBER_CREATE_DATE
+		     ,MEMBER_WARN AS MEMBER_WARN  
+		     ,MEMBER_IS AS MEMBER_IS
+		FROM
+		    MEMBER
+		WHERE 1=1
+		ORDER BY MEMBER_NO DESC
+	</select>
+	<!--
+		화면에서 검색버튼 클릭시 조건 처리 예시(WHERE절)
+		<if test='srchType != null and srchType.equals("아이디")'>
+			AND MEMBER_ID = #{srchVal}
+		</if>
+		<if test='srchType != null and srchType.equals("이름")'>
+			AND MEMBER_NAME = #{srchVal}
+		</if>
+		 -->
+	
+</mapper>
