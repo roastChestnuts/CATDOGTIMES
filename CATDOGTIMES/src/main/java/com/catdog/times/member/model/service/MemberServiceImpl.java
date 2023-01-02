@@ -1,9 +1,14 @@
 package com.catdog.times.member.model.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.member.model.mapper.MemberMapper;
@@ -83,10 +88,26 @@ public class MemberServiceImpl implements MemberService {
         log.info("snsId:: " + memberSnsId);
         return mapper.kakaoSelect(memberSnsId);
     }
+	//네이버로그인
+    @Override
+    public void naverJoin(Member member) {
+        mapper.naverInsert(member);
+        String memberId = member.getId();
+        log.info("userid:: " + memberId);
+    }
 
+    @Override
+    public Member naverLogin(String memberSnsId) {
+        log.info("snsId:: " + memberSnsId);
+        return mapper.naverSelect(memberSnsId);
+    }
+    
     @Override
     public String findMemberBySnsId(String memberSnsId) {
         log.info("snsId:: " + memberSnsId);
         return mapper.findMemberBySnsId(memberSnsId);
     }
+    
+    
+
 }

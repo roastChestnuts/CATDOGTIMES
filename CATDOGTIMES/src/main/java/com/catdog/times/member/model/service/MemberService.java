@@ -14,10 +14,14 @@ public interface MemberService {
 
 	public int nickNameCheck(String nickName);// 닉네임 중복체크
 	
-	void kakaoJoin(Member member);
+	void kakaoJoin(Member member); //카카오
 	
 	Member kakaoLogin(String memberSnsId);
 	
+    public void naverJoin(Member member); //네이버 
+    
+    Member naverLogin(String memberSnsId);
+    
 	String findMemberBySnsId(String memberSnsId);
 	
 	//int delete(int no); //회원삭제

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller 
 // 해당 객체를 세션 스코프까지 확장하는 어노테이션
-@SessionAttributes("loginMember")
+@SessionAttributes({"loginMember", "kakaoToken"})
 public class MemberController {
 	@Autowired
 	private MemberService service;
@@ -119,59 +120,153 @@ public class MemberController {
 		return cnt;
 	}
 	
+	//모달 호출(개인정보)
     @GetMapping("/member/privacyModal")
     public String privacyModal() {
         return "common/privacy";
     }
+	//모달 호출(이용약관)
     @GetMapping("/member/termconditionsModal")
     public String termconditionsModal() {
         return "common/termconditions";
     }
     
 	// 카카오 로그인
-    @GetMapping("/member/kakaoLogin")
-    public String redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
-        // 접속토큰 get
-        String kakaoToken = kakaoService.getReturnAccessToken(code);
+	@GetMapping("/member/kakaoLogin")
+	public ModelAndView redirectkakao(ModelAndView model, @RequestParam String code, HttpSession session)
+			throws IOException {
+		// 접속토큰 get
+		String kakaoToken = kakaoService.getReturnAccessToken(code);
 
-        // 접속자 정보 get
-        Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
-        log.info("result:: " + result);
-        String snsId = (String) result.get("id");
-        String nickName = (String) result.get("nickname");
-        String email = (String) result.get("email");
-        String pw = snsId;
-        String gender = "female".equals((String)result.get("gender")) ? "W" : "M";
-        
-        // 분기
-        Member member = new Member();
-        
-        // 일치하는 snsId 없을 시 회원가입
-        System.out.println("snsId : " + service.kakaoLogin(snsId));
-        if (service.kakaoLogin(snsId) == null) {
-            log.warn("카카오로 회원가입");
-            member.setId(email);
-            member.setEmail(email);
-            member.setPassword(pw);
-            member.setNickName(nickName);
-            member.setSnsId(snsId);
-            member.setGender(gender);
-            service.kakaoJoin(member);
+		// 접속자 정보 get
+		Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
+		log.info("result:: " + result);
+		String snsId = (String) result.get("id");
+		String nickName = (String) result.get("nickname");
+		String email = (String) result.get("email");
+		String pw = snsId;
+		String gender = "female".equals((String) result.get("gender")) ? "W" : "M";
 
-            session.setAttribute("loginMember", member);
-        } else {
-        	// 일치하는 snsId가 있으면 멤버객체에 담음.
-            log.warn("카카오로 로그인");
-            String MemberId = service.findMemberBySnsId(snsId);
-            Member dto = service.findMemberById(MemberId);
-            log.warn("member:: " + dto);
-            session.setAttribute("loginMember", dto);
-        }
-        
-        /* 로그아웃 처리 시, 사용할 토큰 값 */
-        session.setAttribute("kakaoToken", kakaoToken);
+		// 분기
+		Member member = new Member();
 
-        return "redirect:/";
-    }
+		// 일치하는 snsId 없을 시 회원가입
+		if (service.kakaoLogin(snsId) == null) {
+			log.warn("카카오로 회원가입");
+			member.setId(email);
+			member.setEmail(email);
+			member.setPassword(pw);
+			member.setNickName(nickName);
+			member.setSnsId(snsId);
+			member.setGender(gender);
+			service.kakaoJoin(member);
+
+			model.addObject("loginMember", member);
+		} else {
+			// 일치하는 snsId가 있으면 멤버객체에 담음.
+			log.warn("카카오로 로그인");
+			String MemberId = service.findMemberBySnsId(snsId);
+			Member dto = service.findMemberById(MemberId);
+			log.warn("member:: " + dto);
+			model.addObject("loginMember", dto);
+		}
+
+		/* 로그아웃 처리 시, 사용할 토큰 값 */
+		model.addObject("kakaoToken", kakaoToken);
+		
+		model.setViewName("redirect:/");
+		return model;
+	}
+	//네이버 로그인 콜백(성공시 요청 - 데이터를 받는 곳)
+	@RequestMapping("/member/naverLogin")
+	public String naver() {
+		return "common/naverCallBack";
+	}
+	
+	@PostMapping("/member/naverSave")
+	public @ResponseBody String naverSave(ModelAndView model, @RequestBody Member memberDto) {
+//		System.out.println("#############################################");
+//		System.out.println(memberDto.getEmail()); //~@gmail.com
+//		System.out.println(memberDto.getGender()); // M, W
+//		System.out.println(memberDto.getSnsId()); 
+//		System.out.println(memberDto.getName()); // 이름
+//		System.out.println(memberDto.getNickName()); // 닉네임
+//		System.out.println("#############################################");
+		String result;
+		if(memberDto == null) { //넘어온 값이 null이라면 로그인 실패니까
+			result = "no";
+		}else {
+			String snsId = memberDto.getSnsId();
+			String email = memberDto.getEmail();
+			String gender = memberDto.getGender();
+			String name = memberDto.getName();
+			String nickName = memberDto.getNickName();
+			
+			// 일치하는 snsId 없을 시 회원가입
+			if (service.naverLogin(snsId) == null) {
+				log.warn("네이버로 회원가입");
+				memberDto.setId(email);
+				memberDto.setPassword(snsId);
+				service.naverJoin(memberDto);
+	
+				model.addObject("loginMember", memberDto);
+			} else {
+				// 일치하는 snsId가 있으면 멤버객체에 담음.
+				log.warn("네이버로 로그인");
+				String MemberId = service.findMemberBySnsId(snsId);
+				Member dto = service.findMemberById(MemberId);
+				log.warn("member:: " + dto);
+				model.addObject("loginMember", dto);
+			}
+			result = "ok";
+		}
+	
+		return result;
+	}
+	
+//    @GetMapping("/member/kakaoLogin")
+//    public String redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
+//        // 접속토큰 get
+//        String kakaoToken = kakaoService.getReturnAccessToken(code);
+//
+//        // 접속자 정보 get
+//        Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
+//        log.info("result:: " + result);
+//        String snsId = (String) result.get("id");
+//        String nickName = (String) result.get("nickname");
+//        String email = (String) result.get("email");
+//        String pw = snsId;
+//        String gender = "female".equals((String)result.get("gender")) ? "W" : "M";
+//        
+//        // 분기
+//        Member member = new Member();
+//        
+//        // 일치하는 snsId 없을 시 회원가입
+//        System.out.println("snsId : " + service.kakaoLogin(snsId));
+//        if (service.kakaoLogin(snsId) == null) {
+//            log.warn("카카오로 회원가입");
+//            member.setId(email);
+//            member.setEmail(email);
+//            member.setPassword(pw);
+//            member.setNickName(nickName);
+//            member.setSnsId(snsId);
+//            member.setGender(gender);
+//            service.kakaoJoin(member);
+//
+//            session.setAttribute("loginMember", member);
+//        } else {
+//        	// 일치하는 snsId가 있으면 멤버객체에 담음.
+//            log.warn("카카오로 로그인");
+//            String MemberId = service.findMemberBySnsId(snsId);
+//            Member dto = service.findMemberById(MemberId);
+//            log.warn("member:: " + dto);
+//            session.setAttribute("loginMember", dto);
+//        }
+//        
+//        /* 로그아웃 처리 시, 사용할 토큰 값 */
+//        session.setAttribute("kakaoToken", kakaoToken);
+//
+//        return "redirect:/";
+//    }
 }
 

@@ -69,7 +69,8 @@
           </div>
           <div class="login__social">
           	<a href="#" class="login__social--icon" onclick="loginKakao()"><iconify-icon icon="ri:kakao-talk-fill" width="32"/></a>
-            <a href="#" class="login__social--icon"><iconify-icon icon="simple-icons:naver"/></a>
+          	<div id="naverIdLogin" style="display: none;"></div>
+            <a href="#" class="login__social--icon" id="naverLogin"><iconify-icon icon="simple-icons:naver"/></a>
          </div>
         </form>
         
@@ -162,7 +163,8 @@
    </div>
    
    
-
+   <!-- 네이버 SDK -->
+   <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
    <!-- kakao JS -->
    <script src = "https://developers.kakao.com/sdk/js/kakao.js"></script>
    <!-- 주소api -->
@@ -171,7 +173,21 @@
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
    <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js?v=<%=System.currentTimeMillis() %>"></script>
    <script type="text/javascript">
-   	
+      //네이버 로그인
+	  var naverLogin = new naver.LoginWithNaverId(
+			  {
+				  clientId: "mxxEZM0mxB_D9crAuaD9",
+				  callbackUrl: "http://localhost:8088/times/member/naverLogin",// 본인의 callBack url
+				  isPopup: false,
+				  loginButton: {color: "white", type: 1, height:60}
+			  }
+		  );
+	  naverLogin.init();
+	  $(document).on("click", "#naverLogin", function(){ 
+		  var btnNaverLogin = document.getElementById("naverIdLogin").firstChild;
+		  btnNaverLogin.click();
+	  });
+	
       //개인정보처리방침 모달 내부 jsp호출
 	  function privacyCall(){
 		  document.getElementById("ModalLabel").innerHTML = "개인정보처리방침";	  

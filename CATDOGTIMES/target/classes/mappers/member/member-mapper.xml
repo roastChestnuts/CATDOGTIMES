@@ -135,6 +135,47 @@
 		 WHERE MEMBER_SNS_ID = #{snsId}
 	</select>
 	
+	<!-- 네이버 회원가입 -->
+	<insert id="naverInsert">
+	    INSERT INTO MEMBER (
+			MEMBER_NO,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_NICKNAME,
+	        MEMBER_EMAIL ,
+	        MEMBER_IS,
+	        MEMBER_TYPE,
+	        MEMBER_WARN,
+	        MEMBER_CREATE_DATE,
+	        MODIFY_DATE,
+	        MEMBER_SNS_ID
+	    ) VALUES(
+			SEQ_MEMBER_NO.NEXTVAL,
+			#{id},
+			#{password},
+			#{name},
+			#{gender},
+			#{nickName},
+			#{email} ,
+			'Y',
+			0,
+			0,
+			DEFAULT,
+			DEFAULT,
+		    #{snsId}
+	    )
+	</insert>
+	
+	<!-- 네이버 회원 로그인 -->
+	<select id="naverSelect" parameterType="String" resultMap="memberResultMap">
+		SELECT MEMBER_NO
+		  FROM MEMBER
+		 WHERE MEMBER_SNS_ID = #{snsId}
+	</select>
+	
+	<!-- snsid로 회원조회 -->
 	<select id="findMemberBySnsId" parameterType="String" resultType="String">
 		SELECT MEMBER_ID 
 		  FROM MEMBER 
