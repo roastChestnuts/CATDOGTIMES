@@ -11,4 +11,6 @@ public interface AdminService {
 	List<AdminDTO> selectReplyList();
 	//회원 정보 리스트 조회
 	List<AdminDTO> selectMemberList();
+	//게시글 리스트 조회 - 관리자 전용
+	List<AdminDTO> selectBoardManageList();
 }

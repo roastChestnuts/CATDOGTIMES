@@ -32,6 +32,15 @@
 		<result property="memberIs" column="MEMBER_IS"></result>
 	</resultMap>
 	
+	<!-- 게시글관리 정보 resultMap -->
+	<resultMap type="AdminDTO" id="boardManageResultMap">
+		<result property="postId" column="POST_ID"></result>
+		<result property="postContent" column="POST_CONTENT"></result>
+		<result property="postCreateDate" column="POST_CREATE_DATE"></result>
+		<result property="memberName" column="MEMBER_NAME"></result>
+		<result property="memberId" column="MEMBER_ID"></result>
+	</resultMap>
+	
 	
 	<!-- 게시글 정보 조회 리스트 -->
 	<select id="selectBoardList" resultMap="boardListResultMap">
@@ -79,6 +88,22 @@
 		WHERE 1=1
 		ORDER BY MEMBER_NO DESC
 	</select>
+	
+	<!-- 게시물 관리 리스트 -->
+	<select id="selectBoardManageList" resultMap="boardManageResultMap">
+		SELECT 
+     		A.POST_ID AS POST_ID
+     		,A.POST_CONTENT AS POST_CONTENT
+     		,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS POST_CREATE_DATE
+     		,B.MEMBER_NAME AS MEMBER_NAME
+     		,B.MEMBER_ID AS MEMBER_ID
+		FROM
+    		POST A
+    		LEFT OUTER JOIN MEMBER B
+    		ON A.MEMBER_NO = B.MEMBER_NO
+		ORDER BY A.POST_ID DESC
+	</select>
+	
 	<!--
 		화면에서 검색버튼 클릭시 조건 처리 예시(WHERE절)
 		<if test='srchType != null and srchType.equals("아이디")'>

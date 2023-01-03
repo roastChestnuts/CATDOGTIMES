@@ -3,12 +3,10 @@ package com.catdog.times.admin.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor 
 public class AdminDTO {
 	// 회원 ----------------------
 	private String memberNo; 		// 회원번호
@@ -34,4 +32,9 @@ public class AdminDTO {
 	private String replyCreatedDate; // 댓글 등록일
 	private String replyUpdateDate; // 댓글 수정일
 	// --------------------------
+	
+	// 검색영역 --------------------
+	private String srchType;	// 검색유형
+	private String srchVal;		// 검색값
+	// ---------------------------
 }

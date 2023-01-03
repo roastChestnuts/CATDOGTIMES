@@ -88,24 +88,80 @@
 
        		<div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
-				<div class="row">
-                   	<div class="col-xl-12">
-                       	<div class="card mb-4">
-                               <div class="card-header">
-                                   게시글 현황
-                               </div> 
-                               <div class="card-body">
-                               	<span>여기는 게시글관리 구현 영역입니다.</span>
-                               	<br><br><br><br><br><br><br><br>
-                               	<br><br><br><br><br><br><br><br>
-                               </div>
-                           </div>
-                       </div>            
-                   </div>
-             </div>
+				<span style="font-size:30px;font-weight:bold;">사용자 현황</span><br/>
+            <span>멍냥일보 피드 관리페이지 입니다. 위반한 피드에 대한 미노출처리를 할 수 있습니다.</span>
+						<div class="row" style="padding-top:20px;">
+                        	<div class="col-xl-12">
+                            	<div class="card mb-4">
+                                    <div class="card-header">
+                                    	<div>
+                                    		<select class="admin_srchBox" style="width:150px;" id="searchType">
+                                    			<option>아이디</option>
+                                    			<option>이름</option>                                			
+                                    			<option>닉네임</option>
+                                    		</select>
+                                    				<input id="searchVal"></input>
+                                    			</div>
+                                    	<div>
+                                    		<select class="admin_srchBox" style="width:150px;" id="memberType">
+                                    			<option>전체</option>
+                                    			<option>일반회원</option>
+                                    			<option>비활성회원</option>
+                                    			<option>관리자</option>
+                                    		</select>
+                                    	</div>
+                                  		<div style="">
+                                  			<button id="searchBtn" href="#" style="margin:auto; display:block;" onclick="clickSrchBtn()">검색</button>
+                                  		</div>
+                                 	 </div>
+                                  </div>
+                                    	<div>
+                                    		<table class="">
+                                    			<thead>
+                                    				<tr>
+                                    					<td>번호</td>
+                                    					<td>피드글</td>
+                                    					<td>이름</td>
+                                    					<td>아이디</td>
+                                    					<td>등록일</td>
+                                    					<td>미노출처리</td>
+                                    				</tr>
+                                    			</thead>
+                                    			<tbody>
+                                    			<c:forEach var="data" items="${boardManageList}">
+                                    				<tr>
+                                    					<td>${data.postId}</td>
+                                    					<td>${data.postContent}</td>
+                                    					<td>${data.memberName}</td>
+                                    					<td>${data.memberId}</td>
+                                    					<td>${data.postCreateDate}</td>
+                                    					
+                                    					<td>
+                                    					<!-- Rounded switch -->
+														<label id="labelSwitch" class="switch">
+															<c:if test="${data.memberIs eq 'Y'}">
+															  <input class="input" type="checkbox" checked>
+															</c:if>
+															<c:if test="${data.memberIs eq 'N'}">
+															  <input class="input" type="checkbox">
+															</c:if>
+															<span class="slider round"></span>
+														</label>
+														</td>
+                                    				</tr>
+                                    			</c:forEach>
+                                    			</tbody>
+                                    		</table>
+<%--                                     		<span>${memberList}</span> --%>
+                                    	</div>
+                                    </div>
+                                </div>
+                            </div>            
+                        </div>
+                    </div>
                 </main>
+            </div>    
             <!-- end 메인 콘텐트 -->
-        </div>
 
         <aside id="ntside" class="ntheader right_side h_icon_iccl p-3">
             <div class="ntheader_wrapper pr z_200">

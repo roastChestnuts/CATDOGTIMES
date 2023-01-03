@@ -11,8 +11,9 @@ public interface AdminMapper {
 	//게시글 현황 리스트 조회
 	List<AdminDTO> selectBoardList();
 	//댓글 현황 리스트 조회
-	List<AdminDTO> selectReplyList();
-	
+	List<AdminDTO> selectReplyList();	
 	//회원 정보 리스트 조회
 	List<AdminDTO> selectMemberList();
+	//게시글 리스트 조회 - 관리자 전용
+	List<AdminDTO> selectBoardManageList();
 }
