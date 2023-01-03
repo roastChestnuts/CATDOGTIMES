@@ -144,7 +144,6 @@ public class MemberController {
 		String snsId = (String) result.get("id");
 		String nickName = (String) result.get("nickname");
 		String email = (String) result.get("email");
-		String pw = snsId;
 		String gender = "female".equals((String) result.get("gender")) ? "W" : "M";
 
 		// 분기
@@ -155,7 +154,6 @@ public class MemberController {
 			log.warn("카카오로 회원가입");
 			member.setId(email);
 			member.setEmail(email);
-			member.setPassword(pw);
 			member.setNickName(nickName);
 			member.setSnsId(snsId);
 			member.setGender(gender);
@@ -185,28 +183,17 @@ public class MemberController {
 	
 	@PostMapping("/member/naverSave")
 	public @ResponseBody String naverSave(ModelAndView model, @RequestBody Member memberDto) {
-//		System.out.println("#############################################");
-//		System.out.println(memberDto.getEmail()); //~@gmail.com
-//		System.out.println(memberDto.getGender()); // M, W
-//		System.out.println(memberDto.getSnsId()); 
-//		System.out.println(memberDto.getName()); // 이름
-//		System.out.println(memberDto.getNickName()); // 닉네임
-//		System.out.println("#############################################");
 		String result;
 		if(memberDto == null) { //넘어온 값이 null이라면 로그인 실패니까
 			result = "no";
 		}else {
 			String snsId = memberDto.getSnsId();
 			String email = memberDto.getEmail();
-			String gender = memberDto.getGender();
-			String name = memberDto.getName();
-			String nickName = memberDto.getNickName();
 			
 			// 일치하는 snsId 없을 시 회원가입
 			if (service.naverLogin(snsId) == null) {
 				log.warn("네이버로 회원가입");
 				memberDto.setId(email);
-				memberDto.setPassword(snsId);
 				service.naverJoin(memberDto);
 	
 				model.addObject("loginMember", memberDto);

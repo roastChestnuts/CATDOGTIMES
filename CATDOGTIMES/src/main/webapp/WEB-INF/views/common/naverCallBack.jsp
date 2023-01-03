@@ -17,7 +17,6 @@
 <script>
 	var naverLogin = new naver.LoginWithNaverId({
 		clientId: "mxxEZM0mxB_D9crAuaD9", 
-		//callbackUrl: "http://localhost:8088/times/member/naverLogin", 
 		callbackUrl: "{ path }/member/naverLogin", 
 		isPopup: false,
 		callbackHandle: true

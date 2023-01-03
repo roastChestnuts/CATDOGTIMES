@@ -78,9 +78,9 @@ public class MemberServiceImpl implements MemberService {
 	//카카오로그인
     @Override
     public void kakaoJoin(Member member) {
+    	member.setPassword(passwordEncoder.encode(member.getSnsId()));
         mapper.kakaoInsert(member);
-        String memberId = member.getId();
-        log.info("userid:: " + memberId);
+        log.info("userid:: " + member.getId());
     }
 
     @Override
@@ -91,6 +91,7 @@ public class MemberServiceImpl implements MemberService {
 	//네이버로그인
     @Override
     public void naverJoin(Member member) {
+    	member.setPassword(passwordEncoder.encode(member.getSnsId()));
         mapper.naverInsert(member);
         String memberId = member.getId();
         log.info("userid:: " + memberId);
