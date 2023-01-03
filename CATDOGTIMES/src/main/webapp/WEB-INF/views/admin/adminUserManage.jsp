@@ -169,6 +169,7 @@
                                     			</div>
                                     	<div>
                                     		<select class="admin_srchBox" style="width:150px;" id="memberType">
+                                    			<option>전체</option>
                                     			<option>일반회원</option>
                                     			<option>비활성회원</option>
                                     			<option>관리자</option>
@@ -180,6 +181,7 @@
                                  	 </div>
                                   </div>
                                     	<div>
+                                    		<!-- 사용자 현황 테이블 -->
                                     		<table class="">
                                     			<thead>
                                     				<tr>
@@ -227,9 +229,9 @@
                         </div>
                     </div>
                 </main>
+             </div>    
             <!-- end 메인 콘텐트 -->
-        </div>
-
+            
         <aside id="ntside" class="ntheader right_side h_icon_iccl p-3">
             <div class="ntheader_wrapper pr z_200">
                 <div id="kalles-section-header_7" class="kalles-section sp_header_mid">
@@ -435,8 +437,41 @@
     	// 검색버튼 클릭 이벤트
     	function clickSrchBtn(){
     		
-    	// 비동기로 검색값 가져와서 리스트 재조회
-    	var srchType = $('#searchType').val();
+	    	// 비동기로 검색값 가져와서 리스트 재조회
+	    	// 검색 구분값
+	    	var srchType = $('#searchType').val();
+	    	
+	    	// 검색 입력값
+	    	var srchVal = $('#searchVal').val();
+	    	
+	    	// 회원유형 셀렉트 박스 선택 값
+	    	var memberType = $('#memberType').val();
+	    	
+	    	console.log('srchType ::: ' , srchType);
+	    	console.log('srchVal ::: ' , srchVal);
+	    	console.log('memberType ::: ' , memberType);
+	    	
+	    	var param = 
+	    		{
+	    			"srchType":srchType,
+	    			"srchVal" :srchVal ,
+	    			"memberType":memberType
+	    		}
+	    	
+	    	$.ajax({
+	    		url:"/admin/usermanage",
+	    		type:"get",
+	    		contentType:"application/text",
+	    		data:param,
+	    		success: function(data){
+	    			alert("성공!");
+	    		},
+	    		error: function(e){
+	    			alert("실패!");
+	    		}
+	    	})
+	    	
+	    	
     	}
     	
     	// 활성여부 switch 클릭 이벤트
