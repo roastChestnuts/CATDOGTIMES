@@ -32,8 +32,8 @@
 	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
 	<!-- 인터셉터 설정 -->
-	<!-- <interceptors>
-		<interceptor> -->
+	<interceptors>
+		<!-- <interceptor> -->
 			<!-- 인터셉터를 적용시킬 요청 -->
 			<!-- <mapping path="/member/**"/> -->
 		
@@ -43,6 +43,11 @@
 			<!-- 인터셉터 등록 -->
 			
 			<!-- <beans:bean id="loginCheckInterceptor" class="com.catdog.times.common.interceptor.LoginCheckInterceptor"/> -->
-		<!-- </interceptor>
-	</interceptors> -->
+		<!-- </interceptor> -->
+		<interceptor>
+			<mapping path="/member/**"/>
+			<exclude-mapping path="/exclude/**"/>
+			<beans:bean id="jwtInterceptor" class="com.catdog.times.common.interceptor.JwtInterceptor"/>
+		</interceptor>
+	</interceptors>
 </beans:beans>

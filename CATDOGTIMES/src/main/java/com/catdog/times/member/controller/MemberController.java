@@ -1,12 +1,17 @@
 package com.catdog.times.member.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,24 +54,49 @@ public class MemberController {
         return "member/sign_in"; 
     }
 	
+//	@PostMapping("/member/login")
+//	public ModelAndView login(ModelAndView model,
+//				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
+//		
+//		log.info("{}, {}", userId, userPwd);
+//		
+//		Member loginMember = service.login(userId, userPwd);
+//		
+//		if(loginMember != null) {
+//			model.addObject("loginMember", loginMember);
+//			model.setViewName("redirect:/");
+//		} else {
+//			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
+//			model.addObject("location", "/member/login");
+//			model.setViewName("common/msg");			
+//		}		
+//		
+//		return model;
+//	}
 	@PostMapping("/member/login")
-	public ModelAndView login(ModelAndView model,
+	public ResponseEntity<Map<String, Object>> login(ModelAndView model,
 				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
 		
 		log.info("{}, {}", userId, userPwd);
 		
+		Map<String, Object> map = new HashMap<>();
+		
 		Member loginMember = service.login(userId, userPwd);
+		
 		
 		if(loginMember != null) {
 			model.addObject("loginMember", loginMember);
 			model.setViewName("redirect:/");
 		} else {
-			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
-			model.addObject("location", "/member/login");
-			model.setViewName("common/msg");			
+			map.put("msg", "아이디나 비밀번호가 일치하지 않습니다.");
+			map.put("location", "/member/login");
+			return ResponseEntity.status(HttpStatus.FOUND)
+		             .header("Location", "http://localhost:8088/common/msg")
+		             .body(map);
 		}		
-		
-		return model;
+		return ResponseEntity.status(HttpStatus.FOUND)
+	             .header("Location", "http://localhost:3000/post")
+	             .body(map);
 	}
 	
 	@GetMapping("/member/logout")
