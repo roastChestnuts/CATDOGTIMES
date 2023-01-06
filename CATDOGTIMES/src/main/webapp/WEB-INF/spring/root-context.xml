@@ -12,4 +12,5 @@
 	<import resource="security-context.xml"/>
 	<import resource="multipart-context.xml"/>
 	<import resource="emailcheck-context.xml"/>
+	<import resource="redis-context.xml"/>
 </beans>

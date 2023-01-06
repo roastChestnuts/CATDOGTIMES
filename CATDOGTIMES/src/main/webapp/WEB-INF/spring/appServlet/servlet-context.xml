@@ -45,7 +45,7 @@
 			<!-- <beans:bean id="loginCheckInterceptor" class="com.catdog.times.common.interceptor.LoginCheckInterceptor"/> -->
 		<!-- </interceptor> -->
 		<interceptor>
-			<mapping path="/member/**"/>
+			<mapping path="/member/anonymous/**"/>
 			<exclude-mapping path="/exclude/**"/>
 			<beans:bean id="jwtInterceptor" class="com.catdog.times.common.interceptor.JwtInterceptor"/>
 		</interceptor>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.member.model.dto.User;
+import com.catdog.times.member.model.service.JwtServiceImpl;
 import com.catdog.times.member.model.service.KaKaoServiceImpl;
 import com.catdog.times.member.model.service.MailSendService;
 import com.catdog.times.member.model.service.MemberService;
@@ -46,6 +49,10 @@ public class MemberController {
 	@Autowired
 	@Qualifier("kaKaoServiceImpl")
     private SnsService kakaoService;
+	
+	@Autowired
+	JwtServiceImpl jwtService;
+	
 	
     @GetMapping("/member/login")
     public String loginpage() {
@@ -74,7 +81,7 @@ public class MemberController {
 //		return model;
 //	}
 	@PostMapping("/member/login")
-	public ResponseEntity<Map<String, Object>> login(ModelAndView model,
+	public Object login(ModelAndView model,
 				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
 		
 		log.info("{}, {}", userId, userPwd);
@@ -83,20 +90,25 @@ public class MemberController {
 		
 		Member loginMember = service.login(userId, userPwd);
 		
-		
 		if(loginMember != null) {
 			model.addObject("loginMember", loginMember);
-			model.setViewName("redirect:/");
-		} else {
-			map.put("msg", "아이디나 비밀번호가 일치하지 않습니다.");
-			map.put("location", "/member/login");
+			User user = new User(loginMember.getId(), loginMember.getName(), loginMember.getType());
+			Map<String, String> tokenMap = jwtService.createToken(user);
+			String accessToken = tokenMap.get("accessToken");
+			String refreshToken = tokenMap.get("refreshToken");
+			Cookie cookie = new Cookie("token", accessToken);
+			cookie.setMaxAge(60*60*24); //하루
+			
 			return ResponseEntity.status(HttpStatus.FOUND)
-		             .header("Location", "http://localhost:8088/common/msg")
-		             .body(map);
+		             .header("Location", "http://localhost:3000/post")
+		             .body(cookie);
+		} else {
+			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
+			model.addObject("location", "/member/login");
+			model.setViewName("common/msg");
+			return model;
 		}		
-		return ResponseEntity.status(HttpStatus.FOUND)
-	             .header("Location", "http://localhost:3000/post")
-	             .body(map);
+
 	}
 	
 	@GetMapping("/member/logout")
