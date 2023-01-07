@@ -88,8 +88,8 @@
 
        		<div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
-				<span style="font-size:30px;font-weight:bold;">사용자 현황</span><br/>
-            <span>멍냥일보 피드 관리페이지 입니다. 위반한 피드에 대한 미노출처리를 할 수 있습니다.</span>
+				<span style="font-size:30px;font-weight:bold;">게시글 관리</span><br/>
+            <span>멍냥일보에 업로드 된 피드내역 입니다. &nbsp;관리자가 위반되는 피드에 대한 미노출처리를 할 수 있습니다.</span>
 						<div class="row" style="padding-top:20px;">
                         	<div class="col-xl-12">
                             	<div class="card mb-4">
