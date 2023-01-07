@@ -1,8 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="memberMapper">
-	<select id="selectCount" resultType="_int">
-		SELECT COUNT(*) FROM MEMBER
+<mapper namespace="com.catdog.times.member.model.mapper.MemberMapper">
+	<sql id="selectMemberSql">
+		SELECT MEMBER_NO,
+		       MEMBER_ID,
+		       MEMBER_PW,
+		       MEMBER_NAME,
+		       MEMBER_GENDER,
+		       MEMBER_NICKNAME,
+		       MEMBER_EMAIL,
+		       MEMBER_IS,
+		       MEMBER_TYPE,
+		       MEMBER_WARN,
+		       MEMBER_CREATE_DATE,
+		       MODIFY_DATE,
+		       MEMBER_PHOTO,
+		       MEMBER_ADDRESS,
+		       MEMBER_ZIPCODE,
+		       MEMBER_DETAIL_ADDRESS
+		FROM MEMBER
+	</sql>
+	
+	<resultMap type="Member" id="memberResultMap">
+		<id property="no" column="MEMBER_NO" />
+		<result property="id" column="MEMBER_ID"/>
+		<result property="password" column="MEMBER_PW"/>
+		<result property="name" column="MEMBER_NAME"/>
+		<result property="gender" column="MEMBER_GENDER"/>
+		<result property="nickName" column="MEMBER_NICKNAME"/>
+		<result property="email" column="MEMBER_EMAIL"/>
+		<result property="is" column="MEMBER_IS"/>
+		<result property="type" column="MEMBER_TYPE"/>
+		<result property="warn" column="MEMBER_WARN"/>
+		<result property="createDate" column="MEMBER_CREATE_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
+		<result property="photo" column="MEMBER_PHOTO"/>				
+		<result property="address" column="MEMBER_ADDRESS"/>		
+		<result property="zipcode" column="MEMBER_ZIPCODE"/>		
+		<result property="detailAddress" column="MEMBER_DETAIL_ADDRESS"/>		
+		<result property="snsId" column="MEMBER_SNS_ID"/>		
+	</resultMap>
+	
+	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
+		<include refid="selectMemberSql"/>
+		WHERE MEMBER_ID = #{id} AND MEMBER_IS = 'Y'
 	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterType="Member"
+			useGeneratedKeys="true" keyColumn="MEMBER_NO" keyProperty="no">
+		INSERT INTO MEMBER (
+			MEMBER_NO,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_NICKNAME,
+	        MEMBER_EMAIL ,
+	        MEMBER_IS,
+	        MEMBER_TYPE,
+	        MEMBER_WARN,
+	        MEMBER_CREATE_DATE,
+	        MODIFY_DATE,
+	        MEMBER_PHOTO,
+	        MEMBER_ADDRESS,		
+	        MEMBER_ZIPCODE,	
+	        MEMBER_DETAIL_ADDRESS		
+		) VALUES(
+			SEQ_MEMBER_NO.NEXTVAL,
+			#{id},
+			#{password},
+			#{name},
+			#{gender},
+			#{nickName},
+			#{email} ,
+			'Y',
+			0,
+			0,
+			DEFAULT,
+			DEFAULT,
+			DEFAULT,
+			#{address},
+			#{zipcode},
+			#{detailAddress}
+		)	
+	</insert>
+	<!-- 아이디 중복 체크 -->
+	<select id="idCheck" parameterType="String" resultType="int">
+		SELECT COUNT(MEMBER_ID) FROM MEMBER WHERE MEMBER_ID= #{id}
+	</select>
+	<!-- 닉네임 중복 체크 -->
+	<select id="nickNameCheck" parameterType="String" resultType="int">
+		SELECT COUNT(MEMBER_NICKNAME) FROM MEMBER WHERE MEMBER_NICKNAME= #{nickName}
+	</select>
+	
+	<!-- 카카오 회원가입 -->
+	<insert id="kakaoInsert">
+	    INSERT INTO MEMBER (
+			MEMBER_NO,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_NICKNAME,
+	        MEMBER_EMAIL ,
+	        MEMBER_IS,
+	        MEMBER_TYPE,
+	        MEMBER_WARN,
+	        MEMBER_CREATE_DATE,
+	        MODIFY_DATE,
+	        MEMBER_SNS_ID
+	    ) VALUES(
+			SEQ_MEMBER_NO.NEXTVAL,
+			#{id},
+			#{password},
+			#{nickName},
+			#{gender},
+			#{nickName},
+			#{email} ,
+			'Y',
+			0,
+			0,
+			DEFAULT,
+			DEFAULT,
+		    #{snsId}
+	    )
+	</insert>
+	
+	<!-- 카카오 회원 로그인 -->
+	<select id="kakaoSelect" parameterType="String" resultMap="memberResultMap">
+		SELECT MEMBER_NO
+		  FROM MEMBER
+		 WHERE MEMBER_SNS_ID = #{snsId}
+	</select>
+	
+	<!-- 네이버 회원가입 -->
+	<insert id="naverInsert">
+	    INSERT INTO MEMBER (
+			MEMBER_NO,
+	        MEMBER_ID,
+	        MEMBER_PW,
+	        MEMBER_NAME,
+	        MEMBER_GENDER,
+	        MEMBER_NICKNAME,
+	        MEMBER_EMAIL ,
+	        MEMBER_IS,
+	        MEMBER_TYPE,
+	        MEMBER_WARN,
+	        MEMBER_CREATE_DATE,
+	        MODIFY_DATE,
+	        MEMBER_SNS_ID
+	    ) VALUES(
+			SEQ_MEMBER_NO.NEXTVAL,
+			#{id},
+			#{password},
+			#{name},
+			#{gender},
+			#{nickName},
+			#{email} ,
+			'Y',
+			0,
+			0,
+			DEFAULT,
+			DEFAULT,
+		    #{snsId}
+	    )
+	</insert>
+	
+	<!-- 네이버 회원 로그인 -->
+	<select id="naverSelect" parameterType="String" resultMap="memberResultMap">
+		SELECT MEMBER_NO
+		  FROM MEMBER
+		 WHERE MEMBER_SNS_ID = #{snsId}
+	</select>
+	
+	<!-- snsid로 회원조회 -->
+	<select id="findMemberBySnsId" parameterType="String" resultType="String">
+		SELECT MEMBER_ID 
+		  FROM MEMBER 
+		 WHERE MEMBER_SNS_ID = #{snsId}
+	</select>
+	
 </mapper>
