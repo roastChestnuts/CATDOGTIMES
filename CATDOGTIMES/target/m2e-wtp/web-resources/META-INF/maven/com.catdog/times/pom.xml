@@ -15,6 +15,12 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<dependencies>
+		<!-- java annotation -->
+		<dependency>
+		   <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+		    <version>1.3.2</version>
+		</dependency>
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -66,6 +72,20 @@
 		    <artifactId>spring-security-config</artifactId>
 		    <version>${org.springsecurity-version}</version>
 		</dependency>
+		
+		<!-- JWT -->
+		<dependency>
+		   <groupId>io.jsonwebtoken</groupId>
+		   <artifactId>jjwt</artifactId>
+		   <version>0.9.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.0</version>
+		</dependency>
+		
 		<!-- Mail -->
 		<dependency>
 		    <groupId>javax.mail</groupId>
@@ -206,6 +226,18 @@
 		    <artifactId>mybatis</artifactId>
 		    <version>3.5.10</version>
 		</dependency>
+		
+		<dependency>
+	  		<groupId>org.springframework.data</groupId>
+	  		<artifactId>spring-data-redis</artifactId>
+			<version>2.2.1.RELEASE</version>
+	  	</dependency>
+	  	
+	  	<dependency>
+		    <groupId>io.lettuce</groupId>
+		    <artifactId>lettuce-core</artifactId>
+		    <version>6.0.2.RELEASE</version>
+	    </dependency>
 			
 		<!-- Mybatis Spring -->
 		<dependency>
@@ -233,6 +265,12 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
 		    <version>2.13.3</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.13.3</version>
 		</dependency>
 		
 		<!-- gson -->
