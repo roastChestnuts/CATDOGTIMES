@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${ pageContext.request.contextPath }"/>
 <html lang="ko">
 <head>
     <meta charset="utf-8">
@@ -153,8 +154,8 @@
 
         <div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
-            <span style="font-size:30px;font-weight:bold;">사용자 현황</span><br/>
-            <span>멍냥일보를 이용중인 회원 리스트입니다. &nbsp;회원정보를 검색하고 비활성 여부를 설정 할 수 있습니다.</span>
+            <span style="font-size:30px;font-weight:bold;">사용자 관리</span><br/>
+            <span>멍냥일보를 이용중인 회원 리스트입니다. &nbsp;회원 상세정보를 검색하고 비활성 여부를 설정 할 수 있습니다.</span>
 						<div class="row" style="padding-top:20px;">
                         	<div class="col-xl-12">
                             	<div class="card mb-4">
@@ -169,10 +170,10 @@
                                     			</div>
                                     	<div>
                                     		<select class="admin_srchBox" style="width:150px;" id="memberType">
-                                    			<option>전체</option>
-                                    			<option>일반회원</option>
-                                    			<option>비활성회원</option>
-                                    			<option>관리자</option>
+                                    			<option value="">전체</option>
+                                    			<option value=0>일반회원</option>
+                                    			<option value=2>비활성회원</option>
+                                    			<option value=1>관리자</option>
                                     		</select>
                                     	</div>
                                   		<div style="">
@@ -180,7 +181,7 @@
                                   		</div>
                                  	 </div>
                                   </div>
-                                    	<div>
+                                    	<div id="memberTable">
                                     		<!-- 사용자 현황 테이블 -->
                                     		<table class="">
                                     			<thead>
@@ -190,6 +191,7 @@
                                     					<td>아이디</td>
                                     					<td>닉네임</td>
                                     					<td>회원유형</td>
+                                    					<td>이메일</td>
                                     					<td>가입일</td>
                                     					<td>경고횟수</td>
                                     					<td>활성여부</td>
@@ -203,16 +205,16 @@
                                     					<td>${data.memberId}</td>
                                     					<td>${data.memberNickName}</td>
                                     					<td>${data.memberType}</td>
+                                    					<td>${data.memberEmail}</td>
                                     					<td>${data.memberCreateDate}</td>
                                     					<td>${data.memberWarn}</td>
                                     					<td>
-                                    					<!-- Rounded switch -->
 														<label id="labelSwitch" class="switch">
 															<c:if test="${data.memberIs eq 'Y'}">
-															  <input class="input" type="checkbox" checked>
+															  <input class="input" id="test" type="checkbox" checked>
 															</c:if>
 															<c:if test="${data.memberIs eq 'N'}">
-															  <input class="input" type="checkbox">
+															  <input class="input" id="test" type="checkbox">
 															</c:if>
 															<span class="slider round"></span>
 														</label>
@@ -221,7 +223,6 @@
                                     			</c:forEach>
                                     			</tbody>
                                     		</table>
-<%--                                     		<span>${memberList}</span> --%>
                                     	</div>
                                     </div>
                                 </div>
@@ -430,8 +431,11 @@
     <script src="../js/interface.js"></script>
     
     <script type="text/javascript">
+    	var memberArrayList = new Array();
     	$(document).ready(function(){
-    	    		
+    		// 화면 진입 시 목록 조회 함수 실행
+    		clickSrchBtn(); 
+    		
     	});
     	
     	// 검색버튼 클릭 이벤트
@@ -445,11 +449,7 @@
 	    	var srchVal = $('#searchVal').val();
 	    	
 	    	// 회원유형 셀렉트 박스 선택 값
-	    	var memberType = $('#memberType').val();
-	    	
-	    	console.log('srchType ::: ' , srchType);
-	    	console.log('srchVal ::: ' , srchVal);
-	    	console.log('memberType ::: ' , memberType);
+	    	var memberType = $('#memberType option:selected').val();
 	    	
 	    	var param = 
 	    		{
@@ -459,28 +459,127 @@
 	    		}
 	    	
 	    	$.ajax({
-	    		url:"/admin/usermanage",
-	    		type:"get",
-	    		contentType:"application/text",
+	    		url:"${ path }/admin/memberlist",
+	    		type:"GET",
+	    		contentType:"json",
 	    		data:param,
 	    		success: function(data){
-	    			alert("성공!");
+	    			memberArrayList = data;
+	    			$('#memberTable').html("");
+	    			var htmlString = "";
+	    				htmlString += "<table>";
+	    				htmlString += "		<thead>";
+	    			 	htmlString += "		<tr>";
+	    				htmlString += "			<td>번호</td>";
+	    				htmlString += "			<td>이름</td>";
+	    				htmlString += "			<td>아이디</td>";
+	    				htmlString += "			<td>닉네임</td>";
+	    				htmlString += "			<td>회원유형</td>";
+	    				htmlString += "			<td>이메일</td>";
+	    				htmlString += "			<td>가입일</td>";
+	    				htmlString += "			<td>경고횟수</td>";
+	    				htmlString += "			<td>활성여부</td>";
+	    				htmlString += "		</tr>";
+	    				htmlString += "</thead>";
+	    			if(data.length > 0)
+	    			{
+		    				htmlString += "<tbody>";
+	    				for(var i = 0 ; i < data.length ; i++){
+			    			htmlString += "		<tr>"
+		    				htmlString += "			<td>" + data[i].memberNo + "</td>"
+		    				htmlString += "			<td>" + data[i].memberName + "</td>"
+		    				htmlString += "			<td>" + data[i].memberId + "</td>"
+		    				htmlString += "			<td>" + data[i].memberNickName + "</td>"
+		    				htmlString += "			<td>" + data[i].memberType + "</td>"
+		    				htmlString += "			<td>" + data[i].memberEmail + "</td>"
+		    				htmlString += "			<td>" + data[i].memberCreateDate + "</td>"
+		    				htmlString += "			<td>" + data[i].memberWarn + "</td>"
+			    			htmlString += "			<td>"
+			    			htmlString += "				<label id='labelSwitch' class='switch'>"
+			    			if(data[i].memberIs == 'Y'){
+			    				htmlString += "				<input class='input' type='checkbox' checked>"
+			    			} else {
+			    				htmlString += "				<input class='input' type='checkbox'>"
+			    			}
+			    			htmlString += "					<span class='slider round'></span>" 
+			    			htmlString += "				</label>"
+			    			htmlString += "			</td>"
+			    			htmlString += "		</tr>"
+		    			}
+		    				htmlString += "</tbody>";
+	    					htmlString += "</table'>";
+	    			} 
+	    			else
+	    			{
+	    					htmlString += "</table>";
+	    					htmlString += "<div style='text-align:center;'><span>검색 값이 없습니다.</span></div>";
+	    			}
+	    			$('#memberTable').append(htmlString);
 	    		},
 	    		error: function(e){
-	    			alert("실패!");
+	    			console.log(e);
 	    		}
 	    	})
-	    	
 	    	
     	}
     	
     	// 활성여부 switch 클릭 이벤트
-    	$(".input").click(function(){
+    	$(document).on("click",".input",function(e) {
     		
-    		// (예정)활성여부 값 가져와서 Y 일때 N으로, N 일때 Y로 해당 회원 활성여부 값 update
-    		// 1. 활성여부 클릭한 해당 회원의 활성여부 값 가져오고	
-    		// 2.  Y 일때 -> N, N 일때 Y로 변수에 값 넣고		
-    		// 3. 해당 값으로 회원 활성여부 수정하는 API 비동기 처리
+    		
+    		// index 가져오기
+    		var index = $(".input").index(this);
+    		
+    		// 활성여부 클릭한 해당 회원의 활성여부 값 가져오고	
+    		var memberIs = memberArrayList[index].memberIs;
+    		var memberNo = memberArrayList[index].memberNo; 
+    		
+    		// memberIs 가 Y 일때 -> N, N 일때 Y로 변수에 값 넣고
+    		var ckText = "";
+    		if( memberIs == 'Y') {
+    			memberIs = 'N';	
+    			ckText = "비활성 처리를 하시겠습니까?";
+    		} else {
+    			ckText = "활성 처리를 하시겠습니까?";
+    			memberIs = 'Y';	
+    		}
+    		var checkVal = confirm(ckText);
+    		
+    		var param = 
+    		{
+    				"memberNo": memberNo,
+    				"memberIs": memberIs
+    		}
+    		
+    		// confirm 확인 클릭 시 (true)
+    		if(checkVal){ 
+    			// 3. 해당 값으로 회원 활성여부 수정하는 API 비동기 처리
+        		$.ajax({
+    	    		type:'POST',
+    	    		url:'${ path }/admin/test',
+    	    		data:JSON.stringify(param),
+    	    		contentType:'application/json',
+    	    		dataType: 'text',
+    	    		success: function(data){
+    	    			console.log('result ::::::::: ' , data);
+    	    			// 사용자 목록 조회 함수 호출
+    	    			clickSrchBtn();
+    	    		},
+    	    		error: function(e){
+    	    			console.log(e);
+    	    		}
+    	    	})
+    		} else {
+    			// confirm 취소 클릭 시 (false)
+    			var checked = $('.input').prop("checked");
+    			if(checked){
+    				checked = false;
+    			} else {
+    				checked = true;
+    			}
+    			$(this).prop("checked", checked);
+    		}
+    		
     	});
     	
     
