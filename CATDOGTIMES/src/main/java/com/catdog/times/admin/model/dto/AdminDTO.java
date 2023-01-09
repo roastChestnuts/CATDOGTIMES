@@ -14,6 +14,7 @@ public class AdminDTO {
 	private String memberName; 		// 회원명
 	private String memberNickName;  // 회원닉네임
 	private String memberType;		// 회원유형
+	private String memberEmail;		// 회원이메일
 	private String memberCreateDate;// 가입일
 	private String memberWarn;		// 경고횟수
 	private String memberIs;		// 활성여부

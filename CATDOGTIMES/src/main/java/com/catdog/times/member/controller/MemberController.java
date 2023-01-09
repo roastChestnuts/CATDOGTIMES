@@ -1,7 +1,5 @@
 package com.catdog.times.member.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +9,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,7 +26,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.member.model.dto.User;
 import com.catdog.times.member.model.service.JwtServiceImpl;
+import com.catdog.times.member.model.service.KaKaoServiceImpl;
 import com.catdog.times.member.model.service.MailSendService;
 import com.catdog.times.member.model.service.MemberService;
 import com.catdog.times.member.model.service.SnsService;
@@ -297,3 +298,4 @@ public class MemberController {
 //        return "redirect:/";
 //    }
 }
+

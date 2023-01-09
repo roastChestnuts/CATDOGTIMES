@@ -4,15 +4,15 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.catdog.times.admin.model.mapper.AdminMapper">
 	
-	<!-- 게시글 정보 resultMap -->
+	<!-- 대시보드 게시글 정보 resultMap -->
 	<resultMap type="AdminDTO" id="boardListResultMap">
 		<result property="postContent" column="POST_CONTENT"></result>
 		<result property="postCreateDate" column="POST_CREATE_DATE"></result>
-		<result property="memberId" column="MEMBER_ID"></result>
+		<result property="memberId" column="MEMBER_ID"></result>	
 		<result property="postId" column="POST_ID"></result>
 	</resultMap>
 	
-	<!-- 댓글 정보 resultMap -->
+	<!-- 대시보드 댓글 정보 resultMap -->
 	<resultMap type="AdminDTO" id="replyListResultMap">
 		<result property="replyContent" column="REPLY_CONTENT"></result>
 		<result property="replyCreatedDate" column="REPLY_CREATED_DATE"></result>
@@ -27,6 +27,7 @@
 		<result property="memberName" column="MEMBER_NAME"></result>
 		<result property="memberNickName" column="MEMBER_NICKNAME"></result>
 		<result property="memberType" column="MEMBER_TYPE"></result>
+		<result property="memberEmail" column="MEMBER_EMAIL"></result>
 		<result property="memberCreateDate" column="MEMBER_CREATE_DATE"></result>
 		<result property="memberWarn" column="MEMBER_WARN"></result>
 		<result property="memberIs" column="MEMBER_IS"></result>
@@ -42,7 +43,7 @@
 	</resultMap>
 	
 	
-	<!-- 게시글 정보 조회 리스트 -->
+	<!-- 대시보드 게시글 정보조회 리스트 -->
 	<select id="selectBoardList" resultMap="boardListResultMap">
 	SELECT
 		A.POST_ID AS POST_ID 
@@ -56,7 +57,7 @@
 	ORDER BY A.POST_CREATE_DATE DESC
 	</select>
 	
-	<!-- 댓글 정보 조회 리스트  -->
+	<!-- 대시보드 댓글 정보조회 리스트  -->
 	<select id="selectReplyList" resultMap="replyListResultMap">
 	SELECT
 		A.REPLY_ID AS REPLY_ID
@@ -70,8 +71,8 @@
 	ORDER BY A.REPLY_CREATED_DATE DESC
 	</select>
 	
-	<!-- 회원 정보 조회 리스트 -->
-	<select id="selectMemberList" resultMap="memberResultMap">
+	<!-- 사용자 관리 리스트 -->
+	<select id="selectMemberList" parameterType="AdminDTO" resultMap="memberResultMap">
 		SELECT 
 		     MEMBER_NO AS MEMBER_NO
 		     ,MEMBER_ID AS MEMBER_ID
@@ -80,12 +81,29 @@
 		     ,CASE WHEN MEMBER_TYPE = 1 THEN '관리자'
 		           WHEN MEMBER_TYPE = 2 THEN '비활성회원'
 		           ELSE '일반회원' END AS MEMBER_TYPE
+		     ,MEMBER_EMAIL AS MEMBER_EMAIL 
 		     ,TO_CHAR(MEMBER_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS MEMBER_CREATE_DATE
 		     ,MEMBER_WARN AS MEMBER_WARN  
 		     ,MEMBER_IS AS MEMBER_IS
 		FROM
 		    MEMBER
 		WHERE 1=1
+		<if test='srchVal != null and srchVal != ""'>
+			<choose>
+				<when test='srchType.equals("아이디") '>
+					AND MEMBER_ID = #{srchVal}
+				</when>
+				<when test='srchType.equals("이름") '>
+					AND MEMBER_NAME = #{srchVal}
+				</when>
+				<when test='srchType.equals("닉네임") '>
+					AND MEMBER_NICKNAME = #{srchVal}
+				</when>
+			</choose>
+		</if>
+		<if test='memberType != null and memberType != ""'>
+			AND MEMBER_TYPE = #{memberType}
+		</if>
 		ORDER BY MEMBER_NO DESC
 	</select>
 	
@@ -104,14 +122,7 @@
 		ORDER BY A.POST_ID DESC
 	</select>
 	
-	<!--
-		화면에서 검색버튼 클릭시 조건 처리 예시(WHERE절)
-		<if test='srchType != null and srchType.equals("아이디")'>
-			AND MEMBER_ID = #{srchVal}
-		</if>
-		<if test='srchType != null and srchType.equals("이름")'>
-			AND MEMBER_NAME = #{srchVal}
-		</if>
-		 -->
-	
+	<update id="updateMemberIs" parameterType="AdminDTO">
+		UPDATE MEMBER SET MEMBER_IS = #{memberIs} WHERE MEMBER_NO = #{memberNo}			
+	</update>
 </mapper>

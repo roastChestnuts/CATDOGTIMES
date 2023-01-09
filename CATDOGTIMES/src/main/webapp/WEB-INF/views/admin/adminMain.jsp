@@ -89,38 +89,65 @@
         <div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
              <span style="font-size:30px;font-weight:bold;">대시보드</span><br/>
-             <span>멍냥일보 관리자 메인페이지 입니다. &nbsp;각 종 현황을 차트 및 리스트를 이용해 한눈에 볼 수 있습니다.</span>
+             <span>멍냥일보 관리자 메인페이지 입니다. &nbsp; 현사이트 트래픽 수 분석 차트 및 실시간 현황들을 한눈에 볼 수 있습니다.</span>
              <div class="row" style="padding-top:20px;">
-                        	<div class="col-xl-6">
-                            	<div class="card mb-4">
-                                    <div class="card-header">
-                                        방문자 현황
-                                    </div> 
-                                    <div class="card-body">
-                                    	<span>여기는 방문자 현황 차트 구현 영역입니다.</span>
-                                    	<br><br><br><br><br><br><br><br>
-                                    	<br><br><br><br><br><br><br><br>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                            	  <div class="card mb-4">
-                                    <div class="card-header">
-                                        산책기록
-                                    </div> 
-                                    <div class="card-body">
-                                    	<span>여기는 산책기록 구현 영역입니다.</span>
-                                    	<br><br><br><br><br><br><br><br>
-                                    	<br><br><br><br><br><br><br><br>
-                                    </div>
-                                </div>
+             		<div class="col-xl-2">
+                    	<div class="card mb-4">
+                            <div class="card-header">
+                                총 유저 수
+                            </div> 
+                            <div class="card-body">
+                            	<span>20,000</span><br>
                             </div>
                         </div>
-                        <div class="row">
-                        	<div class="col-xl-6">
+                    </div>
+                    <div class="col-xl-2">
                             	<div class="card mb-4">
                                     <div class="card-header">
-                                        댓글 현황
+                                        신규 회원 수
+                                    </div> 
+                                    <div class="card-body">
+                                    	<span>1,000</span><br>
+                                    </div>
+                                </div>
+                            </div>
+                    <div class="col-xl-2">
+                            	<div class="card mb-4">
+                                    <div class="card-header">
+                                        방문자 수
+                                    </div> 
+                                    <div class="card-body">
+                                    	<span>2,500</span><br>
+                                    </div>
+                                </div>
+                            </div>
+                   <div class="col-xl-2">
+                            	<div class="card mb-4">
+                                    <div class="card-header">
+                                        산책 매칭 수
+                                    </div> 
+                                    <div class="card-body">
+                                    	<span>777</span><br>
+                                    </div>
+                                </div>
+                            </div>                 
+                        	<div class="col-xl-12">
+                            	<div class="card mb-6">
+                                    <div class="card-header">
+                                        웹사이트 트래픽 분석 차트 
+                                    </div> 
+                                    <div class="card-body">
+                                    	<span>==========차트 구현 영역입니다.==========</span><br>
+                                    	<br><br><br><br><br><br><br><br><br><br>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row" style="padding-top:20px;">
+                        	<div class="col-xl-4">
+                            	<div class="card mb-3">
+                                    <div class="card-header">
+                                       실시간 댓글 현황
                                     </div>
                                     <div class="card-body">
                                     <c:forEach var="data" items="${replyList}" varStatus="status"> 
@@ -132,15 +159,13 @@
                                     		<a>${data.replyCreatedDate}</a><br>
                                     	</div>
                                     </c:forEach>
-                                    	<br><br><br><br><br><br><br><br>
-                                    	<br><br><br><br><br><br><br><br>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                            	  <div class="card mb-4">
+                            <div class="col-xl-4">
+                            	  <div class="card mb-3">
                                     <div class="card-header">
-                                        게시글 현황 
+                                       실시간 게시글 현황 
                                     </div> 
                                     <div class="card-body">
                                     <c:forEach var="data" items="${boardList}" varStatus="status"> 
@@ -151,14 +176,23 @@
                                     	<a>${data.postCreateDate}</a><br>
                                     </div>
                                     </c:forEach>
-                                    	<br><br><br><br><br><br><br><br>
-                                    	<br><br><br><br><br><br><br><br>
                                     </div>
                                 </div>
                             </div>
+                         <div class="col-xl-4">
+                            	  <div class="card mb-3">
+                                    <div class="card-header">
+                                       실시간 산책매칭 현황 
+                                    </div> 
+                                    <div class="card-body">
+										<br><br><br><br><br><br>
+										<br><br><br><br><br><br>
+                                    </div>
+                                  </div>
+                               </div>
+                         	</div>
                         </div>
             <!-- end 메인 콘텐트 -->
-        </div>
 
         <aside id="ntside" class="ntheader right_side h_icon_iccl p-3">
             <div class="ntheader_wrapper pr z_200">
