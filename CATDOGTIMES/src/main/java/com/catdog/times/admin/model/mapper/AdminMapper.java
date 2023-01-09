@@ -22,6 +22,9 @@ public interface AdminMapper {
 	int updateMemberIs(AdminDTO adminDTO);
 	
 	//게시글 리스트 조회 - 관리자 전용
-	List<AdminDTO> selectBoardManageList();
+	List<AdminDTO> selectBoardManageList(AdminDTO adminDTO);
+	
+	//피드 노출 여부 수정
+	int updatePostShowYn(AdminDTO adminDTO);
 	
 }

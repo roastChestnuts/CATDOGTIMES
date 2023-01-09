@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${ pageContext.request.contextPath }"/>
 <html lang="ko">
 <head>
     <meta charset="utf-8">
@@ -19,11 +20,31 @@
     <link rel="stylesheet" href="../css/home-fashion-vertical.css">
 
     <style>
-/* 전체 레이아웃 */
+	/* 전체 레이아웃 */
         .header_7 .header__mid{padding-top: 32px; padding-bottom: 32px;}
         .widget_img_pr, .widget_img_ar {min-width: 64px;  max-width: 64px;}
         .allrank .rank{padding-left: 0;}
-
+	
+	/* paging css */
+		  .pageInfo{
+		   	list-style : none;
+		   	display: inline-block;
+		  }
+		  .pageInfo li{
+		    float: left;
+		    font-size: 20px;
+ 		    margin-left: auto; 
+		    padding: 7px;
+		    font-weight: 500; 
+		  }
+		  .checked{
+		      color: #56cfe1; 
+		  }
+		  .btshow:hover{
+		  	border-color: black;
+		    background-color: #fff;
+		    color: black;
+		  }
     </style>
 
 </head>
@@ -96,26 +117,25 @@
                                     <div class="card-header">
                                     	<div>
                                     		<select class="admin_srchBox" style="width:150px;" id="searchType">
-                                    			<option>아이디</option>
-                                    			<option>이름</option>                                			
-                                    			<option>닉네임</option>
+                                    			<option value="id">아이디</option>
+                                    			<option value="name">이름</option>                                			
+                                    			<option value="postContent">글내용</option>
                                     		</select>
-                                    				<input id="searchVal"></input>
-                                    			</div>
+                                    		<input id="searchVal"></input>
+                                    	</div>
                                     	<div>
-                                    		<select class="admin_srchBox" style="width:150px;" id="memberType">
-                                    			<option>전체</option>
-                                    			<option>일반회원</option>
-                                    			<option>비활성회원</option>
-                                    			<option>관리자</option>
+                                    		<select class="admin_srchBox" style="width:150px;" id="postShowYn">
+                                    			<option value="">전체</option>
+                                    			<option value="Y">노출</option>
+                                    			<option value="N">미노출</option>
                                     		</select>
                                     	</div>
                                   		<div style="">
-                                  			<button id="searchBtn" href="#" style="margin:auto; display:block;" onclick="clickSrchBtn()">검색</button>
+                                  			<button id="searchBtn" style="margin:auto; display:block;" onclick="clickSrchBtn(1)">검색</button>
                                   		</div>
                                  	 </div>
                                   </div>
-                                    	<div>
+                                    	<div id="boardTable">
                                     		<table class="">
                                     			<thead>
                                     				<tr>
@@ -124,6 +144,7 @@
                                     					<td>이름</td>
                                     					<td>아이디</td>
                                     					<td>등록일</td>
+                                    					<td>댓글수</td>
                                     					<td>미노출처리</td>
                                     				</tr>
                                     			</thead>
@@ -135,24 +156,17 @@
                                     					<td>${data.memberName}</td>
                                     					<td>${data.memberId}</td>
                                     					<td>${data.postCreateDate}</td>
-                                    					
+                                    					<td>${data.replyCnt}</td>
                                     					<td>
-                                    					<!-- Rounded switch -->
-														<label id="labelSwitch" class="switch">
-															<c:if test="${data.memberIs eq 'Y'}">
-															  <input class="input" type="checkbox" checked>
-															</c:if>
-															<c:if test="${data.memberIs eq 'N'}">
-															  <input class="input" type="checkbox">
-															</c:if>
-															<span class="slider round"></span>
-														</label>
-														</td>
+                                    					<!-- 조건에 따라서 버튼 처리 -->
+                                    						${data.postShowYn}
+                                    					</td>
                                     				</tr>
                                     			</c:forEach>
                                     			</tbody>
                                     		</table>
-<%--                                     		<span>${memberList}</span> --%>
+                                    	</div>
+                                    	<div id="pagingArea">
                                     	</div>
                                     </div>
                                 </div>
@@ -299,10 +313,6 @@
                                             data-src="../images/mini-cart/product-01.jpg" width="80"
                                             height="80"></a>
                                 </div>
-<!--                                 <div class="col widget_if_pr"> -->
-<!--                                     <a class="product-title db" href="product-detail-layout-01.html">sunlight bell solar -->
-<!--                                         lamp</a>$35.00 -->
-<!--                                 </div> -->
                             </div>
                             <a href="#" class="btn fwsb detail_link">View All
                                 <i class="las la-arrow-right fs__18"></i></a>
@@ -315,33 +325,7 @@
     <!-- mobile menu -->
     <div id="nt_menu_canvas" class="nt_fk_canvas nt_sleft dn lazyload pt-3">
         <i class="close_pp pegk pe-7s-close ts__03 cd"></i>
-        <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>
-        
-<!--         <div id="kalles-section-mb_nav_js" class="mb_nav_tab active"> -->
-<!--             <div id="kalles-section-mb_nav" class="kalles-section"> -->
-<!--                 <ul id="menu_mb_ul" class="nt_mb_menu"> -->
-<!--                     <li id="item_header_7-0" class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">HOME</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#" class="icon_search push_side cb chp"  data-id="#nt_search_canvas" ><span class="nav_link_txt flex al_center">검색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">탐색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item"> -->
-<!--                         <a href="#" class="kalles-lbl__nav-sale">알림<span class="lbc_nav_mb ml__5">5</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">DM</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">북마크</span></a> -->
-<!--                     </li> -->
-<!--                 </ul> -->
-<!--             </div> -->
-<!--         </div> -->
-        
+        <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>       
     </div>
     <!-- end mobile menu -->
 
@@ -359,6 +343,202 @@
     <script src="../js/js-cookie.min.js"></script>
     <script src="../js/jquery.countdown.min.js"></script>
     <script src="../js/interface.js"></script>
+    
+    <script type="text/javascript">
+    	var boardArrayList = new Array();
+    	var nowPage = 1;
+    	$(document).ready(function(){
+    		// 화면 진입 시 목록 조회 함수 실행
+    		clickSrchBtn(1); 
+    		
+    	});
+    	
+    	// 검색버튼 클릭 이벤트
+    	function clickSrchBtn(pageIdx){
+    		
+    		var pageIdx = pageIdx;
+    		// 페이지 당 출력할 리스트 수
+    		var cntPerPage = 2;
+    		
+	    	// 검색 구분값
+	    	var srchType = $('#searchType').val();
+	    	
+	    	// 검색 입력값
+	    	var srchVal = $('#searchVal').val();
+	    	
+	    	// 게시글 노출여부 값
+	    	var postShowYn = $('#postShowYn option:selected').val();
+	    	
+	    	var param = 
+	    		{
+	    			"srchType"		:	srchType	,
+	    			"srchVal" 		:	srchVal 	,
+	    			"postShowYn"	:	postShowYn	,
+	    			"cntPerPage"	:   cntPerPage	,
+	    			"pageIdx"		:	pageIdx
+	    		}
+    		
+	    	console.log('param ::: ' , param);
+	    	console.log('ttt');
+	    	$.ajax({
+	    		url:"${ path }/admin/boardmanage/boardlist",
+	    		type:"GET",
+	    		contentType:"json",
+	    		data:param,
+	    		success: function(data){
+	    			console.log('data ::: ' , data)
+	    			boardArrayList = data;
+	    			$('#boardTable').html("");
+	    			$('#pagingArea').html("");
+	    			var htmlString = "";
+    				htmlString += "<table>";
+    				htmlString += "		<thead>";
+    			 	htmlString += "		<tr>";
+    				htmlString += "			<td>번호</td>";
+    				htmlString += "			<td>피드글</td>";
+    				htmlString += "			<td>이름</td>";
+    				htmlString += "			<td>아이디</td>";
+    				htmlString += "			<td>등록일</td>";
+    				htmlString += "			<td>댓글수</td>";
+    				htmlString += "			<td>미노출처리</td>";
+    				htmlString += "		</tr>";
+    				htmlString += "</thead>";
+		   				if(data.length > 0)
+		    			{
+			    				htmlString += "<tbody>";
+		    				for(var i = 0 ; i < data.length ; i++){
+				    			htmlString += "		<tr>"
+			    				htmlString += "			<td>" + data[i].postId + "</td>"
+			    				htmlString += "			<td>" + data[i].postContent + "</td>"
+			    				htmlString += "			<td>" + data[i].memberName + "</td>"
+			    				htmlString += "			<td>" + data[i].memberId + "</td>"
+			    				htmlString += "			<td>" + data[i].postCreateDate + "</td>"
+			    				htmlString += "			<td>" + data[i].replyCnt + "</td>"
+				    			htmlString += "			<td>"
+				    			if(data[i].postShowYn == 'Y'){
+					    			htmlString += "			<button class='btshow' style='background-color: #878787'>노출</button>"
+				    			} else {
+					    			htmlString += "			<button class='btshow' style='background-color: #fff'>미노출</button>"
+				    			}
+				    			htmlString += "			</td>"
+				    			htmlString += "		</tr>"
+			    			}
+			    				htmlString += "</tbody>";
+		    					htmlString += "</table'>";
+		    					
+		    					// 페이징 그리는 영역
+		    					var pagingString ="";
+				    			pagingString += "<div class='pageInfo_wrap' style='text-align:center;'>";
+				    			pagingString += "		<div class='pageInfo_area'>";
+				    			pagingString += "			<ul id='pageInfo' class='pageInfo'>";
+				    			if(data[0].startPageIdx > 1){
+									pagingString += "			<li class='pageInfo_btn previous'><a href='#' onclick='pagingClick("+ ( data[0].startPageIdx - 1 ) +")'>이전</a></li>";
+				    			}
+								for(var j = data[0].startPageIdx ; j <= data[0].endPageIdx ; j ++){
+									if(data[0].pageIdx == j)
+									{
+										pagingString += "			<li class='pageInfo_btn'><a class='checked' href='#' onclick='pagingClick("+ j +")'>" + j + "</a></li>";
+									} 
+									else
+									{
+										pagingString += "			<li class='pageInfo_btn'><a href='#' onclick='pagingClick("+ j +")'>" + j + "</a></li>";
+									}
+								}
+								if(data[0].endPageIdx != data[0].pageCnt){
+									pagingString += "			<li class='pageInfo_btn next'><a href='#' onclick='pagingClick("+ ( data[0].endPageIdx + 1 )+")'>다음</a></li>";
+								}
+								pagingString += "			</ul>";
+								pagingString += "		</div>";
+								pagingString += "</div>";
+		    					
+		    			} 
+		   				else
+		    			{
+		    					htmlString += "</table>";
+		    					htmlString += "<div style='text-align:center;'><span>검색 값이 없습니다.</span></div>";
+		    			}
+	    			$('#boardTable').append(htmlString);
+	    			$('#pagingArea').append(pagingString);
+	    		},
+	    		error: function(e){
+	    			alert('실패!!');
+	    			console.log(e);
+	    		}
+	    	})
+	    	
+		}
+    
+    
+    	//--------------------------------------------------
+    	// 페이징 버튼 클릭 이벤트
+    	//--------------------------------------------------
+    	function pagingClick(pageIdx){
+    		nowPage = pageIdx;
+    		clickSrchBtn(pageIdx);
+    	}
+    	
+    
+    	//--------------------------------------------------
+    	// 미노출처리 버튼 클릭 이벤트
+    	//--------------------------------------------------
+    	$(document).on("click",".btshow",function(e) {
+    		
+    		// index 가져오기
+    		var index = ($(".btshow").index(this));
+    		
+    		// 활성여부 클릭한 해당 회원의 활성여부 값 가져오고	
+    		var postId 		= boardArrayList[index].postId;
+    		var postShowYn  = boardArrayList[index].postShowYn; 
+    		
+    		// postShowYn 가 Y 일때 N, N 일때 Y로 변수에 값 넣고
+    		var ckText = "";
+    		if( postShowYn == 'Y') {
+    			postShowYn = 'N';	
+    			ckText = "미노출 처리를 하시겠습니까?";
+    		} else {
+    			ckText = "노출 처리를 하시겠습니까?";
+    			postShowYn = 'Y';	
+    		}
+    		var checkVal = confirm(ckText);
+    		
+    		var param = 
+    		{
+    				"postId"		: 	postId		,
+    				"postShowYn"	: 	postShowYn
+    		}
+    		// confirm 확인 클릭 시 (true)
+    		if(checkVal){ 
+    			// 3. 해당 값으로 회원 활성여부 수정하는 API 비동기 처리
+        		$.ajax({
+    	    		type:'POST',
+    	    		url:'${ path }/admin/boardmanage/post',
+    	    		data:JSON.stringify(param),
+    	    		contentType:'application/json',
+    	    		dataType: 'text',
+    	    		success: function(data){
+    	    			console.log('result ::::::::: ' , data);
+    	    			// 사용자 목록 조회 함수 호출
+    	    			clickSrchBtn(nowPage);
+    	    		},
+    	    		error: function(e){
+    	    			console.log(e);
+    	    		}
+    	    	})
+    		} 
+    		
+    	});
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    	</script>
 </body>
-
 </html>

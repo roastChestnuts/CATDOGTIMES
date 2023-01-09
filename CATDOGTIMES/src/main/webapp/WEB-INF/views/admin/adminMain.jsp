@@ -104,7 +104,7 @@
                     <div class="col-xl-2">
                             	<div class="card mb-4">
                                     <div class="card-header">
-                                        신규 회원 수
+                                        신규가입 회원 수
                                     </div> 
                                     <div class="card-body">
                                     	<span>1,000</span><br>
@@ -138,7 +138,8 @@
                                     </div> 
                                     <div class="card-body">
                                     	<span>==========차트 구현 영역입니다.==========</span><br>
-                                    	<br><br><br><br><br><br><br><br><br><br>
+                                    	<br><br><br><br><br><br>
+                                    	<br><br><br><br><br><br>
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +148,7 @@
                         	<div class="col-xl-4">
                             	<div class="card mb-3">
                                     <div class="card-header">
-                                       실시간 댓글 현황
+                                       댓글 현황
                                     </div>
                                     <div class="card-body">
                                     <c:forEach var="data" items="${replyList}" varStatus="status"> 
@@ -165,7 +166,7 @@
                             <div class="col-xl-4">
                             	  <div class="card mb-3">
                                     <div class="card-header">
-                                       실시간 게시글 현황 
+                                       게시글 현황 
                                     </div> 
                                     <div class="card-body">
                                     <c:forEach var="data" items="${boardList}" varStatus="status"> 
@@ -182,11 +183,11 @@
                          <div class="col-xl-4">
                             	  <div class="card mb-3">
                                     <div class="card-header">
-                                       실시간 산책매칭 현황 
+                                       산책매칭 현황 
                                     </div> 
                                     <div class="card-body">
-										<br><br><br><br><br><br>
-										<br><br><br><br><br><br>
+										<br><br><br><br><br>
+										<br><br><br><br><br>
                                     </div>
                                   </div>
                                </div>
@@ -330,10 +331,6 @@
                                             data-src="../images/mini-cart/product-01.jpg" width="80"
                                             height="80"></a>
                                 </div>
-<!--                                 <div class="col widget_if_pr"> -->
-<!--                                     <a class="product-title db" href="product-detail-layout-01.html">sunlight bell solar -->
-<!--                                         lamp</a>$35.00 -->
-<!--                                 </div> -->
                             </div>
                             <a href="#" class="btn fwsb detail_link">View All
                                 <i class="las la-arrow-right fs__18"></i></a>
@@ -346,33 +343,7 @@
     <!-- mobile menu -->
     <div id="nt_menu_canvas" class="nt_fk_canvas nt_sleft dn lazyload pt-3">
         <i class="close_pp pegk pe-7s-close ts__03 cd"></i>
-        <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>
-        
-<!--         <div id="kalles-section-mb_nav_js" class="mb_nav_tab active"> -->
-<!--             <div id="kalles-section-mb_nav" class="kalles-section"> -->
-<!--                 <ul id="menu_mb_ul" class="nt_mb_menu"> -->
-<!--                     <li id="item_header_7-0" class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">HOME</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#" class="icon_search push_side cb chp"  data-id="#nt_search_canvas" ><span class="nav_link_txt flex al_center">검색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">탐색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item"> -->
-<!--                         <a href="#" class="kalles-lbl__nav-sale">알림<span class="lbc_nav_mb ml__5">5</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">DM</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">북마크</span></a> -->
-<!--                     </li> -->
-<!--                 </ul> -->
-<!--             </div> -->
-<!--         </div> -->
-        
+        <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>      
     </div>
     <!-- end mobile menu -->
 

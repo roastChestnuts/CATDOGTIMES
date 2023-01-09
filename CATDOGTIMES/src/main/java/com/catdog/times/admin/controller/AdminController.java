@@ -46,8 +46,8 @@ import lombok.extern.slf4j.Slf4j;
 		@RequestMapping("/boardmanage")
 		public ModelAndView retrieveBoardmanageInfo(ModelAndView model) {
 			// 게시글 관리
-			List<AdminDTO> boardManageList = service.selectBoardManageList();
-			model.addObject("boardManageList" , boardManageList);
+			//List<AdminDTO> boardManageList = service.selectBoardManageList();
+			//model.addObject("boardManageList" , boardManageList);
 			model.setViewName("admin/adminBoardManage");
 			return model;
 	 	}
@@ -57,7 +57,8 @@ import lombok.extern.slf4j.Slf4j;
 			return "admin/adminRouteManage";
 		}
 		
-		@RequestMapping("/memberlist")
+		// 사용자 목록 조회
+		@RequestMapping("/usermanage/memberlist")
 		@ResponseBody
 		public List<AdminDTO> retrieveMemberList(AdminDTO adminDTO) {
 			log.info("admin DTO :::: " + adminDTO.toString());
@@ -65,12 +66,37 @@ import lombok.extern.slf4j.Slf4j;
 			return memberList;
 		}
 		
-		@RequestMapping("/test")
+		// 사용자 활성/비활성 처리
+		@RequestMapping("/usermanage/memberis")
 		@ResponseBody
 		public String updateMemberIs(@RequestBody AdminDTO adminDTO) {
-			String result = "ok";
+			String result = "";
 			log.info("updateMemberIs adminDTO ::: " + adminDTO.toString());
 			int cnt = service.updateMemberIs(adminDTO);
+			if(cnt == 0) {
+				result = "fail";
+			} else {
+				result = "success";
+			}
+			return result; 
+		}
+		
+		// 게시글 목록 조회
+		@RequestMapping("/boardmanage/boardlist")
+		@ResponseBody
+		public List<AdminDTO> retrieveBoardList(AdminDTO adminDTO) {
+			log.info("retrieveBoardList admin DTO :::: " + adminDTO.toString()); 
+			List<AdminDTO> boardList = service.selectBoardManageList(adminDTO);
+			return boardList;
+		}
+		
+		// 피드 노출/미노출 처리
+		@RequestMapping("/boardmanage/post")
+		@ResponseBody
+		public String updatePostShowYn(@RequestBody AdminDTO adminDTO) {
+			String result = "";
+			log.info("updatePostShowYn adminDTO ::: " + adminDTO.toString());
+			int cnt = service.updatePostShowYn(adminDTO);
 			if(cnt == 0) {
 				result = "fail";
 			} else {
