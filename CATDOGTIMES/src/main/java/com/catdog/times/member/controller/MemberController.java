@@ -1,12 +1,19 @@
 package com.catdog.times.member.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,7 +27,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
-import com.catdog.times.member.model.service.KaKaoServiceImpl;
+import com.catdog.times.member.model.service.JwtServiceImpl;
 import com.catdog.times.member.model.service.MailSendService;
 import com.catdog.times.member.model.service.MemberService;
 import com.catdog.times.member.model.service.SnsService;
@@ -42,6 +49,10 @@ public class MemberController {
 	@Qualifier("kaKaoServiceImpl")
     private SnsService kakaoService;
 	
+	@Autowired
+	JwtServiceImpl jwtService;
+	
+	
     @GetMapping("/member/login")
     public String loginpage() {
         log.info("로그인 페이지 요청");
@@ -49,24 +60,54 @@ public class MemberController {
         return "member/sign_in"; 
     }
 	
+//	@PostMapping("/member/login")
+//	public ModelAndView login(ModelAndView model,
+//				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
+//		
+//		log.info("{}, {}", userId, userPwd);
+//		
+//		Member loginMember = service.login(userId, userPwd);
+//		
+//		if(loginMember != null) {
+//			model.addObject("loginMember", loginMember);
+//			model.setViewName("redirect:/");
+//		} else {
+//			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
+//			model.addObject("location", "/member/login");
+//			model.setViewName("common/msg");			
+//		}		
+//		
+//		return model;
+//	}
 	@PostMapping("/member/login")
-	public ModelAndView login(ModelAndView model,
+	public Object login(ModelAndView model,
 				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
 		
 		log.info("{}, {}", userId, userPwd);
+		
+		Map<String, Object> map = new HashMap<>();
 		
 		Member loginMember = service.login(userId, userPwd);
 		
 		if(loginMember != null) {
 			model.addObject("loginMember", loginMember);
-			model.setViewName("redirect:/");
+			User user = new User(loginMember.getId(), loginMember.getName(), loginMember.getType());
+			Map<String, String> tokenMap = jwtService.createToken(user);
+			String accessToken = tokenMap.get("accessToken");
+			String refreshToken = tokenMap.get("refreshToken");
+			Cookie cookie = new Cookie("token", accessToken);
+			cookie.setMaxAge(60*60*24); //하루
+			
+			return ResponseEntity.status(HttpStatus.FOUND)
+		             .header("Location", "http://localhost:3000/post")
+		             .body(cookie);
 		} else {
 			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
 			model.addObject("location", "/member/login");
-			model.setViewName("common/msg");			
+			model.setViewName("common/msg");
+			return model;
 		}		
-		
-		return model;
+
 	}
 	
 	@GetMapping("/member/logout")
@@ -256,4 +297,3 @@ public class MemberController {
 //        return "redirect:/";
 //    }
 }
-

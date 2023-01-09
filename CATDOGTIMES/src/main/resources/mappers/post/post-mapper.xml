@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.catdog.times.post.model.mapper.PostMapper">
+
+	<resultMap type="PostDTO" id="postResultMap">
+		<result column="POST_ID" property="postId" />
+		<result column="POST_CONTENT" property="postContent" />
+		<result column="POST_CREATE_DATE" property="postCreateDate" />
+		<result column="POST_UPDATE_DATE" property="postUpdateDate" />
+		<result column="MEMBER_NO" property="memberNo" />
+	</resultMap>
+
+	<resultMap type="PostLikeDTO" id="postLikeResultMap">
+		<result column="POST_LIKE_ID" property="postLikeId" />
+		<result column="POST_ID" property="postId" />
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="POST_LIKE_CREATED_DATE"
+			property="postLikeCreatedDate" />
+	</resultMap>
+
+	<resultMap type="PostHashtagDTO" id="postHashtagResultMap">
+		<result column="POST_HASHTAG_ID" property="postHashtagId" />
+		<result column="POST_ID" property="postId" />
+		<result column="POST_HASHTAG" property="postHashtag" />
+	</resultMap>
+
+	<resultMap type="ImageDTO" id="ImageResultMap">
+		<result column="IMAGE_ID" property="imageId" />
+		<result column="IMAGE_SAVED_NAME" property="imageSavedName" />
+		<result column="IMAGE_ORIGINAL_NAME"
+			property="imageOriginalName" />
+		<result column="POST_ID" property="postId" />
+	</resultMap>
+
+	<resultMap type="ReplyDTO" id="ReplyResultMap">
+		<result column="REPLY_ID" property="replyId" />
+		<result column="REPLY_CONTENT" property="replyContent" />
+		<result column="REPLY_CREATED_DATE" property="replyCreatedDate" />
+		<result column="REPLY_UPDATE_DATE" property="replyUpdateDate" />
+		<result column="POST_ID" property="postId" />
+		<result column="MEMBER_NO" property="memberNo" />
+	</resultMap>
+
+	<resultMap type="ReplyLikeDTO" id="ReplyLikeResultMap">
+		<result column="REPLY_LIKE_ID" property="replyLikeId" />
+		<result column="REPLY_ID" property="replyId" />
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="REPLY_LIKE_CREATED_DATE"
+			property="replyLikeCreatedDate" />
+	</resultMap>
+
+	<resultMap type="BookmarkDTO" id="BookmarkResultMap">
+		<result column="BOOKMARK_ID" property="bookmarkId" />
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="POST_ID" property="postId" />
+		<result column="BOOKMARK_CREATED_DATE"
+			property="bookmarkCreatedDate" />
+	</resultMap>
+
+	<!-- <<<<Create>>> -->
+	<!-- SNS 게시글 작성 -->
+	<insert id="insertPost" parameterType="PostDTO"
+		useGeneratedKeys="true" keyColumn="POST_ID" keyProperty="no">
+		INSERT INTO
+		POST (
+		POST_ID,
+		POST_CONTENT,
+		POST_CREATE_DATE,
+		POST_UPDATE_DATE,
+		MEMBER_NO
+		) VALUES(
+		SEQ_POST_ID.NEXTVAL,
+		#{postContent},
+		DEFAULT,
+		DEFAULT,
+		#{memberNo}
+		)
+	</insert>
+	<!-- 이미지 삽입 -->
+	<insert id="insertImage" parameterType="ImageDTO"
+		useGeneratedKeys="true" keyColumn="IMAGE_ID" keyProperty="no">
+		INSERT INTO
+		IMAGE (
+		IMAGE_ID,
+		IMAGE_SAVED_NAME,
+		IMAGE_ORIGINAL_NAME,
+		POST_ID
+		) VALUES(
+		SEQ_IMAGE_ID.NEXTVAL,
+		#{imageSavedName},
+		#{imageOriginalName},
+		#{postId}
+		)
+	</insert>
+	<!-- 좋아요 누르면 -->
+	<insert id="insertLike" parameterType="PostLikeDTO"
+		useGeneratedKeys="true" keyColumn="POST_LIKE_ID" keyProperty="no">
+		INSERT
+		INTO
+		POST_LIKE (
+		POST_LIKE_ID,
+		POST_ID,
+		MEMBER_NO,
+		POST_LIKE_CREATED_DATE
+		)
+		VALUES(
+		SEQ_POST_LIKE_ID.NEXTVAL,
+		#{postId},
+		#{memberNo},
+		DEFAULT
+		)
+	</insert>
+
+	<!-- SNS 게시글 해시태그 작성 -->
+	<insert id="insertHashtag" parameterType="PostHashtagDTO"
+		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID" keyProperty="no">
+		INSERT
+		INTO
+		POST_HASHTAG (
+		POST_HASHTAG_ID,
+		POST_ID,
+		POST_HASHTAG
+		)
+		VALUES(
+		SEQ_POST_HASHTAG_ID.NEXTVAL,
+		#{postId},
+		#{postHashtag}
+		)
+	</insert>
+
+	<!-- 댓글 작성 -->
+	<insert id="insertReply" parameterType="ReplyDTO"
+		useGeneratedKeys="true" keyColumn="REPLY_ID" keyProperty="no">
+		INSERT
+		INTO
+		REPLY (
+		REPLY_ID,
+		REPLY_CONTENT,
+		REPLY_CREATED_DATE,
+		REPLY_UPDATE_DATE,
+		POST_ID,
+		MEMBER_NO
+		)
+		VALUES(
+		SEQ_REPLY_ID.NEXTVAL,
+		#{replyContent},
+		DEFAULT,
+		DEFAULT,
+		#{postId},
+		#{memberNo}
+		)
+	</insert>
+
+	<!-- 댓글 좋아요 -->
+	<insert id="insertReplyLike" parameterType="ReplyLikeDTO"
+		useGeneratedKeys="true" keyColumn="REPLY_LIKE_ID" keyProperty="no">
+		INSERT
+		INTO
+		REPLY_LIKE (
+		REPLY_LIKE_ID,
+		REPLY_ID,
+		MEMBER_NO,
+		REPLY_LIKE_CREATED_DATE
+		)
+		VALUES(
+		SEQ_REPLY_LIKE_ID.NEXTVAL,
+		#{replyId},
+		#{memberNo},
+		DEFAULT
+		)
+	</insert>
+
+	<!-- 북마크 -->
+	<insert id="insertBookmark" parameterType="BookmarkDTO"
+		useGeneratedKeys="true" keyColumn="BOOKMARK_ID" keyProperty="no">
+		INSERT
+		INTO
+		BOOKMARK (
+		BOOKMARK_ID,
+		MEMBER_NO,
+		POST_ID,
+		BOOKMARK_CREATED_DATE
+		)
+		VALUES(
+		SEQ_BOOKMARK_ID.NEXTVAL,
+		#{memberNo},
+		#{postId},
+		DEFAULT
+		)
+	</insert>
+
+	<!-- <<<LIST, READ>>> -->
+	<!-- POST 전체조회 -->
+	<select id="selectAllPost" resultMap="postResultMap">
+		SELECT * FROM POST
+	</select>
+	
+	<!-- 특정 게시물 닉네임으로 조회 -->
+<!-- 	<select id="findByNickname" resultMap="postResultMap"
+		parameterType="String">
+		SELECT p.POST_ID,
+		p.POST_CONTENT,
+		p.POST_CREATE_DATE,
+		p.POST_UPDATE_DATE,
+		m.MEMBER_NICKNAME
+		FROM POST p, MEMBER m
+		WHERE p.MEMBER_NO = m.MEMBER_NO
+		AND
+		m.MEMBER_NICKNAME like '%' || #{nickName} || '%'
+	</select> -->
+	<!-- 게시물 상세조회  -->	
+	<select id="readPost" resultMap="postResultMap"
+		parameterType="int">
+		SELECT *
+		FROM POST
+		WHERE POST_ID = #{postId}
+	</select>	
+	
+	<!-- 특정 게시물 내용으로 조회 -->
+	<select id="findByContent" resultMap="postResultMap"
+		parameterType="String">
+		SELECT *
+		FROM POST
+		WHERE POST_CONTENT like '%' ||
+		#{postContent} || '%'
+	</select>
+	<!-- 게시물 해시태그로 조회 -->
+	<select id="findByHashtag" resultMap="postResultMap"
+		parameterType="String">
+		SELECT p.*
+		FROM POST p, POST_HASHTAG h
+		WHERE p.POST_ID = h.POST_ID
+		AND POST_HASHTAG like '%' || #{postHashtag} || '%'
+	</select>
+
+	<!-- 탐색(이미지 검색 id값을 랜덤하게 넣자[이미지 숫자 counting도 해야되나...]) -->
+	<select id="findImageById" resultMap="ImageResultMap"
+		parameterType="int">
+		SELECT i.*
+		FROM IMAGE i, POST p
+		WHERE i.POST_ID =
+		p.POST_ID
+		AND i.IMAGE_ID like '%' || #{imageId} || '%'
+	</select>
+	<!-- 알림 고민 중... -->
+
+	<!-- <<<UPDATE>>> -->
+	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->
+	<select id="postUpdate" resultMap="postResultMap">
+		UPDATE POST
+		SET POST_CONTENT = #{postContent}
+		WHERE POST_ID = #{postId}
+		AND MEMBER_NO = #{memberNo}
+	</select>
+	<!-- SNS 해시태그 수정 -->
+	<select id="hashtagUpdate" resultMap="postHashtagResultMap">
+		UPDATE POST_HASHTAG
+		SET POST_HASHTAG = #{postHashtag}
+		WHERE POST_HASHTAG_ID = #{postHashtagId}
+		AND POST_ID = #{postId}
+	</select>
+	<!-- SNS 댓글 수정 -->
+	<select id="replyUpdate" resultMap="ReplyResultMap">
+		UPDATE REPLY
+		SET REPLY_CONTENT = #{replyContent}
+		WHERE REPLY_ID = #{postId}
+		AND POST_ID = #{postId}
+		AND MEMBER_NO = #{memberNo}
+	</select>
+
+	<!-- <<<DELETE>>> -->
+	<!-- 우선 자식테이블부터 차근차근 올라가보자 -->
+	<!-- 북마크 삭제 -->
+	<select id="deleteBookmark" parameterType="int">
+		DELETE FROM BOOKMARK
+		WHERE
+		BOOKMARK_ID = #{bookmarkId}
+	</select>
+	<!-- 댓글 좋아요 삭제 -->
+	<select id="deleteReplyLike" parameterType="int">
+		DELETE FROM
+		REPLY_LIKE
+		WHERE
+		REPLY_LIKE_ID = #{replyLikeId}
+	</select>
+	<!-- 게시글 좋아요 삭제 -->
+	<select id="deletePostLike" parameterType="int">
+		DELETE FROM POST_LIKE
+		WHERE
+		POST_LIKE_ID = #{postLikeId}
+	</select>
+	<!-- 게시글 해시태그 삭제 -->
+	<select id="deletePostHashtag" parameterType="int">
+		DELETE FROM
+		POST_HASHTAG
+		WHERE
+		POST_HASHTAG_ID = #{postHashtagId}
+	</select>
+	<!-- 댓글 삭제 -->
+	<select id="deleteReply" parameterType="int">
+		DELETE FROM REPLY
+		WHERE
+		REPLY_ID = #{replyId}
+	</select>
+	<!-- 이미지 삭제 -->
+	<select id="deleteImage" parameterType="int">
+		DELETE FROM IMAGE
+		WHERE
+		IMAGE_ID = #{imageId}
+	</select>
+	<!-- 게시글 삭제 -->
+	<select id="deletePost" parameterType="int">
+		DELETE FROM POST
+		WHERE
+		POST_ID = #{postId}
+	</select>
+</mapper>
