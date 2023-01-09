@@ -95,12 +95,11 @@ public class MailSendServiceImpl implements MailSendService{
 		int result = 0;
 		
 		member.setPassword(passwordEncoder.encode(pw));
-		System.out.println("임시비밀번호 지정 : " + member);
 		result = mapper.updatePassword(member);
 			
 		return result;
 	}
-
+	//임시비밀번호 이메일 발송
 	@Override
 	public void sendTmpPwdEmail(String email, Member member, String pw) {
 		String setFrom = ".com"; 

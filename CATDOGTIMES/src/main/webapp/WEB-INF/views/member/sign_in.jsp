@@ -337,6 +337,18 @@
 	   
 	    //임시비밀번호 발급
 		$("#btn-find-pw").click(function(){
+			const email = $('#find_pw_email').val(); // 이메일 주소값
+			const id = $('#find_pw_id'); // 아이디 값
+			let emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			if (email == "") {
+				Swal.fire('이메일을 입력해주세요.')
+				return false;
+			}else if(id == ""){
+				Swal.fire('아이디를 입력해주세요.')
+			}else if(!emailExpression.test(email)){
+				Swal.fire('이메일 형식에 맞게 입력해주세요.')
+				return false;
+			}
 			$.ajax({
 				url : "${ path }/member/findPw",
 				type : "POST",
@@ -350,7 +362,9 @@
 			                	  icon: 'success',
 			                	  title: '전송 성공!',
 			                      html: '임시비밀번호가 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
-			                	})
+			                	}).then(function() {
+			                	    window.location.reload();
+			                	});
 		               } else {
 		            	   Swal.fire({
 			                	  icon: 'error',
