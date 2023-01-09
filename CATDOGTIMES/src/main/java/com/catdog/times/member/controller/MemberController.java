@@ -96,12 +96,14 @@ public class MemberController {
 			Map<String, String> tokenMap = jwtService.createToken(user);
 			String accessToken = tokenMap.get("accessToken");
 			String refreshToken = tokenMap.get("refreshToken");
-			Cookie cookie = new Cookie("token", accessToken);
-			cookie.setMaxAge(60*60*24); //하루
+//			Cookie cookie = new Cookie("token", accessToken);
+//			cookie.setMaxAge(60*60*24); //하루
 			
 			return ResponseEntity.status(HttpStatus.FOUND)
-		             .header("Location", "http://localhost:3000/post")
-		             .body(cookie);
+					             .header("Location", "http://localhost:3000/post")
+					             .header("REFRESH_TOKEN", refreshToken)
+					             .header("ACCESS_TOKEN", accessToken)
+					             .body(null);
 		} else {
 			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
 			model.addObject("location", "/member/login");
@@ -251,6 +253,28 @@ public class MemberController {
 		}
 	
 		return result;
+	}
+	
+    @PostMapping("/member/findPw")
+    @ResponseBody
+    public Map<String, Object> findIdPw(Member member, @RequestParam("email") String email) throws Exception{
+		int result = 0;
+		String tmpPw = null;
+		Map<String, Object> map = new HashMap<>();
+		
+		tmpPw = mailService.createTmpPassword(member, tmpPw);
+		// 임시 비밀번호를 발급받지 못한 경우
+		if(tmpPw == null) { 
+			map.put("result", 0);
+			return map;
+		}else {
+			result = mailService.setTmpPassword(member, tmpPw);
+			if (result > 0) {
+				mailService.sendTmpPwdEmail(email, member, tmpPw);
+				map.put("result", result);
+			}
+			return map;
+		}
 	}
 	
 //    @GetMapping("/member/kakaoLogin")

@@ -126,16 +126,19 @@
     .login__button:hover {
       background-color: #65bf97;
     }
-    .login__account, .login__signin, .login__signup {
+    .login__account, .login__signin, .login__signup, .find__id, .find__pw{
       font-weight: 600;
       font-size: 0.813rem;
     }
-    .login__account--account, .login__signin--account, .login__signup--account {
+    .login__account--account, .login__signin--account, .login__signup--account, .find__id, .find__pw {
       color: #23004d;
     }
-    .login__account--signin, .login__account--signup, .login__signin--signin, .login__signin--signup, .login__signup--signin, .login__signup--signup {
+    .login__account--signin, .login__account--signup, .login__signin--signin, .login__signin--signup, .login__signup--signin, .login__signup--signup, .find__id, .find__pw {
       color: #4AD395;
       cursor: pointer;
+    }
+    .find__pw, .find__id{
+      float:right;
     }
     .login__social {
       margin-top: 2rem;

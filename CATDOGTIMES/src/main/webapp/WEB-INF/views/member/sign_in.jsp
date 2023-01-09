@@ -57,9 +57,11 @@
           </div>
           <div class="login__box">
             <i class='bx bx-lock login__icon'></i>
-            <input type="text" placeholder="Password" class="login__input" id="password" name="password">
+            <input type="password" placeholder="Password" class="login__input" id="password" name="password">
           </div>
-          <a href="#" class="login__forgot">비밀번호 찾기</a>
+          
+          <span class="find__pw" id="find-pw-span">/비밀번호 찾기</span>
+          <span class="find__id" id="find-id-span">아이디</span>
           
           <a href="#" class="login__button" onclick="return login()">로그인</a> <!-- return받은 값이 true이면 제출 -->
           
@@ -158,6 +160,32 @@
           </div>
           
         </form>
+      	
+      	<!-- 아이디 찾기 폼 -->
+        <form action="${ path }/member/findId" method="POST" class="login__register none" id="find-id">
+          <h1 class="login__title">아이디 찾기</h1>
+          <div class="login__box">
+            <input type="text" placeholder="email" class="login__input" name="email">
+          </div>
+          <span class="login__signup login__signup--signup" onClick="window.location.reload()">로그인</span>
+          
+          <a href="#" class="login__button">아이디 찾기</a>
+        </form> 
+      	
+      	<!-- 비밀번호 찾기 폼 -->
+      	<form class="login__register none" id="find-pw">
+          <h1 class="login__title">비밀번호 재발급</h1>
+          <div class="login__box">
+            <input type="text" placeholder="아이디" class="login__input" id="find_pw_id" name="id">
+          </div>
+          <div class="login__box">
+            <input type="text" placeholder="이메일" class="login__input" id="find_pw_email" name="email">
+          </div>
+          <span class="login__signup login__signup--signup" onClick="window.location.reload()">로그인</span>
+          
+          <a href="#" class="login__button" id="btn-find-pw">임시비밀번호 발급</a>
+        </form> 
+      	
       </div>
     </div>
    </div>
@@ -306,7 +334,36 @@
 			 $("[name=emailCheckValue]").val("0");
 		  }
 		});
-
+	   
+	    //임시비밀번호 발급
+		$("#btn-find-pw").click(function(){
+			$.ajax({
+				url : "${ path }/member/findPw",
+				type : "POST",
+				data : {
+					id : $("#find_pw_id").val(),
+					email : $("#find_pw_email").val()
+				},
+				success: (obj) => {
+		               if(obj.result === 1) {
+		            	   Swal.fire({
+			                	  icon: 'success',
+			                	  title: '전송 성공!',
+			                      html: '임시비밀번호가 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
+			                	})
+		               } else {
+		            	   Swal.fire({
+			                	  icon: 'error',
+			                	  title: '전송 실패!',
+			                	  html: '아이디 또는 이메일을 제대로 입력했는지 확인해주시길 바랍니다.'
+			                	})
+		               }
+		            }, 
+		            error: (error) => {
+		               console.log(error);
+		            }
+		     });
+		 });
    </script>   
 </body>
 

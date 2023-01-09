@@ -30,4 +30,7 @@ public interface MemberMapper {
     
     //snsId로 회원 아이디찾기
     String findMemberBySnsId(String memberSnsId);
+    
+    //임시비밀번호로 변경
+	int updatePassword(Member member);
 }

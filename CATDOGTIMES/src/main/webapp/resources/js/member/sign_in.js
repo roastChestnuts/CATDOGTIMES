@@ -1,25 +1,64 @@
 	  
-      const signup = document.getElementById("sign-up");
-      signin = document.getElementById("sign-in");
-      loginin = document.getElementById("login-in");
-      loginup = document.getElementById("login-up");
+const signup = document.getElementById("sign-up"); //회원가입(앵커)
+      signin = document.getElementById("sign-in"); 		 //로그인(앵커)
+      findidspan = document.getElementById("find-id-span"); 		 //아이디 찾기(앵커)
+      findpwspan = document.getElementById("find-pw-span"); 		 //비밀번호 찾기(앵커)
+      //비밀번호 찾기
+      loginin = document.getElementById("login-in");     //로그인 폼
+      loginup = document.getElementById("login-up");     //회원가입 폼
+      findid = document.getElementById("find-id");     //아이디 찾기 폼
+      findpw = document.getElementById("find-pw");     //비밀번호 찾기 폼
       
       signup.addEventListener("click", () => {
-          loginin.classList.remove("block");
           loginup.classList.remove("none");
-      
-          loginin.classList.add("none");
+          loginin.classList.remove("block");
+		  findid.classList.remove("block");
+		  findpw.classList.remove("block");
+          
+          findid.classList.add("none");   
+          findpw.classList.add("none");
+          loginin.classList.add("none");   
           loginup.classList.add("block");
       })
       
       signin.addEventListener("click", () => {
           loginin.classList.remove("none");
           loginup.classList.remove("block");
+          findid.classList.remove("block");
+          findpw.classList.remove("block");
       
-      
-          loginin.classList.add("block");
+          findpw.classList.add("none");
+          findid.classList.add("none");
           loginup.classList.add("none");
+          loginin.classList.add("block");
+      })
+      
+      findidspan.addEventListener("click", () => {
+          findid.classList.remove("none");
+          loginin.classList.remove("block");
+          loginup.classList.remove("block");
+          findpw.classList.remove("block");
+      
+          findpw.classList.add("none");
+          loginup.classList.add("none");
+          loginin.classList.add("none");
+          findid.classList.add("block");
       })	
+      
+      findpwspan.addEventListener("click", () => {
+          findpw.classList.remove("none");
+          loginin.classList.remove("block");
+          loginup.classList.remove("block");
+          findid.classList.remove("block");
+          
+          findid.classList.add("none");
+          loginup.classList.add("none");
+          loginin.classList.add("none");
+          findpw.classList.add("block");
+      })
+      
+
+      
  	  //로그인 폼 제출 이벤트     
       function login() {
 		if(document.getElementById("id").value==''){
@@ -263,4 +302,6 @@
 			//==================================
 	  		document.getElementById('login-up').submit();
 	   }
+	   
+	   
     
