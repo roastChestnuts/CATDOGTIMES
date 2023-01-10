@@ -99,6 +99,19 @@ public class MailSendServiceImpl implements MailSendService{
 			
 		return result;
 	}
+	//아이디 이메일 발송
+	@Override
+	public void sendIdEmail(String email, String id) {
+		String setFrom = ".com"; 
+		String toMail = email;
+		String title = "멍냥일보 아이디정보 입니다."; 
+		String content = 
+                "<br><br>" + 
+			    "회원님의 아이디는 " + id + "입니다." + 
+			    "<br>";
+		mailSend(setFrom, toMail, title, content);		
+	}
+	
 	//임시비밀번호 이메일 발송
 	@Override
 	public void sendTmpPwdEmail(String email, Member member, String pw) {

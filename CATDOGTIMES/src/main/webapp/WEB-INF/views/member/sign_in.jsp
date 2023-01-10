@@ -162,14 +162,14 @@
         </form>
       	
       	<!-- 아이디 찾기 폼 -->
-        <form action="${ path }/member/findId" method="POST" class="login__register none" id="find-id">
+        <form class="login__register none" id="find-id">
           <h1 class="login__title">아이디 찾기</h1>
           <div class="login__box">
-            <input type="text" placeholder="email" class="login__input" name="email">
+            <input type="text" placeholder="email" class="login__input" id="find_id_email" name="email">
           </div>
           <span class="login__signup login__signup--signup" onClick="window.location.reload()">로그인</span>
           
-          <a href="#" class="login__button">아이디 찾기</a>
+          <a href="#" class="login__button" id="btn-find-id">아이디 찾기</a>
         </form> 
       	
       	<!-- 비밀번호 찾기 폼 -->
@@ -334,7 +334,49 @@
 			 $("[name=emailCheckValue]").val("0");
 		  }
 		});
-	   
+
+	    //아이디 찾기
+		$("#btn-find-id").click(function(){
+			const email = $('#find_id_email').val(); // 이메일 주소값
+
+			let emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			
+			if (email == "") {
+				Swal.fire('이메일을 입력해주세요.')
+				return false;
+			}else if(!emailExpression.test(email)){
+				Swal.fire('이메일 형식에 맞게 입력해주세요.')
+				return false;
+			}
+			$.ajax({
+				url : "${ path }/member/findId",
+				type : "POST",
+				data : {
+					email
+				},
+				success: (obj) => {
+		               if(obj.result === 1) {
+		            	   Swal.fire({
+			                	  icon: 'success',
+			                	  title: '전송 성공!',
+			                      html: '회원님의 아이디가 메일로 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
+			                	}).then(function() {
+			                	    window.location.reload();
+			                	});
+		               } else {
+		            	   Swal.fire({
+			                	  icon: 'error',
+			                	  title: '전송 실패!',
+			                	  html: '이메일을 제대로 입력했는지 확인해주시길 바랍니다.'
+			                	})
+		               }
+		            }, 
+		            error: (error) => {
+		               console.log(error);
+		            }
+		     });
+		 });
+	    
 	    //임시비밀번호 발급
 		$("#btn-find-pw").click(function(){
 			const email = $('#find_pw_email').val(); // 이메일 주소값
@@ -361,7 +403,7 @@
 		            	   Swal.fire({
 			                	  icon: 'success',
 			                	  title: '전송 성공!',
-			                      html: '임시비밀번호가 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
+			                      html: '임시비밀번호가 메일로 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
 			                	}).then(function() {
 			                	    window.location.reload();
 			                	});

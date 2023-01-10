@@ -15,4 +15,6 @@ public interface MailSendService {
 	public int setTmpPassword(Member member, String pw);
 	//임시 비밀번호 메일 전송
 	public void sendTmpPwdEmail(String email, Member member, String tmpPw);
+	//아이디 메일 전송
+	void sendIdEmail(String email, String id);
 }

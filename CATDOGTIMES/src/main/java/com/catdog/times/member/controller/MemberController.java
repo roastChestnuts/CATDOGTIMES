@@ -255,9 +255,27 @@ public class MemberController {
 		return result;
 	}
 	
+    @PostMapping("/member/findId")
+    @ResponseBody
+    public Map<String, Object> findId(@RequestParam("email") String email) throws Exception{
+		String id = null;
+		Map<String, Object> map = new HashMap<>();
+		id = service.findMemberByEmail(email);
+		
+		// 임시 비밀번호를 발급받지 못한 경우
+		if(id == null) { 
+			map.put("result", 0); //실패
+			return map;
+		}else {
+			mailService.sendIdEmail(email, id);
+			map.put("result", 1); //성공
+			return map;
+		}
+	}
+	
     @PostMapping("/member/findPw")
     @ResponseBody
-    public Map<String, Object> findIdPw(Member member, @RequestParam("email") String email) throws Exception{
+    public Map<String, Object> findPw(Member member, @RequestParam("email") String email) throws Exception{
 		int result = 0;
 		String tmpPw = null;
 		Map<String, Object> map = new HashMap<>();
@@ -265,7 +283,7 @@ public class MemberController {
 		tmpPw = mailService.createTmpPassword(member, tmpPw);
 		// 임시 비밀번호를 발급받지 못한 경우
 		if(tmpPw == null) { 
-			map.put("result", 0);
+			map.put("result", result);
 			return map;
 		}else {
 			result = mailService.setTmpPassword(member, tmpPw);

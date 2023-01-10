@@ -182,6 +182,15 @@
 		SELECT MEMBER_ID 
 		  FROM MEMBER 
 		 WHERE MEMBER_SNS_ID = #{snsId}
+		   AND MEMBER_IS = 'Y'
+	</select>
+	<!-- email로 회원조회 -->
+	<select id="findMemberByEmail" parameterType="String" resultType="String">
+		SELECT MEMBER_ID 
+		  FROM MEMBER 
+		 WHERE MEMBER_EMAIL = #{email}
+		   AND MEMBER_IS = 'Y'
+		   AND MEMBER_SNS_ID IS NULL
 	</select>
 	<!-- 임시비밀번호 업데이트-->
 	<update id="updatePassword" parameterType="Member">
