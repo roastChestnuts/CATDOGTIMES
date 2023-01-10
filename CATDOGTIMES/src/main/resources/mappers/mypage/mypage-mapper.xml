@@ -15,8 +15,13 @@
 		<result column="MEMBER_TYPE" property="memberType"/>
 		<result column="MEMBER_WARN" property="memberWarn"/>
 		<result column="MEMBER_CREATE_DATE" property="memberCreateDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
 		<result column="MEMBER_PHOTO" property="memberPhoto"/>
 		<result column="MEMBER_ADDRESS" property="memberAddress"/>
+		<result column="MEMBER_ZIPCODE" property="memberZipcode"/>
+		<result column="MEMBER_DETAIL_ADDRESS" property="memberDetailAddress"/>
+		<result column="MEMBER_SNS_ID" property="memberSnsId"/>
+		
 		<result column="POST_TOTAL" property="postTotal"/>
 		<result column="FOLLOWER_CNT" property="followerCnt"/>
 		<result column="FOLLOWING_CNT" property="followingCnt"/>
@@ -42,9 +47,12 @@
 		     , M.MEMBER_TYPE
 		     , M.MEMBER_WARN
 		     , M.MEMBER_CREATE_DATE
-		     , M.MEMBER_PHOTO
+		     , M.MODIFY_DATE
+		     , NVL(M.MEMBER_PHOTO,'undefined.jpg')       AS MEMBER_PHOTO
 		     , M.MEMBER_ADDRESS
-		     
+		     , M.MEMBER_ZIPCODE
+		     , M.MEMBER_DETAIL_ADDRESS
+		     , M.MEMBER_SNS_ID
 		     , (SELECT COUNT(POST_ID)
                   FROM POST P
                  WHERE P.MEMBER_NO = M.MEMBER_NO ) AS POST_TOTAL 
@@ -83,5 +91,23 @@
         </otherwise>
       </choose>
 	</select>
+	
+	
+	<update id="updateMemberInfo" parameterType="MypageDTO">
+		UPDATE MEMBER
+		SET
+			MEMBER_PW = NVL(#{memberPw}, MEMBER_PW),
+			MEMBER_NAME = NVL(#{memberName},MEMBER_NAME),
+			MEMBER_GENDER = NVL(#{memberGender},MEMBER_GENDER),
+			MEMBER_NICKNAME = NVL(#{memberNickname},MEMBER_NICKNAME),
+			MEMBER_EMAIL = NVL(#{memberEmail},MEMBER_EMAIL),
+			MEMBER_PHOTO = NVL(#{memberPhoto},MEMBER_PHOTO),
+			MEMBER_ADDRESS = NVL(#{memberAddress},MEMBER_ADDRESS),
+			MODIFY_DATE = SYSDATE
+		WHERE
+			MEMBER_NO = #{memberNo}
+	</update>
+		
+	
 
 </mapper>

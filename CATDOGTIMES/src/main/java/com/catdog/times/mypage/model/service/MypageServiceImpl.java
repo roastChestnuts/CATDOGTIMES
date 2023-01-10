@@ -25,6 +25,11 @@ public class MypageServiceImpl implements MypageService {
 	public List<PostContentDTO> selectPostContent(Map<String,Object> map) {
 		return mapper.selectPostContent(map);
 	}
+
+	@Override
+	public int updateMemberInfo(MypageDTO mypagedto) {
+		return mapper.updateMemberInfo(mypagedto);
+	}
 	
 
 }

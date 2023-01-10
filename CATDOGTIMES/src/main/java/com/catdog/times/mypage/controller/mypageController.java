@@ -1,5 +1,6 @@
 package com.catdog.times.mypage.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
@@ -79,9 +78,12 @@ public class mypageController {
 	}
 
 	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
-	public MypageDTO memberinfo(ModelAndView mdel, @RequestBody Map<String,Object> body) {		
-		logger.info("리액트에서 요청오면, 회원정보 스타트");				
-		return null;
+	public MypageDTO memberinfoUpdate(@RequestBody MypageDTO mypage) throws IllegalStateException, IOException {		
+		logger.info("리액트에서 정보 수정 요청오면, 회원정보 수정 스타트"+mypage.toString());   
+		service.updateMemberInfo(mypage);
+		MypageDTO result = service.findByID(mypage.getMemberId());
+		logger.info("정보수정 후 memberinfo 로 이동");
+		return result;
 	}
 	
 	

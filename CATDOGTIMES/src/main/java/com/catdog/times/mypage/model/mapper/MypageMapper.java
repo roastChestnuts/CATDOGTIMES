@@ -13,4 +13,6 @@ import com.catdog.times.mypage.model.dto.PostContentDTO;
 public interface MypageMapper {
 	MypageDTO findByID(String memberId);	
 	List<PostContentDTO> selectPostContent(Map<String,Object> map);
+	int updateMemberInfo(MypageDTO mypagedto);
+	
 }

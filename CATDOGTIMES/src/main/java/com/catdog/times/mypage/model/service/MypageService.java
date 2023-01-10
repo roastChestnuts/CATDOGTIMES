@@ -9,4 +9,5 @@ import com.catdog.times.mypage.model.dto.PostContentDTO;
 public interface MypageService {
 	MypageDTO findByID(String memberId);
 	List<PostContentDTO> selectPostContent(Map<String,Object> map);
+	int updateMemberInfo(MypageDTO mypagedto);
 }
