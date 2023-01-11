@@ -61,7 +61,7 @@
 	<!-- <<<<Create>>> -->
 	<!-- SNS 게시글 작성 -->
 	<insert id="insertPost" parameterType="PostDTO"
-		useGeneratedKeys="true" keyColumn="POST_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="POST_ID" keyProperty="postId">
 		INSERT INTO
 		POST (
 		POST_ID,
@@ -79,7 +79,7 @@
 	</insert>
 	<!-- 이미지 삽입 -->
 	<insert id="insertImage" parameterType="ImageDTO"
-		useGeneratedKeys="true" keyColumn="IMAGE_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="IMAGE_ID" keyProperty="imageId">
 		INSERT INTO
 		IMAGE (
 		IMAGE_ID,
@@ -95,7 +95,7 @@
 	</insert>
 	<!-- 좋아요 누르면 -->
 	<insert id="insertLike" parameterType="PostLikeDTO"
-		useGeneratedKeys="true" keyColumn="POST_LIKE_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="POST_LIKE_ID" keyProperty="postLikeId">
 		INSERT
 		INTO
 		POST_LIKE (
@@ -114,7 +114,7 @@
 
 	<!-- SNS 게시글 해시태그 작성 -->
 	<insert id="insertHashtag" parameterType="PostHashtagDTO"
-		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID" keyProperty="postHashtagId">
 		INSERT
 		INTO
 		POST_HASHTAG (
@@ -131,7 +131,7 @@
 
 	<!-- 댓글 작성 -->
 	<insert id="insertReply" parameterType="ReplyDTO"
-		useGeneratedKeys="true" keyColumn="REPLY_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="REPLY_ID" keyProperty="replyId">
 		INSERT
 		INTO
 		REPLY (
@@ -154,7 +154,7 @@
 
 	<!-- 댓글 좋아요 -->
 	<insert id="insertReplyLike" parameterType="ReplyLikeDTO"
-		useGeneratedKeys="true" keyColumn="REPLY_LIKE_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="REPLY_LIKE_ID" keyProperty="replyLikeId">
 		INSERT
 		INTO
 		REPLY_LIKE (
@@ -173,7 +173,7 @@
 
 	<!-- 북마크 -->
 	<insert id="insertBookmark" parameterType="BookmarkDTO"
-		useGeneratedKeys="true" keyColumn="BOOKMARK_ID" keyProperty="no">
+		useGeneratedKeys="true" keyColumn="BOOKMARK_ID" keyProperty="bookmarkId">
 		INSERT
 		INTO
 		BOOKMARK (
@@ -246,73 +246,74 @@
 	<!-- 알림 고민 중... -->
 
 	<!-- <<<UPDATE>>> -->
+	<!-- 이거 <update>로 해줘야할 것 같은데... -->
 	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->
-	<select id="postUpdate" resultMap="postResultMap">
+	<update id="postUpdate" parameterType="map">
 		UPDATE POST
 		SET POST_CONTENT = #{postContent}
 		WHERE POST_ID = #{postId}
 		AND MEMBER_NO = #{memberNo}
-	</select>
+	</update>
 	<!-- SNS 해시태그 수정 -->
-	<select id="hashtagUpdate" resultMap="postHashtagResultMap">
+	<update id="hashtagUpdate" parameterType="map">
 		UPDATE POST_HASHTAG
 		SET POST_HASHTAG = #{postHashtag}
 		WHERE POST_HASHTAG_ID = #{postHashtagId}
 		AND POST_ID = #{postId}
-	</select>
+	</update>
 	<!-- SNS 댓글 수정 -->
-	<select id="replyUpdate" resultMap="ReplyResultMap">
+	<update id="replyUpdate" parameterType="map">
 		UPDATE REPLY
 		SET REPLY_CONTENT = #{replyContent}
 		WHERE REPLY_ID = #{postId}
 		AND POST_ID = #{postId}
 		AND MEMBER_NO = #{memberNo}
-	</select>
+	</update>
 
 	<!-- <<<DELETE>>> -->
 	<!-- 우선 자식테이블부터 차근차근 올라가보자 -->
 	<!-- 북마크 삭제 -->
-	<select id="deleteBookmark" parameterType="int">
+	<delete id="deleteBookmark" parameterType="int">
 		DELETE FROM BOOKMARK
 		WHERE
 		BOOKMARK_ID = #{bookmarkId}
-	</select>
+	</delete>
 	<!-- 댓글 좋아요 삭제 -->
-	<select id="deleteReplyLike" parameterType="int">
+	<delete id="deleteReplyLike" parameterType="int">
 		DELETE FROM
 		REPLY_LIKE
 		WHERE
 		REPLY_LIKE_ID = #{replyLikeId}
-	</select>
+	</delete>
 	<!-- 게시글 좋아요 삭제 -->
-	<select id="deletePostLike" parameterType="int">
+	<delete id="deletePostLike" parameterType="int">
 		DELETE FROM POST_LIKE
 		WHERE
 		POST_LIKE_ID = #{postLikeId}
-	</select>
+	</delete>
 	<!-- 게시글 해시태그 삭제 -->
-	<select id="deletePostHashtag" parameterType="int">
+	<delete id="deletePostHashtag" parameterType="int">
 		DELETE FROM
 		POST_HASHTAG
 		WHERE
 		POST_HASHTAG_ID = #{postHashtagId}
-	</select>
+	</delete>
 	<!-- 댓글 삭제 -->
-	<select id="deleteReply" parameterType="int">
+	<delete id="deleteReply" parameterType="int">
 		DELETE FROM REPLY
 		WHERE
 		REPLY_ID = #{replyId}
-	</select>
+	</delete>
 	<!-- 이미지 삭제 -->
-	<select id="deleteImage" parameterType="int">
+	<delete id="deleteImage" parameterType="int">
 		DELETE FROM IMAGE
 		WHERE
 		IMAGE_ID = #{imageId}
-	</select>
+	</delete>
 	<!-- 게시글 삭제 -->
-	<select id="deletePost" parameterType="int">
+	<delete id="deletePost" parameterType="int">
 		DELETE FROM POST
 		WHERE
 		POST_ID = #{postId}
-	</select>
+	</delete>
 </mapper>
