@@ -441,7 +441,7 @@
     	//--------------------------------------------------
     	function clickSrchBtn(pageIdx){
     		var pageIdx = pageIdx;
-    		var cntPerPage = 1;
+    		var cntPerPage = 5;
 	    	// 검색 구분값
 	    	var srchType = $('#searchType').val();
 	    	
@@ -470,7 +470,6 @@
 	    		contentType:"json",
 	    		data:param,
 	    		success: function(data){
-	    			console.log(data);
 	    			memberArrayList = data;
 	    			$('#memberTable').html("");
 	    			$('#pagingArea').html("");
@@ -605,7 +604,6 @@
     	    		contentType:'application/json',
     	    		dataType: 'text',
     	    		success: function(data){
-    	    			console.log('result ::::::::: ' , data);
     	    			// 사용자 목록 조회 함수 호출
     	    			clickSrchBtn(nowPage);
     	    		},

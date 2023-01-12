@@ -89,57 +89,101 @@
         <div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
              <span style="font-size:30px;font-weight:bold;">대시보드</span><br/>
-             <span>멍냥일보 관리자 메인페이지 입니다. &nbsp; 현사이트 트래픽 수 분석 차트 및 실시간 현황들을 한눈에 볼 수 있습니다.</span>
-             <div class="row" style="padding-top:20px;">
+             <span>멍냥일보 관리자 메인페이지 입니다.</span>
+             <br><br>
+             <div>
+             	<span style="font-weight : bold;">최근 업데이트 : <span id="updateTime"></span></span>
+             </div>
+             <div class="row" style="padding-top:10px;">
              		<div class="col-xl-2">
                     	<div class="card mb-4">
                             <div class="card-header">
-                                총 유저 수
+                                가입자 수
                             </div> 
                             <div class="card-body">
-                            	<span>20,000</span><br>
+                            	<span>${totalList[0].totalMemberCnt}</span><br>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-2">
-                            	<div class="card mb-4">
-                                    <div class="card-header">
-                                        신규가입 회원 수
-                                    </div> 
-                                    <div class="card-body">
-                                    	<span>1,000</span><br>
-                                    </div>
-                                </div>
-                            </div>
+                   		<div class="card mb-4">
+                           <div class="card-header">
+                               등록된 산책경로 수
+                           </div> 
+                           <div class="card-body">
+                           		<span>${totalList[0].totalRouteCnt}</span><br>
+                           </div>
+                       	</div>
+                   	</div>
                     <div class="col-xl-2">
-                            	<div class="card mb-4">
-                                    <div class="card-header">
-                                        방문자 수
-                                    </div> 
-                                    <div class="card-body">
-                                    	<span>2,500</span><br>
-                                    </div>
-                                </div>
-                            </div>
-                   <div class="col-xl-2">
-                            	<div class="card mb-4">
-                                    <div class="card-header">
-                                        산책 매칭 수
-                                    </div> 
-                                    <div class="card-body">
-                                    	<span>777</span><br>
-                                    </div>
-                                </div>
-                            </div>                 
+                   		<div class="card mb-4">
+                           <div class="card-header">
+                               산책 매칭 수
+                           </div> 
+                           <div class="card-body">
+                           		<span>${totalList[0].totalPartyCnt}</span><br>
+                           </div>
+                       	</div>
+                   	</div>
+                    <div class="col-xl-2">
+                   		<div class="card mb-4">
+                           <div class="card-header">
+                               산책루트 평균 평점
+                           </div> 
+                           <div class="card-body">
+                           		<span>0</span><br>
+                           </div>
+                       	</div>
+                   	</div>
+                  	<div class="col-xl-2">
+                    	<div class="card mb-4">
+	                        <div class="card-header">
+	                           피드 수
+	                        </div> 
+	                        <div class="card-body">
+	                       		<span>${totalList[0].totalPostCnt}</span><br>
+	                        </div>
+                        </div>
+                     </div>                 
                         	<div class="col-xl-12">
                             	<div class="card mb-6">
                                     <div class="card-header">
-                                        웹사이트 트래픽 분석 차트 
+                                        <span>멍냥일보 서비스 연간 차트</span> 
+                                        <div style="display: contents;">
+                                    		<select class="admin_srchBox" style="width:150px;" id="yearVal">
+                                    			<option value="">2023</option>
+                                    			<option value="Y">2022</option>
+                                    			<option value="N">2021</option>
+                                    			<option value="N">2020</option>
+                                    			<option value="N">2019</option>
+                                    			<option value="N">2018</option>
+                                    		</select>
+                                    	</div>
                                     </div> 
                                     <div class="card-body">
-                                    	<span>==========차트 구현 영역입니다.==========</span><br>
-                                    	<br><br><br><br><br><br>
-                                    	<br><br><br><br><br><br>
+<!--                                     	<span>==========차트 구현 영역입니다.==========</span><br> -->
+<!--                                     	<br><br><br><br><br><br> -->
+<!--                                     	<br><br><br><br><br><br> -->
+                                    	<div id="yearlyChartDiv" style="height: 500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        	<div class="col-xl-12" style="padding-top:10px;">
+                            	<div class="card mb-6">
+                                    <div class="card-header">
+                                        <span>멍냥일보 서비스 일간 차트</span> 
+                                        <div style="display: contents;">
+                                    		<select class="admin_srchBox" style="width:150px;" id="yearVal">
+                                    			<option value="">최근 7일</option>
+                                    			<option value="">최근 30일</option>
+                                    		</select>
+                                    	</div>
+                                    </div> 
+                                    <div class="card-body">
+<!--                                     	<span>==========차트 구현 영역입니다.==========</span><br> -->
+<!--                                     	<br><br><br><br><br><br> -->
+<!--                                     	<br><br><br><br><br><br> -->
+                                    	<div id="dailyChartDiv" style="height: 500px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -361,6 +405,98 @@
     <script src="../js/js-cookie.min.js"></script>
     <script src="../js/jquery.countdown.min.js"></script>
     <script src="../js/interface.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+	    $(document).ready(function(){
+	    	
+	    	var date = new Date();
+	    	var today = dateFormat(date);
+	    	
+	    	$('#updateTime').text(today);
+	    	
+	    	google.charts.load('current', {'packages':['corechart']});
+	   	    google.charts.setOnLoadCallback(yearlyCatDogTimesChart);
+	   	    google.charts.setOnLoadCallback(dailyCatDogTimesChart);
+	    	
+		});
+	    
+	    // 현재 시간 포맷팅
+	 	function dateFormat(date){
+	 		  	let month = date.getMonth() + 1;
+	 	        let day = date.getDate();
+	 	        let hour = date.getHours();
+	 	        let minute = date.getMinutes();
+	 	        let second = date.getSeconds();
+
+	 	        month = month >= 10 ? month : '0' + month;
+	 	        day = day >= 10 ? day : '0' + day;
+	 	        hour = hour >= 10 ? hour : '0' + hour;
+	 	        minute = minute >= 10 ? minute : '0' + minute;
+	 	        second = second >= 10 ? second : '0' + second;
+
+	 	        return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+	 	}
+		
+	    // 연간 차트 함수
+	    function yearlyCatDogTimesChart() {
+	        // Some raw data (not necessarily accurate)
+	        var data = google.visualization.arrayToDataTable([
+	          ['Year/Month', '가입자', '산책경로', '산책매칭', '피드'],
+	          ['2023/01',  165,      938,         522,             998,   ],
+	          ['2023/02',  165,      938,         522,             998,   ],
+	          ['2023/03',  165,      938,         522,             998,   ],
+	          ['2023/04',  165,      938,         522,             998,   ],
+	          ['2023/05',  135,      1120,        599,             1268,  ],
+	          ['2023/06',  157,      1167,        587,             807,   ],
+	          ['2023/07',  139,      1110,        615,             968,   ],
+	          ['2023/08',  165,      938,         522,             998,   ],
+	          ['2023/09',  135,      1120,        599,             1268,  ],
+	          ['2023/10',  157,      1167,        587,             807,   ],
+	          ['2023/11',  139,      1110,        615,             968,   ],
+	          ['2023/12',  136,      691,         629,             1026,  ]
+	        ]);
+
+	        var options = {
+	          title : '',
+	          vAxis: {title: ''},
+	          hAxis: {title: ''},
+	          seriesType: 'bars',
+	          series: {5: {type: 'line'}}
+	        };
+
+	        var chart = new google.visualization.ComboChart(document.getElementById('yearlyChartDiv'));
+	        chart.draw(data, options);
+	      }
+	      
+	      // 일간 차트 함수
+	      function dailyCatDogTimesChart() {
+	    	 // 임시데이터
+	         var data = google.visualization.arrayToDataTable([
+		          ['daily', '가입자', '산책경로', '산책매칭', '피드'],
+		          ['2023-01-04',  1030,      540,  550, 600],
+		          ['2023-01-05',  1030,      540,  550, 600],
+		          ['2023-01-06',  1030,      540,  550, 600],
+		          ['2023-01-07',  1030,      540,  550, 600],
+		          ['2023-01-08',  660,       1120, 400, 400],
+		          ['2023-01-09',  1170,      460,  600, 800],
+		          ['2023-01-10',  1000,      400,  500, 300]
+		        ]);
+
+		        var options = {
+		          title: 'Company Performance',
+		          curveType: 'function',
+		          legend: { position: 'bottom' }
+		        };
+	        var chart = new google.visualization.LineChart(document.getElementById('dailyChartDiv'));
+	        chart.draw(data, options);
+	      }
+	      
+	      function getTotalValue(date){
+	    	  
+	    	  
+	    	  
+	      }
+    </script>
 </body>
 
 </html>
