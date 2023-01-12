@@ -33,11 +33,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member login(String id, String password) {
 		Member member = null;
-		System.out.println(id);
-		System.out.println(password);
+//		System.out.println(id);
+//		System.out.println(password);
 		member = this.findMemberById(id);
 		
-		System.out.println(member);
+//		System.out.println(member);
 		if(member != null && passwordEncoder.matches(password, member.getPassword())) {
 			return member;
 		} else {
@@ -109,6 +109,11 @@ public class MemberServiceImpl implements MemberService {
         return mapper.findMemberBySnsId(memberSnsId);
     }
     
+    @Override
+    public String findMemberByEmail(String memberEmail) {
+        log.info("snsId:: " + memberEmail);
+        return mapper.findMemberByEmail(memberEmail);
+    }
     
 
 }

@@ -63,6 +63,26 @@ public class mypageController {
 				
 		return mypagedto;
 	}
+	
+	@RequestMapping(value = "/memberPostSearch", method = RequestMethod.POST)
+	public List<PostContentDTO> memberPostSearch(String searchType, String memberNo) {	
+	//public MypageDTO memberPostSearch(String id) {	
+		logger.info("리액트에서 요청오면, memberPostSearch-" + searchType+ "-" + memberNo );
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("searchType", searchType);
+		map.put("memberNo", memberNo);		
+		
+		List<PostContentDTO> postcontentList = service.selectPostContent(map);		
+		logger.info(postcontentList.toString());
+				
+		return postcontentList;
+	}
 
+	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
+	public MypageDTO memberinfo(ModelAndView mdel, @RequestBody Map<String,Object> body) {		
+		logger.info("리액트에서 요청오면, 회원정보 스타트");				
+		return null;
+	}
+	
 	
 }

@@ -23,13 +23,23 @@ public class AdminServiceImpl implements AdminService {
 		return mapper.selectReplyList();
 	}	
 	//회원 정보 리스트 조회
-	@Override
-	public List<AdminDTO> selectMemberList() { 
-		return mapper.selectMemberList();
+	@Override 
+	public List<AdminDTO> selectMemberList(AdminDTO adminDTO) { 
+		return mapper.selectMemberList(adminDTO);
 	}
 	//게시글 리스트 조회 - 관리자 전용
 	@Override
-	public List<AdminDTO> selectBoardManageList() { 
-		return mapper.selectBoardManageList();
+	public List<AdminDTO> selectBoardManageList(AdminDTO adminDTO) { 
+		return mapper.selectBoardManageList(adminDTO); 
+	}
+	
+	@Override
+	public int updateMemberIs(AdminDTO adminDTO) { 
+		return mapper.updateMemberIs(adminDTO);  
+	}
+	
+	@Override
+	public int updatePostShowYn(AdminDTO adminDTO) { 
+		return mapper.updatePostShowYn(adminDTO);  
 	}
 }

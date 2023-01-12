@@ -2,12 +2,19 @@ package com.catdog.times.mypage.model.dto;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class PostContentDTO {
 
 	private int postId;
 	private String postContent;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	private Date postCreateDate;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	private Date postUpdateDate;
+	
 	private int memberNo;
 
 	public PostContentDTO() {}
