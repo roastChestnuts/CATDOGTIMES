@@ -18,7 +18,8 @@
 		       MEMBER_PHOTO,
 		       MEMBER_ADDRESS,
 		       MEMBER_ZIPCODE,
-		       MEMBER_DETAIL_ADDRESS
+		       MEMBER_DETAIL_ADDRESS,
+		       MEMBER_SNS_ID
 		FROM MEMBER
 	</sql>
 	
@@ -44,7 +45,8 @@
 	
 	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
 		<include refid="selectMemberSql"/>
-		WHERE MEMBER_ID = #{id} AND MEMBER_IS = 'Y'
+		WHERE MEMBER_ID = #{id} 
+		  AND MEMBER_IS = 'Y'
 	</select>
 	
 	<!-- 회원가입 -->
@@ -177,9 +179,23 @@
 	
 	<!-- snsid로 회원조회 -->
 	<select id="findMemberBySnsId" parameterType="String" resultType="String">
-		SELECT MEMBER_ID 
+		SELECT MEMBER_ID
 		  FROM MEMBER 
 		 WHERE MEMBER_SNS_ID = #{snsId}
+		   AND MEMBER_IS = 'Y'
 	</select>
-	
+	<!-- email로 회원조회 -->
+	<select id="findMemberByEmail" parameterType="String" resultType="String">
+		SELECT MEMBER_ID 
+		  FROM MEMBER 
+		 WHERE MEMBER_EMAIL = #{email}
+		   AND MEMBER_IS = 'Y'
+		   AND MEMBER_SNS_ID IS NULL
+	</select>
+	<!-- 임시비밀번호 업데이트-->
+	<update id="updatePassword" parameterType="Member">
+		UPDATE MEMBER 
+		   SET MEMBER_PW = #{password} 
+		 WHERE MEMBER_ID = #{id}
+	</update>
 </mapper>
