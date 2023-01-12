@@ -66,32 +66,11 @@ public class MemberController {
         return "member/sign_in"; 
     }
 	
-//	@PostMapping("/member/login")
-//	public ModelAndView login(ModelAndView model,
-//				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
-//		
-//		log.info("{}, {}", userId, userPwd);
-//		
-//		Member loginMember = service.login(userId, userPwd);
-//		
-//		if(loginMember != null) {
-//			model.addObject("loginMember", loginMember);
-//			model.setViewName("redirect:/");
-//		} else {
-//			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
-//			model.addObject("location", "/member/login");
-//			model.setViewName("common/msg");			
-//		}		
-//		
-//		return model;
-//	}
 	@PostMapping("/member/login")
 	public Object login(ModelAndView model,
 				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
 		
 		log.info("{}, {}", userId, userPwd);
-		
-		Map<String, Object> map = new HashMap<>();
 		
 		Member loginMember = service.login(userId, userPwd);
 		
@@ -101,21 +80,72 @@ public class MemberController {
 			Map<String, String> tokenMap = jwtService.createToken(user);
 			String accessToken = tokenMap.get("accessToken");
 			String refreshToken = tokenMap.get("refreshToken");
-//			Cookie cookie = new Cookie("token", accessToken);
-//			cookie.setMaxAge(60*60*24); //하루
-			
 			return ResponseEntity.status(HttpStatus.FOUND)
-					             .header("Location", "http://localhost:3000/post")
-					             .header("REFRESH_TOKEN", refreshToken)
-					             .header("ACCESS_TOKEN", accessToken)
-					             .body(null);
+		             .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+		             .body(null);
 		} else {
 			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
 			model.addObject("location", "/member/login");
 			model.setViewName("common/msg");
 			return model;
 		}		
+	}
+	
+	// 카카오 로그인
+	@GetMapping("/member/kakaoLogin")
+	public ResponseEntity<?> redirectkakao(ModelAndView model, @RequestParam String code, HttpSession session)
+			throws IOException {
+		// 접속토큰 get
+		String kakaoToken = kakaoService.getReturnAccessToken(code);
 
+		// 접속자 정보 get
+		Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
+		log.info("result:: " + result);
+		String snsId = (String) result.get("id");
+		String nickName = (String) result.get("nickname");
+		String email = (String) result.get("email");
+		String gender = "female".equals((String) result.get("gender")) ? "W" : "M";
+		int type = 0;
+		//토큰 생성용 객체
+		User user = new User();
+		
+		// 일치하는 snsId 없을 시 회원가입
+		if (service.kakaoLogin(snsId) == null) {
+			Member member = new Member();
+			log.warn("카카오로 회원가입");
+			member.setId(email);
+			member.setEmail(email);
+			member.setNickName(nickName);
+			member.setSnsId(snsId);
+			member.setGender(gender);
+			service.kakaoJoin(member);
+			
+			model.addObject("loginMember", member);
+		} else {
+			// 일치하는 snsId가 있으면 멤버객체에 담음.
+			log.warn("카카오로 로그인");
+			String MemberId = service.findMemberBySnsId(snsId);
+			Member dto = service.findMemberById(MemberId);
+			//멤버타입이 업데이트 돼있다면 바뀔 것
+			type = dto.getType();
+			log.warn("member:: " + dto);
+			model.addObject("loginMember", dto);
+		}
+		//토큰 객체 세팅
+		user.setId(email);
+		user.setName(nickName);
+		user.setMemberType(type);
+		
+		Map<String, String> tokenMap = jwtService.createToken(user);
+		String accessToken = tokenMap.get("accessToken");
+		String refreshToken = tokenMap.get("refreshToken");
+
+		/* 로그아웃 처리 시, 사용할 토큰 값 */
+		model.addObject("kakaoToken", kakaoToken);
+		
+		return ResponseEntity.status(HttpStatus.FOUND)
+	             .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+	             .body(null);
 	}
 	
 	@GetMapping("/member/logout")
@@ -180,50 +210,6 @@ public class MemberController {
         return "common/termconditions";
     }
     
-	// 카카오 로그인
-	@GetMapping("/member/kakaoLogin")
-	public ModelAndView redirectkakao(ModelAndView model, @RequestParam String code, HttpSession session)
-			throws IOException {
-		// 접속토큰 get
-		String kakaoToken = kakaoService.getReturnAccessToken(code);
-
-		// 접속자 정보 get
-		Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
-		log.info("result:: " + result);
-		String snsId = (String) result.get("id");
-		String nickName = (String) result.get("nickname");
-		String email = (String) result.get("email");
-		String gender = "female".equals((String) result.get("gender")) ? "W" : "M";
-
-		// 분기
-		Member member = new Member();
-
-		// 일치하는 snsId 없을 시 회원가입
-		if (service.kakaoLogin(snsId) == null) {
-			log.warn("카카오로 회원가입");
-			member.setId(email);
-			member.setEmail(email);
-			member.setNickName(nickName);
-			member.setSnsId(snsId);
-			member.setGender(gender);
-			service.kakaoJoin(member);
-
-			model.addObject("loginMember", member);
-		} else {
-			// 일치하는 snsId가 있으면 멤버객체에 담음.
-			log.warn("카카오로 로그인");
-			String MemberId = service.findMemberBySnsId(snsId);
-			Member dto = service.findMemberById(MemberId);
-			log.warn("member:: " + dto);
-			model.addObject("loginMember", dto);
-		}
-
-		/* 로그아웃 처리 시, 사용할 토큰 값 */
-		model.addObject("kakaoToken", kakaoToken);
-		
-		model.setViewName("redirect:/");
-		return model;
-	}
 	//네이버 로그인 콜백(성공시 요청 - 데이터를 받는 곳)
 	@RequestMapping("/member/naverLogin")
 	public String naver() {
@@ -338,50 +324,5 @@ public class MemberController {
 		String response = s.hasNext() ? s.next() : "";
 		System.out.println(response);		
 	}
-	
-//    @GetMapping("/member/kakaoLogin")
-//    public String redirectkakao(@RequestParam String code, HttpSession session) throws IOException {
-//        // 접속토큰 get
-//        String kakaoToken = kakaoService.getReturnAccessToken(code);
-//
-//        // 접속자 정보 get
-//        Map<String, Object> result = kakaoService.getUserInfo(kakaoToken);
-//        log.info("result:: " + result);
-//        String snsId = (String) result.get("id");
-//        String nickName = (String) result.get("nickname");
-//        String email = (String) result.get("email");
-//        String pw = snsId;
-//        String gender = "female".equals((String)result.get("gender")) ? "W" : "M";
-//        
-//        // 분기
-//        Member member = new Member();
-//        
-//        // 일치하는 snsId 없을 시 회원가입
-//        System.out.println("snsId : " + service.kakaoLogin(snsId));
-//        if (service.kakaoLogin(snsId) == null) {
-//            log.warn("카카오로 회원가입");
-//            member.setId(email);
-//            member.setEmail(email);
-//            member.setPassword(pw);
-//            member.setNickName(nickName);
-//            member.setSnsId(snsId);
-//            member.setGender(gender);
-//            service.kakaoJoin(member);
-//
-//            session.setAttribute("loginMember", member);
-//        } else {
-//        	// 일치하는 snsId가 있으면 멤버객체에 담음.
-//            log.warn("카카오로 로그인");
-//            String MemberId = service.findMemberBySnsId(snsId);
-//            Member dto = service.findMemberById(MemberId);
-//            log.warn("member:: " + dto);
-//            session.setAttribute("loginMember", dto);
-//        }
-//        
-//        /* 로그아웃 처리 시, 사용할 토큰 값 */
-//        session.setAttribute("kakaoToken", kakaoToken);
-//
-//        return "redirect:/";
-//    }
 }
 

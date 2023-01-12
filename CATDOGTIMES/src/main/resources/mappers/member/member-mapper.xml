@@ -179,7 +179,7 @@
 	
 	<!-- snsid로 회원조회 -->
 	<select id="findMemberBySnsId" parameterType="String" resultType="String">
-		SELECT MEMBER_ID 
+		SELECT MEMBER_ID
 		  FROM MEMBER 
 		 WHERE MEMBER_SNS_ID = #{snsId}
 		   AND MEMBER_IS = 'Y'

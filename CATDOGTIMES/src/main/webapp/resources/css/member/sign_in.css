@@ -249,4 +249,13 @@
 	.login__create::-webkit-scrollbar-track {
 	    background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
 	}
-}
+	
+      /* 비디오 */
+      video {
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+        transition: opacity 0.3s 1s ease;
+      }
+
+

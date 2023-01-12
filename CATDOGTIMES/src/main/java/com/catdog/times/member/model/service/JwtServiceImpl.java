@@ -12,6 +12,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
+@PropertySource("classpath:jwt.properties")
 public class JwtServiceImpl{
 	@Value("${jwt.secretkey}")
 	private String SECRET_KEY; //서명에 사용할 키
@@ -44,6 +46,7 @@ public class JwtServiceImpl{
 	
 	// 토큰 생성 메서드
 	public Map<String, String> createToken(User user) { // 토큰에 담고싶은 값 파라미터로 가져오기
+		System.out.println(SECRET_KEY);
 		String accessToken = createAccessToken(user, ACCESS_EXP_TIME, SECRET_KEY);
 		String refreshToken = createRefreshToken(REFRESH_EXP_TIME, accessToken);
 		

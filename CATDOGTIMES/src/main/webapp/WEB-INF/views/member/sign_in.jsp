@@ -42,11 +42,20 @@
 	  </div>
 	</div>
 
+	
+
   <div class="login">
     <div class="login__content">
-      <div class="login__img">
-        <img src="https://image.freepik.com/free-vector/code-typing-concept-illustration_114360-3581.jpg" alt="user login">
-      </div>
+      <section id="slider" class="slider-element dark">
+		<div class="slider-inner">
+			<div class="video-wrap m-auto" style="position: sticky">
+				<video id="mainVideo" style="z-index: 1" preload="auto" loop autoplay muted playsinline></video>
+				<div class="video-overlay w-100" style="z-index: 0; background-color: rgba(0, 0, 0, 0.45)"></div>
+			</div>
+	  	</div>
+	  </section>
+      
+      
       <div class="login__forms">
         <!--로그인 폼 -->
         <form action="${ path }/member/login" method="POST" class="login__register" id="login-in">
@@ -246,7 +255,7 @@
 	            }
 	        },
 	        error:function(){
-	            alert("에러입니다");
+	            Swal.fire("에러입니다");
 	        }})
       }
 	  //아이디 중복체크
@@ -273,7 +282,7 @@
 		            }
 		        },
 		        error:function(){
-		            alert("에러입니다");
+		            Swal.fire("에러입니다");
 		        }
 		    });
 		}else{
@@ -420,6 +429,11 @@
 		            }
 		     });
 		 });
+	    
+		$(document).ready(function () {
+			videoNum = Math.floor(3 * Math.random()) + 1;
+			$("#mainVideo").append('<source src="${ path }/resources/images/movie/movie'.concat(videoNum, '.mp4" type="video/mp4" />'));
+		});
    </script>   
 </body>
 

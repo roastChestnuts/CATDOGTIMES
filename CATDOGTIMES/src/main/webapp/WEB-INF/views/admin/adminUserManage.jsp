@@ -464,10 +464,10 @@
 	    		contentType:"application/text",
 	    		data:param,
 	    		success: function(data){
-	    			alert("성공!");
+	    			Swal.fire("성공!");
 	    		},
 	    		error: function(e){
-	    			alert("실패!");
+	    			Swal.fire("실패!");
 	    		}
 	    	})
 	    	
