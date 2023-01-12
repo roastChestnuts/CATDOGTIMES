@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${ pageContext.request.contextPath }"/>
 <html lang="ko">
 <head>
     <meta charset="utf-8">
@@ -89,6 +90,22 @@
 		.slider.round:before {
 		  border-radius: 50%;
 		}
+		
+		/* paging css */
+		  .pageInfo{
+		   	list-style : none;
+		   	display: inline-block;
+		  }
+		  .pageInfo li{
+		    float: left;
+		    font-size: 20px;
+ 		    margin-left: auto; 
+		    padding: 7px;
+		    font-weight: 500; 
+		  }
+		  .checked{
+		      color: #56cfe1; 
+		  }
     </style>
 	
 </head>
@@ -153,34 +170,43 @@
 
         <div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
-            <span style="font-size:30px;font-weight:bold;">사용자 현황</span><br/>
-            <span>멍냥일보를 이용중인 회원 리스트입니다. &nbsp;회원정보를 검색하고 비활성 여부를 설정 할 수 있습니다.</span>
+            <span style="font-size:30px;font-weight:bold;">사용자 관리</span><br/>
+            <span>멍냥일보를 이용중인 회원 리스트입니다. &nbsp;회원 상세정보를 검색하고 비활성 여부를 설정 할 수 있습니다.</span>
 						<div class="row" style="padding-top:20px;">
                         	<div class="col-xl-12">
                             	<div class="card mb-4">
                                     <div class="card-header">
+                                    	<span style="display: list-item; float: left; margin-top: 10px;  margin-left: 20px; margin-right: 10px;">회원유형</span>
+                                    	<div style="margin-bottom: 10px;">
+                                    		<select class="admin_srchBox" style="width:150px;" id="memberType">
+                                    			<option value="">전체</option>
+                                    			<option value=0>일반회원</option>
+                                    			<option value=1>산책등록가능회원</option>
+                                    			<option value=2>관리자</option>
+                                    		</select>
+                                    	</div>
+                                    	<span style="display: list-item; float: left; margin-top: 10px;  margin-left: 20px; margin-right: 10px;">활성여부</span>
+                                    	<div style="margin-bottom: 10px;">
+                                    		<select class="admin_srchBox" style="width:150px;" id="memberIs">
+                                    			<option value="">전체</option>
+                                    			<option value="Y">활성</option>
+                                    			<option value="N">비활성</option>
+                                    		</select>
+                                    	</div>
                                     	<div>
                                     		<select class="admin_srchBox" style="width:150px;" id="searchType">
                                     			<option>아이디</option>
                                     			<option>이름</option>                                			
                                     			<option>닉네임</option>
                                     		</select>
-                                    				<input id="searchVal"></input>
-                                    			</div>
-                                    	<div>
-                                    		<select class="admin_srchBox" style="width:150px;" id="memberType">
-                                    			<option>전체</option>
-                                    			<option>일반회원</option>
-                                    			<option>비활성회원</option>
-                                    			<option>관리자</option>
-                                    		</select>
+                                    		<input id="searchVal"></input>
                                     	</div>
                                   		<div style="">
-                                  			<button id="searchBtn" href="#" style="margin:auto; display:block;" onclick="clickSrchBtn()">검색</button>
+                                  			<button id="searchBtn" href="#" style="margin:auto; display:block;" onclick="clickSrchBtn(1)">검색</button>
                                   		</div>
                                  	 </div>
                                   </div>
-                                    	<div>
+                                    	<div id="memberTable">
                                     		<!-- 사용자 현황 테이블 -->
                                     		<table class="">
                                     			<thead>
@@ -190,6 +216,7 @@
                                     					<td>아이디</td>
                                     					<td>닉네임</td>
                                     					<td>회원유형</td>
+                                    					<td>이메일</td>
                                     					<td>가입일</td>
                                     					<td>경고횟수</td>
                                     					<td>활성여부</td>
@@ -203,16 +230,16 @@
                                     					<td>${data.memberId}</td>
                                     					<td>${data.memberNickName}</td>
                                     					<td>${data.memberType}</td>
+                                    					<td>${data.memberEmail}</td>
                                     					<td>${data.memberCreateDate}</td>
                                     					<td>${data.memberWarn}</td>
                                     					<td>
-                                    					<!-- Rounded switch -->
 														<label id="labelSwitch" class="switch">
 															<c:if test="${data.memberIs eq 'Y'}">
-															  <input class="input" type="checkbox" checked>
+															  <input class="input" id="test" type="checkbox" checked>
 															</c:if>
 															<c:if test="${data.memberIs eq 'N'}">
-															  <input class="input" type="checkbox">
+															  <input class="input" id="test" type="checkbox">
 															</c:if>
 															<span class="slider round"></span>
 														</label>
@@ -221,7 +248,8 @@
                                     			</c:forEach>
                                     			</tbody>
                                     		</table>
-<%--                                     		<span>${memberList}</span> --%>
+                                    	</div>
+                                    	<div id="pagingArea">
                                     	</div>
                                     </div>
                                 </div>
@@ -368,10 +396,6 @@
                                             data-src="../images/mini-cart/product-01.jpg" width="80"
                                             height="80"></a>
                                 </div>
-<!--                                 <div class="col widget_if_pr"> -->
-<!--                                     <a class="product-title db" href="product-detail-layout-01.html">sunlight bell solar -->
-<!--                                         lamp</a>$35.00 -->
-<!--                                 </div> -->
                             </div>
                             <a href="#" class="btn fwsb detail_link">View All
                                 <i class="las la-arrow-right fs__18"></i></a>
@@ -385,32 +409,6 @@
     <div id="nt_menu_canvas" class="nt_fk_canvas nt_sleft dn lazyload pt-3">
         <i class="close_pp pegk pe-7s-close ts__03 cd"></i>
         <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>
-        
-<!--         <div id="kalles-section-mb_nav_js" class="mb_nav_tab active"> -->
-<!--             <div id="kalles-section-mb_nav" class="kalles-section"> -->
-<!--                 <ul id="menu_mb_ul" class="nt_mb_menu"> -->
-<!--                     <li id="item_header_7-0" class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">HOME</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#" class="icon_search push_side cb chp"  data-id="#nt_search_canvas" ><span class="nav_link_txt flex al_center">검색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">탐색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item"> -->
-<!--                         <a href="#" class="kalles-lbl__nav-sale">알림<span class="lbc_nav_mb ml__5">5</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">DM</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">북마크</span></a> -->
-<!--                     </li> -->
-<!--                 </ul> -->
-<!--             </div> -->
-<!--         </div> -->
-        
     </div>
     <!-- end mobile menu -->
 
@@ -430,14 +428,20 @@
     <script src="../js/interface.js"></script>
     
     <script type="text/javascript">
+    	var memberArrayList = new Array();
+    	var nowPage = 1;
     	$(document).ready(function(){
-    	    		
+    		// 화면 진입 시 목록 조회 함수 실행
+    		clickSrchBtn(1); 
+    		
     	});
     	
-    	// 검색버튼 클릭 이벤트
-    	function clickSrchBtn(){
-    		
-	    	// 비동기로 검색값 가져와서 리스트 재조회
+    	//--------------------------------------------------
+    	//	사용자 목록 조회 
+    	//--------------------------------------------------
+    	function clickSrchBtn(pageIdx){
+    		var pageIdx = pageIdx;
+    		var cntPerPage = 1;
 	    	// 검색 구분값
 	    	var srchType = $('#searchType').val();
 	    	
@@ -445,42 +449,181 @@
 	    	var srchVal = $('#searchVal').val();
 	    	
 	    	// 회원유형 셀렉트 박스 선택 값
-	    	var memberType = $('#memberType').val();
+	    	var memberType = $('#memberType option:selected').val();
 	    	
-	    	console.log('srchType ::: ' , srchType);
-	    	console.log('srchVal ::: ' , srchVal);
-	    	console.log('memberType ::: ' , memberType);
+	    	// 활성여부 셀렉트 박스 선택 값
+	    	var memberIs = $('#memberIs option:selected').val();
 	    	
 	    	var param = 
 	    		{
-	    			"srchType":srchType,
-	    			"srchVal" :srchVal ,
-	    			"memberType":memberType
+	    			"srchType"	:	srchType,
+	    			"srchVal" 	:	srchVal,
+	    			"memberType":	memberType,
+	    			"memberIs"	:	memberIs,
+	    			"cntPerPage":   cntPerPage,
+	    			"pageIdx"	:	pageIdx
 	    		}
 	    	
 	    	$.ajax({
-	    		url:"/admin/usermanage",
-	    		type:"get",
-	    		contentType:"application/text",
+	    		url:"${ path }/admin/usermanage/memberlist",
+	    		type:"GET",
+	    		contentType:"json",
 	    		data:param,
 	    		success: function(data){
-	    			Swal.fire("성공!");
+	    			console.log(data);
+	    			memberArrayList = data;
+	    			$('#memberTable').html("");
+	    			$('#pagingArea').html("");
+	    			var htmlString = "";
+	    				htmlString += "<table>";
+	    				htmlString += "		<thead>";
+	    			 	htmlString += "		<tr>";
+	    				htmlString += "			<td>번호</td>";
+	    				htmlString += "			<td>이름</td>";
+	    				htmlString += "			<td>아이디</td>";
+	    				htmlString += "			<td>닉네임</td>";
+	    				htmlString += "			<td>회원유형</td>";
+	    				htmlString += "			<td>이메일</td>";
+	    				htmlString += "			<td>가입일</td>";
+	    				htmlString += "			<td>경고횟수</td>";
+	    				htmlString += "			<td>활성여부</td>";
+	    				htmlString += "		</tr>";
+	    				htmlString += "</thead>";
+	    			if(data.length > 0)
+	    			{
+		    				htmlString += "<tbody>";
+	    				for(var i = 0 ; i < data.length ; i++){
+			    			htmlString += "		<tr>"
+		    				htmlString += "			<td>" + data[i].memberNo + "</td>"
+		    				htmlString += "			<td>" + data[i].memberName + "</td>"
+		    				htmlString += "			<td>" + data[i].memberId + "</td>"
+		    				htmlString += "			<td>" + data[i].memberNickName + "</td>"
+		    				htmlString += "			<td>" + data[i].memberType + "</td>"
+		    				htmlString += "			<td>" + data[i].memberEmail + "</td>"
+		    				htmlString += "			<td>" + data[i].memberCreateDate + "</td>"
+		    				htmlString += "			<td>" + data[i].memberWarn + "</td>"
+			    			htmlString += "			<td>"
+			    			htmlString += "				<label id='labelSwitch' class='switch'>"
+			    			if(data[i].memberIs == 'Y'){
+			    				htmlString += "				<input class='input' type='checkbox' checked>"
+			    			} else {
+			    				htmlString += "				<input class='input' type='checkbox'>"
+			    			}
+			    			htmlString += "					<span class='slider round'></span>" 
+			    			htmlString += "				</label>"
+			    			htmlString += "			</td>"
+			    			htmlString += "		</tr>"
+		    			}
+		    				htmlString += "</tbody>";
+	    					htmlString += "</table'>";
+	    					// 페이징 그리는 영역
+	    					var pagingString ="";
+			    			pagingString += "<div class='pageInfo_wrap' style='text-align:center;'>";
+			    			pagingString += "		<div class='pageInfo_area'>";
+			    			pagingString += "			<ul id='pageInfo' class='pageInfo'>";
+			    			if(data[0].startPageIdx > 1){
+								pagingString += "			<li class='pageInfo_btn previous'><a href='#' onclick='pagingClick("+ ( data[0].startPageIdx - 1 ) +")'>이전</a></li>";
+			    			}
+							for(var j = data[0].startPageIdx ; j <= data[0].endPageIdx ; j ++){
+								if(data[0].pageIdx == j)
+								{
+									pagingString += "			<li class='pageInfo_btn'><a class='checked' href='#' onclick='pagingClick("+ j +")'>" + j + "</a></li>";
+								} 
+								else
+								{
+									pagingString += "			<li class='pageInfo_btn'><a href='#' onclick='pagingClick("+ j +")'>" + j + "</a></li>";
+								}
+							}
+							if(data[0].endPageIdx != data[0].pageCnt){
+								pagingString += "			<li class='pageInfo_btn next'><a href='#' onclick='pagingClick("+ ( data[0].endPageIdx + 1 )+")'>다음</a></li>";
+							}
+							pagingString += "			</ul>";
+							pagingString += "		</div>";
+							pagingString += "</div>";
+	    			} 
+	    			else
+	    			{
+	    					htmlString += "</table>";
+	    					htmlString += "<div style='text-align:center;'><span>검색 값이 없습니다.</span></div>";
+	    			}
+		    			
+	    			$('#memberTable').append(htmlString);
+	    			$('#pagingArea').append(pagingString);
 	    		},
 	    		error: function(e){
-	    			Swal.fire("실패!");
+	    			console.log(e);
 	    		}
 	    	})
 	    	
-	    	
     	}
     	
+    	//--------------------------------------------------
+    	// 페이징 버튼 클릭 이벤트
+    	//--------------------------------------------------
+    	function pagingClick(pageIdx){
+    		nowPage = pageIdx;
+    		clickSrchBtn(pageIdx);
+    	}
+    	
+    	//--------------------------------------------------
     	// 활성여부 switch 클릭 이벤트
-    	$(".input").click(function(){
+    	//--------------------------------------------------
+    	$(document).on("click",".input",function(e) {
     		
-    		// (예정)활성여부 값 가져와서 Y 일때 N으로, N 일때 Y로 해당 회원 활성여부 값 update
-    		// 1. 활성여부 클릭한 해당 회원의 활성여부 값 가져오고	
-    		// 2.  Y 일때 -> N, N 일때 Y로 변수에 값 넣고		
-    		// 3. 해당 값으로 회원 활성여부 수정하는 API 비동기 처리
+    		
+    		// index 가져오기
+    		var index = $(".input").index(this);
+    		
+    		// 활성여부 클릭한 해당 회원의 활성여부 값 가져오고	
+    		var memberIs = memberArrayList[index].memberIs;
+    		var memberNo = memberArrayList[index].memberNo; 
+    		
+    		// memberIs 가 Y 일때 N, N 일때 Y로 변수에 값 넣고
+    		var ckText = "";
+    		if( memberIs == 'Y') {
+    			memberIs = 'N';	
+    			ckText = "비활성 처리를 하시겠습니까?";
+    		} else {
+    			ckText = "활성 처리를 하시겠습니까?";
+    			memberIs = 'Y';	
+    		}
+    		var checkVal = confirm(ckText);
+    		
+    		var param = 
+    		{
+    				"memberNo": memberNo,
+    				"memberIs": memberIs
+    		}
+    		
+    		// confirm 확인 클릭 시 (true)
+    		if(checkVal){ 
+    			// 3. 해당 값으로 회원 활성여부 수정하는 API 비동기 처리
+        		$.ajax({
+    	    		type:'POST',
+    	    		url:'${ path }/admin/usermanage/memberis',
+    	    		data:JSON.stringify(param),
+    	    		contentType:'application/json',
+    	    		dataType: 'text',
+    	    		success: function(data){
+    	    			console.log('result ::::::::: ' , data);
+    	    			// 사용자 목록 조회 함수 호출
+    	    			clickSrchBtn(nowPage);
+    	    		},
+    	    		error: function(e){
+    	    			console.log(e);
+    	    		}
+    	    	})
+    		} else {
+    			// confirm 취소 클릭 시 (false)
+    			var checked = $('.input').prop("checked");
+    			if(checked){
+    				checked = false;
+    			} else {
+    				checked = true;
+    			}
+    			$(this).prop("checked", checked);
+    		}
+    		
     	});
     	
     
