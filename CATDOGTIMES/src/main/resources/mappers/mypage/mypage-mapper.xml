@@ -33,7 +33,23 @@
 		<result column="POST_CREATE_DATE" property="postCreateDate"/>
 		<result column="POST_UPDATE_DATE" property="postUpdateDate"/>
 		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="IMAGE_ID" property="imageId"/>
+		<result column="IMAGE_SAVED_NAME" property="imageSavedName"/>
+		<result column="IMAGE_ORIGINAL_NAME" property="imageOriginalName"/>
+		<result column="REPLY_CNT" property="replyCnt"/>
+		<result column="LIKE_CNT" property="likeCnt"/>
+		<result column="MEMBER_NICKNAME" property="memberNickname"/>		
 	</resultMap>
+	
+	<resultMap id="followListResultMap" type="FollowMemberDTO">
+		<result column="FOLLOW_NO" property="followNo"/>
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="MEMBER_ID" property="memberId"/>
+		<result column="MEMBER_NAME" property="memberName"/>
+		<result column="MEMBER_NICKNAME" property="memberNickname"/>
+		<result column="MEMBER_PHOTO" property="memberPhoto"/>
+		<result column="TYPE" property="type"/>
+	</resultMap>	
 	
 	<select id="findByID" resultMap="myPageResultMap" parameterType="String">
 		SELECT M.MEMBER_NO
@@ -68,26 +84,38 @@
 	</select>
 	
 	<select id="selectPostContent" resultMap="postContentResultMap" parameterType="Map">
-		SELECT POST_ID
-     		 , POST_CONTENT
-     	 	 , POST_CREATE_DATE
-     		 , POST_UPDATE_DATE
-     		 , MEMBER_NO
-  		 FROM POST 
-  		WHERE 1=1	 
+		SELECT P.POST_ID
+		     , P.POST_CONTENT
+		     , P.POST_CREATE_DATE
+		     , P.POST_UPDATE_DATE
+		     , P.MEMBER_NO
+		     , I.IMAGE_ID 
+		     , I.IMAGE_SAVED_NAME 
+		     , I.IMAGE_ORIGINAL_NAME 
+		     , (SELECT COUNT(*)
+		          FROM REPLY R
+		         WHERE R.POST_ID = P.POST_ID )   AS REPLY_CNT 
+		     , (SELECT COUNT(*)
+		          FROM POST_LIKE LI
+		         WHERE LI.POST_ID = P.POST_ID )  AS LIKE_CNT  
+             , M.MEMBER_NICKNAME 		          		     
+		  FROM POST P
+	 LEFT JOIN IMAGE I ON P.POST_ID = I.POST_ID AND ROWNUM = 1
+	 LEFT JOIN MEMBER M ON M.MEMBER_NO  = P.MEMBER_NO AND ROWNUM = 1 
+  		 WHERE 1=1	 
 	  <choose>
     	<when test="searchType != null and searchType == 'postlike' ">
-    	  AND POST_ID IN (SELECT POST_ID 
-                    	    FROM POST_LIKE 
-                           WHERE MEMBER_NO = #{memberNo} )
+    	  AND P.POST_ID IN (SELECT POST_ID 
+                      	      FROM POST_LIKE 
+                             WHERE MEMBER_NO = #{memberNo} )
     	</when>
         <when test="searchType != null and searchType == 'bookmark' ">
-		  AND POST_ID IN (SELECT POST_ID 
+		  AND P.POST_ID IN (SELECT POST_ID 
                    		    FROM BOOKMARK 
                    		   WHERE MEMBER_NO = #{memberNo} ) 
         </when>
         <otherwise>
-          AND MEMBER_NO = #{memberNo} 
+          AND P.MEMBER_NO = #{memberNo} 
         </otherwise>
       </choose>
 	</select>
@@ -96,18 +124,51 @@
 	<update id="updateMemberInfo" parameterType="MypageDTO">
 		UPDATE MEMBER
 		SET
-			MEMBER_PW = NVL(#{memberPw}, MEMBER_PW),
-			MEMBER_NAME = NVL(#{memberName},MEMBER_NAME),
-			MEMBER_GENDER = NVL(#{memberGender},MEMBER_GENDER),
-			MEMBER_NICKNAME = NVL(#{memberNickname},MEMBER_NICKNAME),
-			MEMBER_EMAIL = NVL(#{memberEmail},MEMBER_EMAIL),
-			MEMBER_PHOTO = NVL(#{memberPhoto},MEMBER_PHOTO),
-			MEMBER_ADDRESS = NVL(#{memberAddress},MEMBER_ADDRESS),
-			MODIFY_DATE = SYSDATE
+			MEMBER_PW = 		NVL(#{memberPw}, 	MEMBER_PW),
+			MEMBER_NAME = 		NVL(#{memberName},	MEMBER_NAME),
+			MEMBER_GENDER = 	NVL(#{memberGender},MEMBER_GENDER),
+			MEMBER_NICKNAME = 	NVL(#{memberNickname},MEMBER_NICKNAME),
+			MEMBER_EMAIL = 		NVL(#{memberEmail},	MEMBER_EMAIL),
+			MEMBER_PHOTO = 		NVL(#{memberPhoto},	MEMBER_PHOTO),
+			MEMBER_ADDRESS = 	NVL(#{memberAddress},MEMBER_ADDRESS),
+			MEMBER_DETAIL_ADDRESS = 	NVL(#{memberDetailAddress},MEMBER_DETAIL_ADDRESS),
+			MEMBER_ZIPCODE = 	NVL(#{memberZipcode},MEMBER_ZIPCODE),
+			MODIFY_DATE = 		SYSDATE
 		WHERE
 			MEMBER_NO = #{memberNo}
 	</update>
-		
 	
+	<select id='selectFollowList' resultMap="followListResultMap" parameterType="Map">
+	  <choose>
+    	<when test="type != null and type == 'follower' ">
+          SELECT M.MEMBER_NO         AS FOLLOW_NO
+               , M.MEMBER_ID
+               , M.MEMBER_NICKNAME
+               , M.MEMBER_PHOTO
+               , F.MEMBER_NO 
+               , 'follower'          AS TYPE
+            FROM FOLLOW F    	
+      INNER JOIN MEMBER M ON F.FOLLOWER_ID  = M.MEMBER_NO
+           WHERE 1=1
+             AND F.MEMBER_NO = #{memberNo}         
+    	</when>
+        <when test="type != null and type == 'following' ">
+          SELECT M.MEMBER_NO         AS FOLLOW_NO
+               , M.MEMBER_ID
+               , M.MEMBER_NICKNAME
+               , M.MEMBER_PHOTO 
+               , F.MEMBER_NO
+               , 'following'         AS TYPE
+            FROM FOLLOW F        
+      INNER JOIN MEMBER M ON F.FOLLOWING_ID = M.MEMBER_NO
+           WHERE 1=1                     
+             AND F.MEMBER_NO = #{memberNo}        
+         </when>
+       </choose>                          
+	</select>
+		
+    <delete id="deleteFollower" parameterType="Map">
+      DELETE FROM FOLLOW WHERE MEMBER_NO = #{memberNo} AND FOLLOWER_ID = #{followNo}     
+    </delete>	
 
 </mapper>
