@@ -6,12 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.catdog.times.admin.model.dto.AdminDTO;
+import com.catdog.times.admin.model.dto.AdminStaticsDTO;
 import com.catdog.times.admin.model.mapper.AdminMapper;
 
 @Service
 public class AdminServiceImpl implements AdminService { 	
 	@Autowired
 	private AdminMapper mapper;
+	
+	//대시보드 항목별 Total값 조회	
+	@Override
+	public List<AdminStaticsDTO> selectAllTotalCount() { 
+		return mapper.selectAllTotalCount(); 
+	}
+	
 	//게시글 현황 리스트 조회	
 	@Override
 	public List<AdminDTO> selectBoardList() { 
@@ -29,12 +37,28 @@ public class AdminServiceImpl implements AdminService {
 	}
 	//게시글 리스트 조회 - 관리자 전용
 	@Override
-	public List<AdminDTO> selectBoardManageList() { 
-		return mapper.selectBoardManageList();
+	public List<AdminDTO> selectBoardManageList(AdminDTO adminDTO) { 
+		return mapper.selectBoardManageList(adminDTO); 
 	}
 	
 	@Override
 	public int updateMemberIs(AdminDTO adminDTO) { 
 		return mapper.updateMemberIs(adminDTO);  
+	}
+	
+	@Override
+	public int updatePostShowYn(AdminDTO adminDTO) { 
+		return mapper.updatePostShowYn(adminDTO);  
+	}
+	
+	//게시글 리스트 조회 - 관리자 전용
+	@Override
+	public List<AdminDTO> selectRouteManageList(AdminDTO adminDTO) { 
+		return mapper.selectRouteManageList(adminDTO); 
+	}
+	
+	@Override
+	public int updateRoutePublic(AdminDTO adminDTO) { 
+		return mapper.updateRoutePublic(adminDTO);  
 	}
 }

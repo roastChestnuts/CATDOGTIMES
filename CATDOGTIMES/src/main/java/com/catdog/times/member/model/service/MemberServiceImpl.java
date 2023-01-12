@@ -104,6 +104,11 @@ public class MemberServiceImpl implements MemberService {
         return mapper.findMemberBySnsId(memberSnsId);
     }
     
+    @Override
+    public String findMemberByEmail(String memberEmail) {
+        log.info("snsId:: " + memberEmail);
+        return mapper.findMemberByEmail(memberEmail);
+    }
     
 
 }
