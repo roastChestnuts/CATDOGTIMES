@@ -11,6 +11,7 @@ import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
+import com.catdog.times.post.model.dto.SNSFeedDTO;
 
 @Mapper
 public interface PostMapper {
@@ -38,7 +39,7 @@ public interface PostMapper {
 
 	/* <<<LIST, READ>>> */
 	// POST 전체조회
-	List<PostDTO> selectAllPost();
+	List<SNSFeedDTO> selectAllPost();
 	// List<PostContentDTO> selectPostContent(Map<String,Object> map);
 
 	

@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.catdog.times.post.model.mapper.PostMapper">
+	<resultMap type="SNSFeedDTO" id="SNSFeedDTOResultMap">
+		<result column="feedId" property="feedId" />
+		<result column="feedContent" property="feedContent" />
+		<result column="writerName" property="writerName" />
+		<result column="writerPhoto" property="writerPhoto" />
+		<result column="feedImage" property="feedImage" />
+		<result column="likerName" property="likerName" />		
+		<result column="likerPhoto" property="likerPhoto" />		
+		<result column="replyLikeCount" property="replyLikeCount" />		
+	</resultMap>
+
 
 	<resultMap type="PostDTO" id="postResultMap">
 		<result column="POST_ID" property="postId" />
@@ -114,7 +125,8 @@
 
 	<!-- SNS 게시글 해시태그 작성 -->
 	<insert id="insertHashtag" parameterType="PostHashtagDTO"
-		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID" keyProperty="postHashtagId">
+		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID"
+		keyProperty="postHashtagId">
 		INSERT
 		INTO
 		POST_HASHTAG (
@@ -154,7 +166,8 @@
 
 	<!-- 댓글 좋아요 -->
 	<insert id="insertReplyLike" parameterType="ReplyLikeDTO"
-		useGeneratedKeys="true" keyColumn="REPLY_LIKE_ID" keyProperty="replyLikeId">
+		useGeneratedKeys="true" keyColumn="REPLY_LIKE_ID"
+		keyProperty="replyLikeId">
 		INSERT
 		INTO
 		REPLY_LIKE (
@@ -173,7 +186,8 @@
 
 	<!-- 북마크 -->
 	<insert id="insertBookmark" parameterType="BookmarkDTO"
-		useGeneratedKeys="true" keyColumn="BOOKMARK_ID" keyProperty="bookmarkId">
+		useGeneratedKeys="true" keyColumn="BOOKMARK_ID"
+		keyProperty="bookmarkId">
 		INSERT
 		INTO
 		BOOKMARK (
@@ -191,32 +205,47 @@
 	</insert>
 
 	<!-- <<<LIST, READ>>> -->
-	<!-- POST 전체조회 -->
-	<select id="selectAllPost" resultMap="postResultMap">
-		SELECT * FROM POST
+	<!-- SNS 피드 원하는 값만 조회 -->
+	<select id="selectAllPost" resultMap="SNSFeedDTOResultMap">
+		SELECT A.POST_ID as feedId, --피드 id
+				--A.MEMBER_NO -- 게시글 작성자 닉네임 불러올 넘버
+				A.POST_CONTENT as feedContent, -- 피드 콘텐츠
+				D.MEMBER_NICKNAME as writerName, -- 작성자 닉네임
+				D.MEMBER_PHOTO as writerPhoto, -- 작성자 프로필
+				B.IMAGE_SAVED_NAME as feedImage, --피드 이미지
+				--C.MEMBER_NO, -- 댓글 사용자 닉네임 불러올 넘버
+				E.MEMBER_NICKNAME as likerName,
+				E.MEMBER_PHOTO as likerPhoto,
+				C.POST_LIKE_COUNT as replyLikeCount -- 댓글 좋아요 개수
+			FROM POST A
+			LEFT JOIN IMAGE B
+				ON A.POST_ID = B.POST_ID
+			LEFT JOIN (SELECT
+				POST_ID,
+		            count(POST_LIKE_ID) as POST_LIKE_COUNT,
+		            max(MEMBER_NO) as MEMBER_NO
+		            FROM POST_LIKE
+		            GROUP BY POST_ID) C
+				ON A.POST_ID = C.POST_ID
+			LEFT JOIN MEMBER D
+				ON A.MEMBER_NO = D.MEMBER_NO
+			LEFT JOIN MEMBER E
+				ON C.MEMBER_NO = E.MEMBER_NO
 	</select>
-	
+
 	<!-- 특정 게시물 닉네임으로 조회 -->
-<!-- 	<select id="findByNickname" resultMap="postResultMap"
-		parameterType="String">
-		SELECT p.POST_ID,
-		p.POST_CONTENT,
-		p.POST_CREATE_DATE,
-		p.POST_UPDATE_DATE,
-		m.MEMBER_NICKNAME
-		FROM POST p, MEMBER m
-		WHERE p.MEMBER_NO = m.MEMBER_NO
-		AND
-		m.MEMBER_NICKNAME like '%' || #{nickName} || '%'
-	</select> -->
-	<!-- 게시물 상세조회  -->	
+	<!-- <select id="findByNickname" resultMap="postResultMap" parameterType="String"> 
+		SELECT p.POST_ID, p.POST_CONTENT, p.POST_CREATE_DATE, p.POST_UPDATE_DATE, 
+		m.MEMBER_NICKNAME FROM POST p, MEMBER m WHERE p.MEMBER_NO = m.MEMBER_NO AND 
+		m.MEMBER_NICKNAME like '%' || #{nickName} || '%' </select> -->
+	<!-- 게시물 상세조회 -->
 	<select id="readPost" resultMap="postResultMap"
 		parameterType="int">
 		SELECT *
 		FROM POST
 		WHERE POST_ID = #{postId}
-	</select>	
-	
+	</select>
+
 	<!-- 특정 게시물 내용으로 조회 -->
 	<select id="findByContent" resultMap="postResultMap"
 		parameterType="String">
@@ -230,7 +259,8 @@
 		parameterType="String">
 		SELECT p.*
 		FROM POST p, POST_HASHTAG h
-		WHERE p.POST_ID = h.POST_ID
+		WHERE p.POST_ID =
+		h.POST_ID
 		AND POST_HASHTAG like '%' || #{postHashtag} || '%'
 	</select>
 
@@ -250,23 +280,28 @@
 	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->
 	<update id="postUpdate" parameterType="map">
 		UPDATE POST
-		SET POST_CONTENT = #{postContent}
+		SET
+		POST_CONTENT = #{postContent}
 		WHERE POST_ID = #{postId}
-		AND MEMBER_NO = #{memberNo}
+		AND MEMBER_NO =
+		#{memberNo}
 	</update>
 	<!-- SNS 해시태그 수정 -->
 	<update id="hashtagUpdate" parameterType="map">
 		UPDATE POST_HASHTAG
-		SET POST_HASHTAG = #{postHashtag}
+		SET
+		POST_HASHTAG = #{postHashtag}
 		WHERE POST_HASHTAG_ID = #{postHashtagId}
 		AND POST_ID = #{postId}
 	</update>
 	<!-- SNS 댓글 수정 -->
 	<update id="replyUpdate" parameterType="map">
 		UPDATE REPLY
-		SET REPLY_CONTENT = #{replyContent}
+		SET
+		REPLY_CONTENT = #{replyContent}
 		WHERE REPLY_ID = #{postId}
-		AND POST_ID = #{postId}
+		AND POST_ID =
+		#{postId}
 		AND MEMBER_NO = #{memberNo}
 	</update>
 

@@ -3,16 +3,17 @@ package com.catdog.times.post.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.post.model.dto.PostDTO;
+import com.catdog.times.post.model.dto.SNSFeedDTO;
 import com.catdog.times.post.model.service.PostService;
 
+@CrossOrigin(origins="*", maxAge = 3600)
 @RestController
 @RequestMapping("/post")
 public class PostController {
@@ -30,26 +31,18 @@ public class PostController {
 	}
 
 	// SNS 게시글(Post) 전체조회
-
-	@RequestMapping("/list")
-	public ModelAndView selectAllpost() {
-		ModelAndView mav = new ModelAndView("list");
-		List<PostDTO> postlist = service.selectAllPost();
-		mav.addObject("postlist", postlist);
-		return mav;
+	
+	@RequestMapping(value="/list", method = RequestMethod.GET)
+	public List<SNSFeedDTO> selectAllPost() {
+		List<SNSFeedDTO> postList = service.selectAllPost();
+		System.out.println("잘들어오나 확인:" + postList);	
+		return postList;
 	}
 
 	// SNS 게시글 수정
-	public ModelAndView postUpdate(PostDTO post) {
-		ModelAndView mav = new ModelAndView();
+	public int postUpdate(PostDTO post) {		
 		int result = service.postUpdate(post);
-		if (result > 0) {
-			mav.setViewName("redirect:/list");
-		} else {
-			mav.setViewName(null); // redirect 어디로?
-		}
-		mav.addObject("post", post);
-		return mav;
+		return result;
 	}
 	// SNS 게시글 삭제 로그인 유무 체크 필요한가...
 
@@ -58,6 +51,6 @@ public class PostController {
 		System.out.println(postId);
 		// 로그인 사용자 찾기 (우선 pass)
 		int result = service.deletePost(Integer.parseInt(postId));		
-		return "성공";
+		return "성공"+result;
 	}
 }

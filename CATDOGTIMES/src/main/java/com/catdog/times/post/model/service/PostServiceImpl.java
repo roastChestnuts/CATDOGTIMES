@@ -12,6 +12,7 @@ import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
+import com.catdog.times.post.model.dto.SNSFeedDTO;
 import com.catdog.times.post.model.mapper.PostMapper;
 
 @Service
@@ -62,7 +63,8 @@ public class PostServiceImpl implements PostService {
 	//List·Read
 	
 	@Override
-	public List<PostDTO> selectAllPost() {		
+	public List<SNSFeedDTO> selectAllPost() {
+		System.out.println("postServiceImpl 들어가나?");
 		return mapper.selectAllPost();
 	}
 
