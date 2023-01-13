@@ -68,7 +68,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 map.put("status", 403);
             }
             else {
-                request.setAttribute("userId", Integer.parseInt(ret));
+                request.setAttribute("userId", ret);
                 map.put("status", 200);// AccessToken이 유효할 때
             }
         }

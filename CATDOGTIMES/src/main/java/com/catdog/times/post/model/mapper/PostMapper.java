@@ -76,7 +76,7 @@ public interface PostMapper {
 	//댓글 좋아요 삭제
 	int deleteReplyLike(int replyLikeId);
 	
-	//게시글 좋아요 삭제 
+	//게시글 좋아요 삭제(병찬) 
 	int deletePostLike(int postLikeId);
 	
 	//게시글 해시태그 삭제
