@@ -5,6 +5,14 @@
 <mapper namespace="com.catdog.times.admin.model.mapper.AdminMapper">
 	
 	<!-- 대시보드 게시글 정보 resultMap -->
+	<resultMap type="AdminStaticsDTO" id="dashboardTotalResultMap">
+		<result property="totalMemberCnt" column="TOTAL_MEMBER_CNT"></result>
+		<result property="totalRouteCnt" column="TOTAL_ROUTE_CNT"></result>
+		<result property="totalPartyCnt" column="TOTAL_PARTY_CNT"></result>	
+		<result property="totalPostCnt" column="TOTAL_POST_CNT"></result>
+	</resultMap>
+	
+	<!-- 대시보드 게시글 정보 resultMap -->
 	<resultMap type="AdminDTO" id="boardListResultMap">
 		<result property="postContent" column="POST_CONTENT"></result>
 		<result property="postCreateDate" column="POST_CREATE_DATE"></result>
@@ -31,55 +39,127 @@
 		<result property="memberCreateDate" column="MEMBER_CREATE_DATE"></result>
 		<result property="memberWarn" column="MEMBER_WARN"></result>
 		<result property="memberIs" column="MEMBER_IS"></result>
+		<result property="rowNum" column="ROW_NUM"></result>
+		<result property="totalCnt" column="TOTAL_CNT"></result>
+		<result property="pageCnt" column="PAGE_CNT"></result>
+		<result property="pageIdx" column="PAGE_IDX"></result>
+		<result property="startPageIdx" column="START_PAGE_IDX"></result>
+		<result property="endPageIdx" column="END_PAGE_IDX"></result>
 	</resultMap>
 	
-	<!-- 게시글관리 정보 resultMap -->
-	<resultMap type="AdminDTO" id="boardManageResultMap">
+	<!-- 게시글 정보 resultMap -->
+	<resultMap type="AdminDTO" id="postResultMap">
 		<result property="postId" column="POST_ID"></result>
 		<result property="postContent" column="POST_CONTENT"></result>
 		<result property="postCreateDate" column="POST_CREATE_DATE"></result>
 		<result property="memberName" column="MEMBER_NAME"></result>
 		<result property="memberId" column="MEMBER_ID"></result>
+		<result property="postShowYn" column="POST_SHOW_YN"></result>
+		<result property="replyCnt" column="REPLY_CNT"></result>
+		<result property="rowNum" column="ROW_NUM"></result>
+		<result property="totalCnt" column="TOTAL_CNT"></result>
+		<result property="pageCnt" column="PAGE_CNT"></result>
+		<result property="pageIdx" column="PAGE_IDX"></result>
+		<result property="startPageIdx" column="START_PAGE_IDX"></result>
+		<result property="endPageIdx" column="END_PAGE_IDX"></result>
 	</resultMap>
+	
+	<!-- 산책루트 정보 resultMap -->
+	<resultMap type="AdminDTO" id="routeResultMap">
+		<result property="routeNo" column="ROUTE_NO"></result>
+		<result property="routeName" column="ROUTE_NAME"></result>
+		<result property="routeDepartures" column="ROUTE_DEPARTURES"></result>
+		<result property="routeDestination" column="ROUTE_DESTINATION"></result>
+		<result property="routePublic" column="ROUTE_PUBLIC"></result>
+		<result property="memberId" column="MEMBER_ID"></result>
+		<result property="routeRatingCnt" column="ROUTE_RATING_CNT"></result>
+		<result property="routeRatingScoreAvg" column="ROUTE_RATING_SCORE_AVG"></result>
+		<result property="rowNum" column="ROW_NUM"></result>
+		<result property="totalCnt" column="TOTAL_CNT"></result>
+		<result property="pageCnt" column="PAGE_CNT"></result>
+		<result property="pageIdx" column="PAGE_IDX"></result>
+		<result property="startPageIdx" column="START_PAGE_IDX"></result>
+		<result property="endPageIdx" column="END_PAGE_IDX"></result>
+	</resultMap>
+	
+	<!-- 페이징 처리 상단 -->
+	<sql id="pageCols">
+	-- 페이징 SQL 추가
+	/* ----------------------------------------------------------------------------- */
+	SELECT * FROM (
+	SELECT ROWNUM AS ROW_NUM
+		  ,PAGE_FRM.*
+		  ,COUNT(1) OVER() AS TOTAL_CNT
+		  ,CEIL(COUNT(1) OVER() / NVL(#{cntPerPage},10) ) AS PAGE_CNT
+		  ,NVL(#{pageIdx},1) AS PAGE_IDX
+		  ,((TRUNC(NVL(#{pageIdx} -1, 1)/10,0))*10) +1 AS START_PAGE_IDX
+		  ,LEAST( (TRUNC(NVL(#{pageIdx}-1,1)/10,0)+1)*10
+		  		, CEIL(COUNT(1) OVER() / NVL ( #{cntPerPage},10) ) ) AS END_PAGE_IDX
+	FROM
+		(
+	/* ----------------------------------------------------------------------------- */
+	</sql>
+	
+	<!-- 페이징 처리 하단 -->
+	<sql id="pageCtrl">
+	/* ----------------------------------------------------------------------------- */
+		) PAGE_FRM )
+		WHERE ROW_NUM BETWEEN ((NVL(#{pageIdx},1)-1)* NVL( #{cntPerPage},10) +1)
+						AND     NVL(#{pageIdx},1)   * NVL( #{cntPerPage},10)
+	/* ----------------------------------------------------------------------------- */
+	</sql>
+	
+	<!-- 대시보드 상단 Total값 조회 -->
+	<select id="selectAllTotalCount" resultMap="dashboardTotalResultMap">
+		SELECT *
+		FROM
+		     (SELECT COUNT(*) AS TOTAL_MEMBER_CNT FROM MEMBER WHERE MEMBER_TYPE != 2) 	/* 가입자 수 */
+		    ,(SELECT COUNT(*) AS TOTAL_ROUTE_CNT FROM WALK_ROUTE)						/* 산책경로 수 */	
+		    ,(SELECT COUNT(*) AS TOTAL_PARTY_CNT FROM WALK_PARTY)						/* 산책매칭 수 */
+		    ,(SELECT COUNT(*) AS TOTAL_POST_CNT FROM POST)								/* 피드 수 */
+	</select>
+	
 	
 	
 	<!-- 대시보드 게시글 정보조회 리스트 -->
 	<select id="selectBoardList" resultMap="boardListResultMap">
-	SELECT
-		A.POST_ID AS POST_ID 
-	    ,A.POST_CONTENT AS POST_CONTENT 
-	    ,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI') AS POST_CREATE_DATE 
-	    ,B.MEMBER_ID AS MEMBER_ID 
-	FROM
-	    POST A
-	  	LEFT OUTER JOIN MEMBER B
-	    ON A.MEMBER_NO = B.MEMBER_NO
-	ORDER BY A.POST_CREATE_DATE DESC
+		SELECT
+			A.POST_ID AS POST_ID 
+		    ,A.POST_CONTENT AS POST_CONTENT 
+		    ,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI') AS POST_CREATE_DATE 
+		    ,B.MEMBER_ID AS MEMBER_ID 
+		FROM
+		    POST A
+		  	LEFT OUTER JOIN MEMBER B
+		    ON A.MEMBER_NO = B.MEMBER_NO
+		ORDER BY A.POST_CREATE_DATE DESC
 	</select>
 	
 	<!-- 대시보드 댓글 정보조회 리스트  -->
 	<select id="selectReplyList" resultMap="replyListResultMap">
-	SELECT
-		A.REPLY_ID AS REPLY_ID
-	    ,A.REPLY_CONTENT AS REPLY_CONTENT 
-	    ,TO_CHAR(A.REPLY_CREATED_DATE, 'YYYY-MM-DD HH24:MI') AS REPLY_CREATED_DATE
-	    ,B.MEMBER_ID AS MEMBER_ID
-	FROM
-	    REPLY A
-	  	LEFT OUTER JOIN MEMBER B
-	    ON A.MEMBER_NO = B.MEMBER_NO
-	ORDER BY A.REPLY_CREATED_DATE DESC
+		SELECT
+			A.REPLY_ID AS REPLY_ID
+		    ,A.REPLY_CONTENT AS REPLY_CONTENT 
+		    ,TO_CHAR(A.REPLY_CREATED_DATE, 'YYYY-MM-DD HH24:MI') AS REPLY_CREATED_DATE
+		    ,B.MEMBER_ID AS MEMBER_ID
+		FROM
+		    REPLY A
+		  	LEFT OUTER JOIN MEMBER B
+		    ON A.MEMBER_NO = B.MEMBER_NO
+		ORDER BY A.REPLY_CREATED_DATE DESC
 	</select>
 	
 	<!-- 사용자 관리 리스트 -->
 	<select id="selectMemberList" parameterType="AdminDTO" resultMap="memberResultMap">
+		<!-- 페이징 상단 -->
+		<include refid="pageCols"></include>
 		SELECT 
 		     MEMBER_NO AS MEMBER_NO
 		     ,MEMBER_ID AS MEMBER_ID
 		     ,MEMBER_NAME AS MEMBER_NAME
 		     ,MEMBER_NICKNAME  AS MEMBER_NICKNAME
-		     ,CASE WHEN MEMBER_TYPE = 1 THEN '관리자'
-		           WHEN MEMBER_TYPE = 2 THEN '비활성회원'
+		     ,CASE WHEN MEMBER_TYPE = 1 THEN '산책등록회원'
+		           WHEN MEMBER_TYPE = 2 THEN '관리자'
 		           ELSE '일반회원' END AS MEMBER_TYPE
 		     ,MEMBER_EMAIL AS MEMBER_EMAIL 
 		     ,TO_CHAR(MEMBER_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS MEMBER_CREATE_DATE
@@ -104,25 +184,118 @@
 		<if test='memberType != null and memberType != ""'>
 			AND MEMBER_TYPE = #{memberType}
 		</if>
+		<if test='memberIs != null and memberIs != ""'>
+			AND MEMBER_IS = #{memberIs}
+		</if>
 		ORDER BY MEMBER_NO DESC
+		<!-- 페이징 하단 -->
+		<include refid="pageCtrl"></include>
 	</select>
 	
 	<!-- 게시물 관리 리스트 -->
-	<select id="selectBoardManageList" resultMap="boardManageResultMap">
+	<select id="selectBoardManageList" parameterType="AdminDTO" resultMap="postResultMap">
+		<!-- 페이징 상단 -->
+		<include refid="pageCols"></include>
 		SELECT 
-     		A.POST_ID AS POST_ID
-     		,A.POST_CONTENT AS POST_CONTENT
-     		,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS POST_CREATE_DATE
-     		,B.MEMBER_NAME AS MEMBER_NAME
-     		,B.MEMBER_ID AS MEMBER_ID
+		    A.POST_ID AS POST_ID
+		    ,A.POST_CONTENT AS POST_CONTENT
+		    ,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS POST_CREATE_DATE
+		    ,B.MEMBER_NAME AS MEMBER_NAME
+		    ,B.MEMBER_ID AS MEMBER_ID
+		    ,A.POST_SHOW_YN AS POST_SHOW_YN
+		    ,(SELECT COUNT(C.POST_ID) FROM REPLY C WHERE A.POST_ID = C.POST_ID) AS REPLY_CNT
 		FROM
-    		POST A
-    		LEFT OUTER JOIN MEMBER B
-    		ON A.MEMBER_NO = B.MEMBER_NO
+		    POST A
+		    LEFT OUTER JOIN MEMBER B
+		    ON A.MEMBER_NO = B.MEMBER_NO
+		WHERE 1=1
+		<if test='srchVal != null and srchVal != ""'>
+			<choose>
+				<when test='srchType.equals("id") '>
+					AND B.MEMBER_ID = #{srchVal}
+				</when>
+				<when test='srchType.equals("name") '>
+					AND B.MEMBER_NAME = #{srchVal}
+				</when>
+				<when test='srchType.equals("postContent") '>
+					AND A.POST_CONTENT LIKE '%'||#{srchVal}||'%'
+				</when>
+			</choose>
+		</if>
+		<if test='postShowYn != null and postShowYn != ""'>
+			AND A.POST_SHOW_YN = #{postShowYn}
+		</if>
 		ORDER BY A.POST_ID DESC
+		<!-- 페이징 하단 -->
+		<include refid="pageCtrl"></include>
 	</select>
 	
 	<update id="updateMemberIs" parameterType="AdminDTO">
 		UPDATE MEMBER SET MEMBER_IS = #{memberIs} WHERE MEMBER_NO = #{memberNo}			
 	</update>
+	
+	<update id="updatePostShowYn" parameterType="AdminDTO">
+		UPDATE POST SET POST_SHOW_YN  = #{postShowYn} WHERE POST_ID = #{postId}
+	</update>
+	
+	
+	<select id="selectRouteManageList" parameterType="AdminDTO" resultMap="routeResultMap">
+		<!-- 페이징 상단 -->
+		<include refid="pageCols"></include>
+		SELECT
+		    A.ROUTE_NO AS ROUTE_NO
+		    ,A.ROUTE_NAME AS ROUTE_NAME
+		    ,A.ROUTE_DEPARTURES AS ROUTE_DEPARTURES
+		    ,A.ROUTE_DESTINATION AS ROUTE_DESTINATION
+		    ,A.ROUTE_PUBLIC AS ROUTE_PUBLIC
+		    ,B.MEMBER_ID AS MEMBER_ID
+		    ,NVL(C.CNT_ROUTE_RATING,0) AS ROUTE_RATING_CNT
+		    ,NVL(C.AVG_ROUTE_RATING_SCORE,0) AS ROUTE_RATING_SCORE_AVG
+		FROM
+		    WALK_ROUTE A
+		    LEFT JOIN MEMBER B
+		    ON A.MEMBER_NO = B.MEMBER_NO
+		    LEFT JOIN (
+		        SELECT 
+		            TRUNC(AVG(NVL(ROUTE_RATING_SCORE,0))) AS AVG_ROUTE_RATING_SCORE
+		            ,COUNT(ROUTE_NO) AS CNT_ROUTE_RATING
+		            ,ROUTE_NO AS ROUTE_NO
+		        FROM
+		            ROUTE_RATING 
+		        GROUP BY ROUTE_NO
+		    ) C
+		    ON A.ROUTE_NO = C.ROUTE_NO
+		WHERE 1=1
+		<if test='srchVal != null and srchVal != ""'>
+			<choose>
+				<when test='srchType.equals("routeNo") '>
+					AND A.ROUTE_NO = #{srchVal}
+				</when>
+				<when test='srchType.equals("routeName") '>
+					AND A.ROUTE_NAME = #{srchVal}
+				</when>
+				<when test='srchType.equals("routeDepartures") '>
+					AND A.ROUTE_DEPARTURES = #{srchVal}
+				</when>
+				<when test='srchType.equals("routeDestination") '>
+					AND A.ROUTE_DESTINATION = #{srchVal}
+				</when>
+				<when test='srchType.equals("memberId") '>
+					AND B.MEMBER_ID = #{srchVal}
+				</when>
+			</choose>
+		</if>
+		<if test='routePublic != null and routePublic != ""'>
+			AND A.ROUTE_PUBLIC = #{routePublic}
+		</if> 
+		ORDER BY
+		    A.ROUTE_NO DESC
+		<!-- 페이징 하단 -->
+		<include refid="pageCtrl"></include>
+	</select>
+	
+	<update id="updateRoutePublic" parameterType="AdminDTO">
+		UPDATE WALK_ROUTE SET ROUTE_PUBLIC  = #{routePublic} WHERE ROUTE_NO = #{routeNo}
+	</update>
+	
 </mapper>

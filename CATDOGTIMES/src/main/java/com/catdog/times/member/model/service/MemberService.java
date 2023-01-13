@@ -23,6 +23,8 @@ public interface MemberService {
     Member naverLogin(String memberSnsId);
     
 	String findMemberBySnsId(String memberSnsId);
+
+	String findMemberByEmail(String memberEmail);
 	
 	//int delete(int no); //회원삭제
 }

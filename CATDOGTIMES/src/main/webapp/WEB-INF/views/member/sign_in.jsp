@@ -42,11 +42,20 @@
 	  </div>
 	</div>
 
+	
+
   <div class="login">
     <div class="login__content">
-      <div class="login__img">
-        <img src="https://image.freepik.com/free-vector/code-typing-concept-illustration_114360-3581.jpg" alt="user login">
-      </div>
+      <section id="slider" class="slider-element dark">
+		<div class="slider-inner">
+			<div class="video-wrap m-auto" style="position: sticky">
+				<video id="mainVideo" style="z-index: 1" preload="auto" loop autoplay muted playsinline></video>
+				<div class="video-overlay w-100" style="z-index: 0; background-color: rgba(0, 0, 0, 0.45)"></div>
+			</div>
+	  	</div>
+	  </section>
+      
+      
       <div class="login__forms">
         <!--로그인 폼 -->
         <form action="${ path }/member/login" method="POST" class="login__register" id="login-in">
@@ -57,9 +66,11 @@
           </div>
           <div class="login__box">
             <i class='bx bx-lock login__icon'></i>
-            <input type="text" placeholder="Password" class="login__input" id="password" name="password">
+            <input type="password" placeholder="Password" class="login__input" id="password" name="password">
           </div>
-          <a href="#" class="login__forgot">비밀번호 찾기</a>
+          
+          <span class="find__pw" id="find-pw-span">/비밀번호 찾기</span>
+          <span class="find__id" id="find-id-span">아이디</span>
           
           <a href="#" class="login__button" onclick="return login()">로그인</a> <!-- return받은 값이 true이면 제출 -->
           
@@ -158,6 +169,32 @@
           </div>
           
         </form>
+      	
+      	<!-- 아이디 찾기 폼 -->
+        <form class="login__register none" id="find-id">
+          <h1 class="login__title">아이디 찾기</h1>
+          <div class="login__box">
+            <input type="text" placeholder="email" class="login__input" id="find_id_email" name="email">
+          </div>
+          <span class="login__signup login__signup--signup" onClick="window.location.reload()">로그인</span>
+          
+          <a href="#" class="login__button" id="btn-find-id">아이디 찾기</a>
+        </form> 
+      	
+      	<!-- 비밀번호 찾기 폼 -->
+      	<form class="login__register none" id="find-pw">
+          <h1 class="login__title">비밀번호 재발급</h1>
+          <div class="login__box">
+            <input type="text" placeholder="아이디" class="login__input" id="find_pw_id" name="id">
+          </div>
+          <div class="login__box">
+            <input type="text" placeholder="이메일" class="login__input" id="find_pw_email" name="email">
+          </div>
+          <span class="login__signup login__signup--signup" onClick="window.location.reload()">로그인</span>
+          
+          <a href="#" class="login__button" id="btn-find-pw">임시비밀번호 발급</a>
+        </form> 
+      	
       </div>
     </div>
    </div>
@@ -218,7 +255,7 @@
 	            }
 	        },
 	        error:function(){
-	            alert("에러입니다");
+	            Swal.fire("에러입니다");
 	        }})
       }
 	  //아이디 중복체크
@@ -245,7 +282,7 @@
 		            }
 		        },
 		        error:function(){
-		            alert("에러입니다");
+		            Swal.fire("에러입니다");
 		        }
 		    });
 		}else{
@@ -307,6 +344,96 @@
 		  }
 		});
 
+	    //아이디 찾기
+		$("#btn-find-id").click(function(){
+			const email = $('#find_id_email').val(); // 이메일 주소값
+
+			let emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			
+			if (email == "") {
+				Swal.fire('이메일을 입력해주세요.')
+				return false;
+			}else if(!emailExpression.test(email)){
+				Swal.fire('이메일 형식에 맞게 입력해주세요.')
+				return false;
+			}
+			$.ajax({
+				url : "${ path }/member/findId",
+				type : "POST",
+				data : {
+					email
+				},
+				success: (obj) => {
+		               if(obj.result === 1) {
+		            	   Swal.fire({
+			                	  icon: 'success',
+			                	  title: '전송 성공!',
+			                      html: '회원님의 아이디가 메일로 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
+			                	}).then(function() {
+			                	    window.location.reload();
+			                	});
+		               } else {
+		            	   Swal.fire({
+			                	  icon: 'error',
+			                	  title: '전송 실패!',
+			                	  html: '이메일을 제대로 입력했는지 확인해주시길 바랍니다.'
+			                	})
+		               }
+		            }, 
+		            error: (error) => {
+		               console.log(error);
+		            }
+		     });
+		 });
+	    
+	    //임시비밀번호 발급
+		$("#btn-find-pw").click(function(){
+			const email = $('#find_pw_email').val(); // 이메일 주소값
+			const id = $('#find_pw_id'); // 아이디 값
+			let emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			if (email == "") {
+				Swal.fire('이메일을 입력해주세요.')
+				return false;
+			}else if(id == ""){
+				Swal.fire('아이디를 입력해주세요.')
+			}else if(!emailExpression.test(email)){
+				Swal.fire('이메일 형식에 맞게 입력해주세요.')
+				return false;
+			}
+			$.ajax({
+				url : "${ path }/member/findPw",
+				type : "POST",
+				data : {
+					id : $("#find_pw_id").val(),
+					email : $("#find_pw_email").val()
+				},
+				success: (obj) => {
+		               if(obj.result === 1) {
+		            	   Swal.fire({
+			                	  icon: 'success',
+			                	  title: '전송 성공!',
+			                      html: '임시비밀번호가 메일로 전송되었습니다!<br/>*이메일이 도착하기까지 몇 분 정도 소요될 수 있습니다.<br/>*스팸 메일함으로 발송될 수 있으니 체크 바랍니다.',
+			                	}).then(function() {
+			                	    window.location.reload();
+			                	});
+		               } else {
+		            	   Swal.fire({
+			                	  icon: 'error',
+			                	  title: '전송 실패!',
+			                	  html: '아이디 또는 이메일을 제대로 입력했는지 확인해주시길 바랍니다.'
+			                	})
+		               }
+		            }, 
+		            error: (error) => {
+		               console.log(error);
+		            }
+		     });
+		 });
+	    
+		$(document).ready(function () {
+			videoNum = Math.floor(3 * Math.random()) + 1;
+			$("#mainVideo").append('<source src="${ path }/resources/images/movie/movie'.concat(videoNum, '.mp4" type="video/mp4" />'));
+		});
    </script>   
 </body>
 

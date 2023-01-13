@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 @Component
+@PropertySource("classpath:jwt.properties")
 public class JwtInterceptor implements HandlerInterceptor {
 	@Value("${jwt.secretkey}")
 	private String SECRET_KEY; //서명에 사용할 키
