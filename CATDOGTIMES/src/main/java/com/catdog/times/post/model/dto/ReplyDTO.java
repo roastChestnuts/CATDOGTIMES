@@ -17,4 +17,5 @@ public class ReplyDTO {
 	private int postId;
 	private int memberNo;
 	private String replyNickname;
+	private String writerPhoto;
 }

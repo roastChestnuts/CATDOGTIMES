@@ -52,6 +52,7 @@
 		<result column="postId" property="postId" />
 		<result column="MEMBER_NO" property="memberNo" />
 		<result column="replyNickname" property="replyNickname" />
+		<result column="writerPhoto" property="writerPhoto" />
 	</resultMap>
 
 	<resultMap type="ReplyLikeDTO" id="ReplyLikeResultMap">
@@ -294,7 +295,8 @@
 		--R.REPLY_CREATED_DATE , REPLY 생성일
 		--R.REPLY_UPDATE_DATE , REPLY 수정일
 		--R.POST_ID, --REPLY 가져올 때 쓸 ID
-		M.MEMBER_NICKNAME AS replyNickname--REPLY 작성한 사람의 닉네임
+		M.MEMBER_NICKNAME AS replyNickname,--REPLY 작성한 사람의 닉네임
+		M.MEMBER_PHOTO AS writerPhoto-- REPLY 작성한 사람의 프로필 사진
 		FROM REPLY R, MEMBER M, POST P
 		WHERE R.MEMBER_NO = M.MEMBER_NO
 		AND R.POST_ID = P.POST_ID

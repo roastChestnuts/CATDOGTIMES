@@ -49,14 +49,14 @@ public class PostController {
 		int result = service.postUpdate(post);
 		return result;
 	}
-	// SNS 게시글 삭제 로그인 유무 체크 필요한가...
-
+	
+	// SNS 게시글 삭제 
 	@RequestMapping(value = "/delete")
-	public String deletePost(String postId) {
+	public int deletePost(int postId) {
 		System.out.println(postId);
-		// 로그인 사용자 찾기 (우선 pass)
-		int result = service.deletePost(Integer.parseInt(postId));
-		return "성공" + result;
+		//우선 아무나 삭제 가능하게 했는데, 이것도 memberNo와 게시글 작성자 일치할 때만 삭제하게끔 만들어야 함.
+		int result = service.deletePost(postId);
+		return result;
 	}
 
 	/* 해시태그 insert */
