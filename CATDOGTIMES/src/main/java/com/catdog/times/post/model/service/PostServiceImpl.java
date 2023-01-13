@@ -72,7 +72,13 @@ public class PostServiceImpl implements PostService {
 	public PostDTO readPost(int postId) {		
 		return mapper.readPost(postId);
 	}
-
+	
+	@Override
+	public List<ReplyDTO> readReply(int postId) {
+		System.out.println("ServiceImpl" + postId);
+		return mapper.readReply(postId);
+	}
+	
 	@Override
 	public List<PostDTO> findByContent(String postContent) {		
 		return mapper.findByContent(postContent);

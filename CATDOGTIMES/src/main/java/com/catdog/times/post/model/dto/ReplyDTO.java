@@ -16,4 +16,5 @@ public class ReplyDTO {
 	private Date replyUpdateDate;
 	private int postId;
 	private int memberNo;
+	private String replyNickname;
 }

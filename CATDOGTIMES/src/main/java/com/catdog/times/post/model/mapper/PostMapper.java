@@ -39,9 +39,7 @@ public interface PostMapper {
 
 	/* <<<LIST, READ>>> */
 	// POST 전체조회
-	List<SNSFeedDTO> selectAllPost();
-	// List<PostContentDTO> selectPostContent(Map<String,Object> map);
-
+	List<SNSFeedDTO> selectAllPost();	
 	
 	// 특정 게시물 닉네임으로 조회. 내 파트가 아닌 것으로 보임
 /*	PostDTO findByNickname(String nickName);*/
@@ -57,7 +55,10 @@ public interface PostMapper {
 
 	// 탐색
 	ImageDTO findImageById(int imageId);
-
+	
+	// 댓글 불러오기
+	List<ReplyDTO> readReply(int postId);
+	
 	/* <<UPDATE>> */
 	// SNS 게시물 본문 수정
 	int postUpdate(PostDTO post);
