@@ -41,7 +41,17 @@ public class AdminDTO {
 	private String srchVal;				// 검색값
 	// ---------------------------
 	
-	// 페이징 ---------------------
+	// 산책루트 --------------------
+	private String routeNo;				// 산책루트번호
+	private String routeName;			// 루트이름
+	private String routeDepartures;		// 루트출발지
+	private String routeDestination;	// 루트도착지
+	private String routePublic;			// 루트 공개여부(TRUE,FALSE)
+	private int routeRatingCnt;			// 루트 평가 수
+	private int routeRatingScoreAvg;	// 루트 평균 평점
+	// ---------------------------
+	
+	// 페이징 ----------------------
 	private int rowNum;					// 행번호
 	private int totalCnt;				// 총건수
 	private int pageCnt;				// 페이지 count

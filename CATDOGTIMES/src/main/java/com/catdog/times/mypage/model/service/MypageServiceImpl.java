@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.catdog.times.mypage.model.dto.FollowMemberDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 import com.catdog.times.mypage.model.mapper.MypageMapper;
@@ -25,6 +26,19 @@ public class MypageServiceImpl implements MypageService {
 	public List<PostContentDTO> selectPostContent(Map<String,Object> map) {
 		return mapper.selectPostContent(map);
 	}
-	
 
+	@Override
+	public int updateMemberInfo(MypageDTO mypagedto) {
+		return mapper.updateMemberInfo(mypagedto);
+	}
+	
+	@Override
+	public List<FollowMemberDTO> selectFollowList(Map<String,Object> map) {
+		return mapper.selectFollowList(map);
+	}
+	
+	@Override
+	public int deleteFollower(Map<String,Object> map) {
+		return mapper.deleteFollower(map);
+	}
 }
