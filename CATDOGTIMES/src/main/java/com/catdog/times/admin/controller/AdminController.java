@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.admin.model.dto.AdminDTO;
+import com.catdog.times.admin.model.dto.AdminStaticsDTO;
 import com.catdog.times.admin.model.service.AdminService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 		
 		@RequestMapping("/dashboard")
 		public ModelAndView retrieveDashboardInfo(ModelAndView model) {
+			//대시보드 - 항목별 Total값 조회
+			List<AdminStaticsDTO> totalList = service.selectAllTotalCount();	
 			//대시보드 - 게시글 조회
 			List<AdminDTO> boardList = service.selectBoardList();
-			model.addObject("boardList", boardList);
 			//대시보드 - 댓글 조회
 			List<AdminDTO> replyList = service.selectReplyList();	
+			model.addObject("totalList", totalList);
+			model.addObject("boardList", boardList);
 			model.addObject("replyList", replyList);
 			model.setViewName("admin/adminMain");
 			return model;
@@ -104,4 +108,29 @@ import lombok.extern.slf4j.Slf4j;
 			}
 			return result; 
 		}
+		
+		// 산책루트 목록 조회
+		@RequestMapping("/routemanage/routelist")
+		@ResponseBody
+		public List<AdminDTO> retrieveRouteManageList(AdminDTO adminDTO) {
+			log.info("retrieveRouteManageList admin DTO :::: " + adminDTO.toString()); 
+			List<AdminDTO> routeList = service.selectRouteManageList(adminDTO);
+			return routeList;
+		}
+		
+		// 산책루트 공개/비공개 처리
+		@RequestMapping("/routemanage/route")
+		@ResponseBody
+		public String updateRoutePublic(@RequestBody AdminDTO adminDTO) {
+			String result = "";
+			log.info("updateRoutePublic adminDTO ::: " + adminDTO.toString());
+			int cnt = service.updateRoutePublic(adminDTO);
+			if(cnt == 0) {
+				result = "fail";
+			} else {
+				result = "success";
+			}
+			return result; 
+		}
+		
 	}

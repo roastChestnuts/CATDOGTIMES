@@ -358,7 +358,7 @@
     		
     		var pageIdx = pageIdx;
     		// 페이지 당 출력할 리스트 수
-    		var cntPerPage = 2;
+    		var cntPerPage = 5;
     		
 	    	// 검색 구분값
 	    	var srchType = $('#searchType').val();
@@ -378,15 +378,12 @@
 	    			"pageIdx"		:	pageIdx
 	    		}
     		
-	    	console.log('param ::: ' , param);
-	    	console.log('ttt');
 	    	$.ajax({
 	    		url:"${ path }/admin/boardmanage/boardlist",
 	    		type:"GET",
 	    		contentType:"json",
 	    		data:param,
 	    		success: function(data){
-	    			console.log('data ::: ' , data)
 	    			boardArrayList = data;
 	    			$('#boardTable').html("");
 	    			$('#pagingArea').html("");
@@ -416,9 +413,9 @@
 			    				htmlString += "			<td>" + data[i].replyCnt + "</td>"
 				    			htmlString += "			<td>"
 				    			if(data[i].postShowYn == 'Y'){
-					    			htmlString += "			<button class='btshow' style='background-color: #878787'>노출</button>"
+					    			htmlString += "			<button class='btshow' style='background-color: #fff'>노출</button>"
 				    			} else {
-					    			htmlString += "			<button class='btshow' style='background-color: #fff'>미노출</button>"
+					    			htmlString += "			<button class='btshow' style='background-color: #878787'>미노출</button>"
 				    			}
 				    			htmlString += "			</td>"
 				    			htmlString += "		</tr>"
@@ -516,7 +513,6 @@
     	    		contentType:'application/json',
     	    		dataType: 'text',
     	    		success: function(data){
-    	    			console.log('result ::::::::: ' , data);
     	    			// 사용자 목록 조회 함수 호출
     	    			clickSrchBtn(nowPage);
     	    		},
@@ -527,16 +523,6 @@
     		} 
     		
     	});
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     	</script>

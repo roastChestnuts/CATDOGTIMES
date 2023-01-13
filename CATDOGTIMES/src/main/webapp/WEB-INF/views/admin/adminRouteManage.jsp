@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${ pageContext.request.contextPath }"/>
 <html lang="ko">
 <head>
     <meta charset="utf-8">
@@ -19,11 +20,31 @@
     <link rel="stylesheet" href="../css/home-fashion-vertical.css">
 
     <style>
-/* 전체 레이아웃 */
+	/* 전체 레이아웃 */
         .header_7 .header__mid{padding-top: 32px; padding-bottom: 32px;}
         .widget_img_pr, .widget_img_ar {min-width: 64px;  max-width: 64px;}
         .allrank .rank{padding-left: 0;}
-
+	
+	/* paging css */
+		  .pageInfo{
+		   	list-style : none;
+		   	display: inline-block;
+		  }
+		  .pageInfo li{
+		    float: left;
+		    font-size: 20px;
+ 		    margin-left: auto; 
+		    padding: 7px;
+		    font-weight: 500; 
+		  }
+		  .checked{
+		      color: #56cfe1; 
+		  }
+		  .btshow:hover{
+		  	border-color: black;
+		    background-color: #fff;
+		    color: black;
+		  }
     </style>
 
 </head>
@@ -50,7 +71,7 @@
                             </div>
                             <div class="col-lg-12 col-6 tc">
                                 <div class="branding ts__05 lh__1">
-                                    <a class="dib" href="#">멍냥일보</a>
+                                    <a class="dib" href="mypage2.html">멍냥일보</a>
                                 </div>
                             </div>
                             
@@ -86,26 +107,77 @@
         </header>
         <!-- end header -->
 
-        <div id="nt_content" class="mainContent p-5">
+       		<div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
-<div class="row">
+				<span style="font-size:30px;font-weight:bold;">산책루트 관리</span><br/>
+            <span>멍냥일보 산책루트관리 페이지 입니다. &nbsp;산책루트에 대한 공개여부처리를 할 수 있습니다.</span>
+						<div class="row" style="padding-top:20px;">
                         	<div class="col-xl-12">
                             	<div class="card mb-4">
                                     <div class="card-header">
-                                        산책루트 관리
-                                    </div> 
-                                    <div class="card-body">
-                                    	<span>여기는 산책루트 구현 영역입니다.</span>
-                                    	<br><br><br><br><br><br><br><br>
-                                    	<br><br><br><br><br><br><br><br>
+                                    	<div>
+                                    		<select class="admin_srchBox" style="width:150px;" id="searchType">
+                                    			<option value="routeNo">산책루트번호</option>
+                                    			<option value="routeName">루트명</option>                                			
+                                    			<option value="routeDepartures">출발지</option>                                			
+                                    			<option value="routeDestination">도착지</option>                                			
+                                    			<option value="memberId">아이디</option>
+                                    		</select>
+                                    		<input id="searchVal"></input>
+                                    	</div>
+                                    	<div>
+                                    		<select class="admin_srchBox" style="width:150px;" id="routePublic">
+                                    			<option value="">전체</option>
+                                    			<option value="TRUE">공개</option>
+                                    			<option value="FALSE">비공개</option>
+                                    		</select>
+                                    	</div>
+                                  		<div style="">
+                                  			<button id="searchBtn" style="margin:auto; display:block;" onclick="clickSrchBtn(1)">검색</button>
+                                  		</div>
+                                 	 </div>
+                                  </div>
+                                    	<div id="routeTable">
+                                    		<table class="">
+                                    			<thead>
+                                    				<tr>
+                                    					<td>산책루트번호</td>
+                                    					<td>루트명</td>
+                                    					<td>출발지</td>
+                                    					<td>도착지</td>
+                                    					<td>아이디</td>
+                                    					<td>평가 수</td>
+                                    					<td>평점평균</td>
+                                    				</tr>
+                                    			</thead>
+                                    			<tbody>
+                                    			<c:forEach var="data" items="${boardManageList}">
+                                    				<tr>
+                                    					<td>${data.postId}</td>
+                                    					<td>${data.postContent}</td>
+                                    					<td>${data.memberName}</td>
+                                    					<td>${data.memberId}</td>
+                                    					<td>${data.postCreateDate}</td>
+                                    					<td>${data.replyCnt}</td>
+                                    					<td>
+                                    					<!-- 조건에 따라서 버튼 처리 -->
+                                    						${data.postShowYn}
+                                    					</td>
+                                    				</tr>
+                                    			</c:forEach>
+                                    			</tbody>
+                                    		</table>
+                                    	</div>
+                                    	<div id="pagingArea">
+                                    	</div>
                                     </div>
                                 </div>
                             </div>            
                         </div>
                     </div>
                 </main>
+            </div>    
             <!-- end 메인 콘텐트 -->
-        </div>
 
         <aside id="ntside" class="ntheader right_side h_icon_iccl p-3">
             <div class="ntheader_wrapper pr z_200">
@@ -243,10 +315,6 @@
                                             data-src="../images/mini-cart/product-01.jpg" width="80"
                                             height="80"></a>
                                 </div>
-<!--                                 <div class="col widget_if_pr"> -->
-<!--                                     <a class="product-title db" href="product-detail-layout-01.html">sunlight bell solar -->
-<!--                                         lamp</a>$35.00 -->
-<!--                                 </div> -->
                             </div>
                             <a href="#" class="btn fwsb detail_link">View All
                                 <i class="las la-arrow-right fs__18"></i></a>
@@ -259,33 +327,7 @@
     <!-- mobile menu -->
     <div id="nt_menu_canvas" class="nt_fk_canvas nt_sleft dn lazyload pt-3">
         <i class="close_pp pegk pe-7s-close ts__03 cd"></i>
-        <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>
-        
-<!--         <div id="kalles-section-mb_nav_js" class="mb_nav_tab active"> -->
-<!--             <div id="kalles-section-mb_nav" class="kalles-section"> -->
-<!--                 <ul id="menu_mb_ul" class="nt_mb_menu"> -->
-<!--                     <li id="item_header_7-0" class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">HOME</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#" class="icon_search push_side cb chp"  data-id="#nt_search_canvas" ><span class="nav_link_txt flex al_center">검색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">탐색</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item"> -->
-<!--                         <a href="#" class="kalles-lbl__nav-sale">알림<span class="lbc_nav_mb ml__5">5</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">DM</span></a> -->
-<!--                     </li> -->
-<!--                     <li class="menu-item  "> -->
-<!--                         <a href="#"><span class="nav_link_txt flex al_center">북마크</span></a> -->
-<!--                     </li> -->
-<!--                 </ul> -->
-<!--             </div> -->
-<!--         </div> -->
-        
+        <div class="pr mb_nav_ul flex al_center fl_center p-3" >멍냥일보</div>       
     </div>
     <!-- end mobile menu -->
 
@@ -303,6 +345,190 @@
     <script src="../js/js-cookie.min.js"></script>
     <script src="../js/jquery.countdown.min.js"></script>
     <script src="../js/interface.js"></script>
+    
+    <script type="text/javascript">
+    	var routeArrayList = new Array();
+    	var nowPage = 1;
+    	$(document).ready(function(){
+    		// 화면 진입 시 목록 조회 함수 실행
+    		clickSrchBtn(1); 
+    		
+    	});
+    	
+    	// 검색버튼 클릭 이벤트
+    	function clickSrchBtn(pageIdx){
+    		
+    		var pageIdx = pageIdx;
+    		// 페이지 당 출력할 리스트 수
+    		var cntPerPage = 5;
+    		
+	    	// 검색 구분값
+	    	var srchType = $('#searchType').val();
+	    	
+	    	// 검색 입력값
+	    	var srchVal = $('#searchVal').val();
+	    	
+	    	// 산책루트 공개여부 값
+	    	var routePublic = $('#routePublic option:selected').val();
+	    	
+	    	var param = 
+	    		{
+	    			"srchType"		:	srchType	,
+	    			"srchVal" 		:	srchVal 	,
+	    			"routePublic"	:	routePublic	,
+	    			"cntPerPage"	:   cntPerPage	,
+	    			"pageIdx"		:	pageIdx
+	    		}
+    		
+	    	$.ajax({
+	    		url:"${ path }/admin/routemanage/routelist",
+	    		type:"GET",
+	    		contentType:"json",
+	    		data:param,
+	    		success: function(data){
+	    			routeArrayList = data;
+	    			$('#routeTable').html("");
+	    			$('#pagingArea').html("");
+	    			var htmlString = "";
+    				htmlString += "<table>";
+    				htmlString += "		<thead>";
+    			 	htmlString += "		<tr>";
+    				htmlString += "			<td>산책루트번호</td>";
+    				htmlString += "			<td>루트명</td>";
+    				htmlString += "			<td>출발지</td>";
+    				htmlString += "			<td>도착지</td>";
+    				htmlString += "			<td>아이디</td>";
+    				htmlString += "			<td>평가 수</td>";
+    				htmlString += "			<td>평점평균</td>";
+    				htmlString += "			<td>공개여부</td>";
+    				htmlString += "		</tr>";
+    				htmlString += "</thead>";
+		   				if(data.length > 0)
+		    			{
+			    				htmlString += "<tbody>";
+		    				for(var i = 0 ; i < data.length ; i++){
+				    			htmlString += "		<tr>"
+			    				htmlString += "			<td>" + data[i].routeNo + "</td>"
+			    				htmlString += "			<td>" + data[i].routeName + "</td>"
+			    				htmlString += "			<td>" + data[i].routeDepartures + "</td>"
+			    				htmlString += "			<td>" + data[i].routeDestination + "</td>"
+			    				htmlString += "			<td>" + data[i].memberId + "</td>"
+			    				htmlString += "			<td>" + data[i].routeRatingCnt + "</td>"
+			    				htmlString += "			<td>" + data[i].routeRatingScoreAvg + "</td>"
+				    			htmlString += "			<td>"
+				    			if(data[i].routePublic == 'TRUE'){
+					    			htmlString += "			<button class='btshow' style='background-color: #fff'>공개</button>"
+				    			} else {
+					    			htmlString += "			<button class='btshow' style='background-color: #878787'>비공개</button>"
+				    			}
+				    			htmlString += "			</td>"
+				    			htmlString += "		</tr>"
+			    			}
+			    				htmlString += "</tbody>";
+		    					htmlString += "</table'>";
+		    					
+		    					// 페이징 그리는 영역
+		    					var pagingString ="";
+				    			pagingString += "<div class='pageInfo_wrap' style='text-align:center;'>";
+				    			pagingString += "		<div class='pageInfo_area'>";
+				    			pagingString += "			<ul id='pageInfo' class='pageInfo'>";
+				    			if(data[0].startPageIdx > 1){
+									pagingString += "			<li class='pageInfo_btn previous'><a href='#' onclick='pagingClick("+ ( data[0].startPageIdx - 1 ) +")'>이전</a></li>";
+				    			}
+								for(var j = data[0].startPageIdx ; j <= data[0].endPageIdx ; j ++){
+									if(data[0].pageIdx == j)
+									{
+										pagingString += "			<li class='pageInfo_btn'><a class='checked' href='#' onclick='pagingClick("+ j +")'>" + j + "</a></li>";
+									} 
+									else
+									{
+										pagingString += "			<li class='pageInfo_btn'><a href='#' onclick='pagingClick("+ j +")'>" + j + "</a></li>";
+									}
+								}
+								if(data[0].endPageIdx != data[0].pageCnt){
+									pagingString += "			<li class='pageInfo_btn next'><a href='#' onclick='pagingClick("+ ( data[0].endPageIdx + 1 )+")'>다음</a></li>";
+								}
+								pagingString += "			</ul>";
+								pagingString += "		</div>";
+								pagingString += "</div>";
+		    					
+		    			} 
+		   				else
+		    			{
+		    					htmlString += "</table>";
+		    					htmlString += "<div style='text-align:center;'><span>검색 값이 없습니다.</span></div>";
+		    			}
+	    			$('#routeTable').append(htmlString);
+	    			$('#pagingArea').append(pagingString);
+	    		},
+	    		error: function(e){
+	    			alert('실패!!');
+	    			console.log(e);
+	    		}
+	    	})
+	    	
+	    	
+		}
+    
+    
+    	//--------------------------------------------------
+    	// 페이징 버튼 클릭 이벤트
+    	//--------------------------------------------------
+    	function pagingClick(pageIdx){
+    		nowPage = pageIdx;
+    		clickSrchBtn(pageIdx);
+    	}
+    	
+    
+    	//--------------------------------------------------
+    	// 미노출처리 버튼 클릭 이벤트
+    	//--------------------------------------------------
+    	$(document).on("click",".btshow",function(e) {
+    		
+    		// index 가져오기
+    		var index = ($(".btshow").index(this));
+    		
+    		// 활성여부 클릭한 해당 회원의 활성여부 값 가져오고	
+    		var routeNo 	 = routeArrayList[index].routeNo;
+    		var routePublic  = routeArrayList[index].routePublic; 
+    		
+    		// postShowYn 가 Y 일때 N, N 일때 Y로 변수에 값 넣고
+    		var ckText = "";
+    		if( routePublic == 'TRUE') {
+    			routePublic = 'FALSE';	
+    			ckText = "비공개 처리를 하시겠습니까?";
+    		} else {
+    			routePublic = 'TRUE';	
+    			ckText = "공개 처리를 하시겠습니까?";
+    		}
+    		var checkVal = confirm(ckText);
+    		
+    		var param = 
+    		{
+    				"routeNo"		: 	routeNo		,
+    				"routePublic"	: 	routePublic
+    		}
+    		// confirm 확인 클릭 시 (true)
+    		if(checkVal){ 
+    			// 3. 해당 값으로 회원 활성여부 수정하는 API 비동기 처리
+        		$.ajax({
+    	    		type:'POST',
+    	    		url:'${ path }/admin/routemanage/route',
+    	    		data:JSON.stringify(param),
+    	    		contentType:'application/json',
+    	    		dataType: 'text',
+    	    		success: function(data){
+    	    			// 사용자 목록 조회 함수 호출
+    	    			clickSrchBtn(nowPage);
+    	    		},
+    	    		error: function(e){
+    	    			console.log(e);
+    	    		}
+    	    	})
+    		} 
+    		
+    	});
+    
+    	</script>
 </body>
-
 </html>
