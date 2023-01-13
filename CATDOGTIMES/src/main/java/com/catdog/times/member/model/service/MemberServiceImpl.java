@@ -1,6 +1,11 @@
 package com.catdog.times.member.model.service;
 
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.member.model.mapper.MemberMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -115,5 +121,62 @@ public class MemberServiceImpl implements MemberService {
         return mapper.findMemberByEmail(memberEmail);
     }
     
+	@Override
+	public int checkAnimalNumber(String animalRegNo) {
+		log.info("snsId:: " + animalRegNo);
+        return mapper.checkAnimalNumber(animalRegNo);
+	}
+    
+    @Override
+    public int updateAnimalNumber(Member member) throws Exception{
+        log.info("snsId:: " + member.getAnimalRegNo());
+    	
+    	ObjectMapper objectMapper = new ObjectMapper();
+		URL url = new URL("https://www.animal.go.kr/front/awtis/record/recordConfirmDtl.do;");
+		HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+		httpConn.setRequestMethod("POST");
+
+		httpConn.setRequestProperty("Accept", "application/json, text/javascript, */*; q=0.01");
+		httpConn.setRequestProperty("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+		httpConn.setRequestProperty("Connection", "keep-alive");
+		httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+		httpConn.setRequestProperty("Cookie", "WMONID=57syYTpaec1; JSESSIONID=ab8i2La1QXHyGlxjXFBjMVACpTMT3t1C89zNOeWSjrVZEujRbl9KWkXqTB1pHQtq.aniwas_servlet_engine2; JSESSIONID_FRONT7=pYzNu1gkQmKBdIl5XaZRJKwmCFMPj1K98IWoa5t15LwqkaXibYlsA5js7oAsnVop.aniwas2_servlet_front");
+		httpConn.setRequestProperty("Origin", "https://www.animal.go.kr");
+		httpConn.setRequestProperty("Referer", "https://www.animal.go.kr/front/awtis/record/recordConfirmList.do?menuNo=2000000011");
+		httpConn.setRequestProperty("Sec-Fetch-Dest", "empty");
+		httpConn.setRequestProperty("Sec-Fetch-Mode", "cors");
+		httpConn.setRequestProperty("Sec-Fetch-Site", "same-origin");
+		httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+		httpConn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+		httpConn.setRequestProperty("sec-ch-ua", "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Google Chrome\";v=\"108\"");
+		httpConn.setRequestProperty("sec-ch-ua-mobile", "?0");
+		httpConn.setRequestProperty("sec-ch-ua-platform", "\"Windows\"");
+
+		httpConn.setDoOutput(true);
+		OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+		writer.write("sOwnerState=owner&searchOwnerKeyword="+member.getName()+"&sRfidState=drn&searchRfidKeyword="+member.getAnimalRegNo());
+		writer.flush();
+		writer.close();
+		httpConn.getOutputStream().close();
+
+		InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+				? httpConn.getInputStream()
+				: httpConn.getErrorStream();
+		Scanner s = new Scanner(responseStream).useDelimiter("\\A");
+		String response = s.hasNext() ? s.next() : "";
+		
+		//json -> map변환 {"data":{"bgroup":"","kindCd":...}}
+		Map<String, Object> dataCheck = objectMapper.readValue(response, Map.class);
+		
+		if(dataCheck.get("data") == (Object)0) {
+			return 0; //조회 실패
+		}else {
+			//data에 해당하는 value부분만 String으로 변환 후 다시 map으로 변환
+			Map<String, Object> data = objectMapper.readValue(objectMapper.writeValueAsString(dataCheck.get("data")), Map.class);
+			//System.out.println(data.get("dogRegNo"));
+			return mapper.updateAnimalNumber(member);
+		}
+    }
+
 
 }

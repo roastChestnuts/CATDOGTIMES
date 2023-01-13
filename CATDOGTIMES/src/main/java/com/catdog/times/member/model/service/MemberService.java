@@ -25,6 +25,10 @@ public interface MemberService {
 	String findMemberBySnsId(String memberSnsId);
 
 	String findMemberByEmail(String memberEmail);
+
+	int checkAnimalNumber(String animalRegNo);
+	
+	int updateAnimalNumber(Member member) throws Exception; //동물등록번호조회
 	
 	//int delete(int no); //회원삭제
 }

@@ -36,4 +36,10 @@ public interface MemberMapper {
     
     //임시비밀번호로 변경
 	int updatePassword(Member member);
+	
+	//기등록동물번호인지 체크
+	int checkAnimalNumber(String animalRegNo);
+	
+	//동물등록번호 업데이트
+	int updateAnimalNumber(Member member);
 }

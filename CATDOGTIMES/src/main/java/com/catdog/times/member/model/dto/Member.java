@@ -41,4 +41,6 @@ public class Member {
 	private String detailAddress;
 	
 	private String snsId;
+	
+	private String animalRegNo;
 }
