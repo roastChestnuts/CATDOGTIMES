@@ -86,16 +86,19 @@ public class mypageController {
 		return postcontentList;
 	}
 
+	
 	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
 //	public MypageDTO memberinfoUpdate(@RequestBody MypageDTO mypage) throws IllegalStateException, IOException {		
-	public MypageDTO memberinfoUpdate(@RequestPart("mypage") MypageDTO mypage, @RequestPart MultipartFile photofile, HttpSession session) throws IllegalStateException, IOException {		
-		logger.info("리액트에서 정보 수정 요청오면, 회원정보 수정 스타트"+mypage.toString()+"-"+photofile.toString());
+	public MypageDTO memberinfoUpdate(@RequestPart("mypage") MypageDTO mypage, @RequestPart(required = false) MultipartFile photofile, HttpSession session) throws IllegalStateException, IOException {		
+		//logger.info("리액트에서 정보 수정 요청오면, 회원정보 수정 스타트"+mypage.toString()+"-"+photofile.toString());
 				
 		String path = WebUtils.getRealPath(session.getServletContext(), "/resources/upload");
 		logger.info("path ===== "+ path);
-		
-		String filename = fileuploadService.uploadFiles(photofile, path);
-		mypage.setMemberPhoto(filename);
+			
+		if(photofile != null){
+			String filename = fileuploadService.uploadFiles(photofile, path);			
+			mypage.setMemberPhoto(filename);
+		}
 		
 		service.updateMemberInfo(mypage);
 		MypageDTO result = service.findByID(mypage.getMemberId());
@@ -117,18 +120,19 @@ public class mypageController {
 	}
 	
 	@RequestMapping(value = "/deleteFollower", method = RequestMethod.POST)
-	public List<FollowMemberDTO> deleteFollower(String memberNo, String followNo) {	
-		logger.info("리액트에서 요청오면, deleteFollower-" + memberNo + "-" + followNo );
+	public List<FollowMemberDTO> deleteFollower(String type, String memberNo, String followId) {	
+		logger.info("리액트에서 요청오면, deleteFollower-" + memberNo + "-" + followId );
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("type", "follower");
+		map.put("type", type);
 		map.put("memberNo", memberNo);		
-		map.put("followNo", followNo);
+		map.put("followId", followId);
 		
 		service.deleteFollower(map);		
 		List<FollowMemberDTO> followList = service.selectFollowList(map);		
 		logger.info(followList.toString());
 				
 		return followList;
+		//return null;
 	}
 	
 	
