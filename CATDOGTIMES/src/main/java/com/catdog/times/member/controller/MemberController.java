@@ -288,10 +288,9 @@ public class MemberController {
 	}
     
     //동물등록조회 테스트
-    @PostMapping("/member/animalNumber")
+    @GetMapping("/member/animalNumber")
     @ResponseBody
-	public int updateAnimalNumber(Member member/* int memberNo, String name, String animalRegNo */) throws Exception{
-//    	int result = service.updateAnimalNumber(memberNo, name, animalRegNo);
+	public int updateAnimalNumber(Member member /*int memberNo, String name, String animalRegNo */) throws Exception{
     	int result = 0;
     	if(service.checkAnimalNumber(member.getAnimalRegNo()) > 0) { //기 등록된 동물등록 번호라면 리턴
     		return result;
