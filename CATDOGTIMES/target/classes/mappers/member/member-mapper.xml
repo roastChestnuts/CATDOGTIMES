@@ -200,7 +200,7 @@
 		 WHERE MEMBER_ID = #{id}
 	</update>
 	<!-- 동물등록번호 조회 -->
-	<select id="findMemberByEmail" parameterType="String" resultType="int">
+	<select id="checkAnimalNumber" parameterType="String" resultType="int">
 		SELECT count(*) 
 		  FROM MEMBER 
 		 WHERE MEMBER_ANIMAL_REG_NO = #{animalRegNo}
