@@ -17,7 +17,7 @@ public interface MemberService {
 
 	public int nickNameCheck(String nickName);// 닉네임 중복체크
 	
-	void kakaoJoin(Member member); //카카오
+	String kakaoJoin(Member member); //카카오
 	
 	Member kakaoLogin(String memberSnsId);
 	

@@ -99,7 +99,7 @@
 	</select>
 	
 	<!-- 카카오 회원가입 -->
-	<insert id="kakaoInsert">
+	<insert id="kakaoInsert" useGeneratedKeys="true" keyColumn="MEMBER_NO" keyProperty="no">
 	    INSERT INTO MEMBER (
 			MEMBER_NO,
 	        MEMBER_ID,
@@ -129,6 +129,10 @@
 			DEFAULT,
 		    #{snsId}
 	    )
+	    <selectKey keyProperty="no" resultType="String" order="AFTER"> 
+			SELECT SEQ_MEMBER_NO.CURRVAL
+			FROM DUAL
+        </selectKey>
 	</insert>
 	
 	<!-- 카카오 회원 로그인 -->

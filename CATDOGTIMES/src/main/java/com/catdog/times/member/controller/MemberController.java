@@ -77,7 +77,7 @@ public class MemberController {
 		
 		if(loginMember != null) {
 			model.addObject("loginMember", loginMember);
-			User user = new User(loginMember.getId(), loginMember.getName(), loginMember.getType());
+			User user = new User(Integer.toString(loginMember.getNo()), loginMember.getName(), loginMember.getType());
 			Map<String, String> tokenMap = jwtService.createToken(user);
 			String accessToken = tokenMap.get("accessToken");
 			String refreshToken = tokenMap.get("refreshToken");
@@ -106,6 +106,7 @@ public class MemberController {
 		String nickName = (String) result.get("nickname");
 		String email = (String) result.get("email");
 		String gender = "female".equals((String) result.get("gender")) ? "W" : "M";
+		String no = "";
 		int type = 0;
 		//토큰 생성용 객체
 		User user = new User();
@@ -119,7 +120,7 @@ public class MemberController {
 			member.setNickName(nickName);
 			member.setSnsId(snsId);
 			member.setGender(gender);
-			service.kakaoJoin(member);
+			no = service.kakaoJoin(member);
 			
 			model.addObject("loginMember", member);
 		} else {
@@ -129,11 +130,12 @@ public class MemberController {
 			Member dto = service.findMemberById(MemberId);
 			//멤버타입이 업데이트 돼있다면 바뀔 것
 			type = dto.getType();
+			no = Integer.toString(dto.getNo());
 			log.warn("member:: " + dto);
 			model.addObject("loginMember", dto);
 		}
 		//토큰 객체 세팅
-		user.setId(email);
+		user.setId(no);
 		user.setName(nickName);
 		user.setMemberType(type);
 		

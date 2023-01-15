@@ -17,7 +17,7 @@ public interface MemberMapper {
 	public int nickNameCheck(String nickName);
 	
 	// 카카오 회원가입
-    void kakaoInsert(Member member);
+    String kakaoInsert(Member member);
     
     //snsId로 회원정보 조회
     Member kakaoSelect(String memberSnsId);
