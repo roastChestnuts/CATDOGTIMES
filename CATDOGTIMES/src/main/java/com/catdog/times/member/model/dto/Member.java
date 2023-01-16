@@ -26,6 +26,8 @@ public class Member {
 	
 	private String is; //
 	
+	private String photo;
+	
 	private int type;
 	
 	private int warn; //
