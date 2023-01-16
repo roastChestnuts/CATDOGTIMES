@@ -368,8 +368,7 @@
 	<!-- 게시글 좋아요 삭제 -->
 	<delete id="deletePostLike" parameterType="int">
 		DELETE FROM POST_LIKE
-		WHERE
-		POST_LIKE_ID = #{postLikeId}
+		WHERE POST_LIKE_ID = #{postLikeId}
 	</delete>
 	<!-- 게시글 해시태그 삭제 -->
 	<delete id="deletePostHashtag" parameterType="int">

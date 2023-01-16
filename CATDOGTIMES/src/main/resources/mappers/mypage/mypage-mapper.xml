@@ -42,7 +42,7 @@
 	</resultMap>
 	
 	<resultMap id="followListResultMap" type="FollowMemberDTO">
-		<result column="FOLLOW_NO" property="followNo"/>
+		<result column="FOLLOW_ID" property="followId"/>
 		<result column="MEMBER_NO" property="memberNo"/>
 		<result column="MEMBER_ID" property="memberId"/>
 		<result column="MEMBER_NAME" property="memberName"/>
@@ -74,10 +74,10 @@
                  WHERE P.MEMBER_NO = M.MEMBER_NO ) AS POST_TOTAL 
              , (SELECT  COUNT(FOLLOWER_ID)   
                   FROM FOLLOW F
-                 WHERE F.MEMBER_NO = M.MEMBER_NO ) AS FOLLOWER_CNT
+                 WHERE F.FOLLOWER_ID = M.MEMBER_NO ) AS FOLLOWER_CNT
              , (SELECT  COUNT(FOLLOWING_ID)   
                   FROM FOLLOW F 
-                 WHERE F.MEMBER_NO = M.MEMBER_NO ) AS FOLLOWING_CNT             
+                 WHERE F.FOLLOWING_ID = M.MEMBER_NO ) AS FOLLOWING_CNT             
                  
 		FROM MEMBER M
 		WHERE M.MEMBER_ID = #{memberId}	
@@ -141,34 +141,35 @@
 	<select id='selectFollowList' resultMap="followListResultMap" parameterType="Map">
 	  <choose>
     	<when test="type != null and type == 'follower' ">
-          SELECT M.MEMBER_NO         AS FOLLOW_NO
+          SELECT M.MEMBER_NO         
                , M.MEMBER_ID
                , M.MEMBER_NICKNAME
                , M.MEMBER_PHOTO
-               , F.MEMBER_NO 
+               , F.FOLLOW_ID 
                , 'follower'          AS TYPE
             FROM FOLLOW F    	
-      INNER JOIN MEMBER M ON F.FOLLOWER_ID  = M.MEMBER_NO
+      INNER JOIN MEMBER M ON F.FOLLOWING_ID  = M.MEMBER_NO
            WHERE 1=1
-             AND F.MEMBER_NO = #{memberNo}         
+             AND F.FOLLOWER_ID = #{memberNo}         
     	</when>
         <when test="type != null and type == 'following' ">
-          SELECT M.MEMBER_NO         AS FOLLOW_NO
+          SELECT M.MEMBER_NO         
                , M.MEMBER_ID
                , M.MEMBER_NICKNAME
                , M.MEMBER_PHOTO 
-               , F.MEMBER_NO
+               , F.FOLLOW_ID
                , 'following'         AS TYPE
             FROM FOLLOW F        
-      INNER JOIN MEMBER M ON F.FOLLOWING_ID = M.MEMBER_NO
+      INNER JOIN MEMBER M ON F.FOLLOWER_ID = M.MEMBER_NO
            WHERE 1=1                     
-             AND F.MEMBER_NO = #{memberNo}        
+             AND F.FOLLOWING_ID = #{memberNo}        
          </when>
        </choose>                          
 	</select>
 		
     <delete id="deleteFollower" parameterType="Map">
-      DELETE FROM FOLLOW WHERE MEMBER_NO = #{memberNo} AND FOLLOWER_ID = #{followNo}     
+      DELETE FROM FOLLOW 
+      WHERE  FOLLOW_ID = #{followId}     
     </delete>	
 
 </mapper>

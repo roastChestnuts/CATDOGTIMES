@@ -23,6 +23,8 @@ public interface PostMapper {
 	// 이미지 업로드
 	int insertImage(ImageDTO image);
 
+	//게시글 좋아요
+	int insertPostLike(String postId, String memberNo);
 	// 좋아요 클릭
 	int insertLike(PostLikeDTO postLike);
 
@@ -78,7 +80,7 @@ public interface PostMapper {
 	//댓글 좋아요 삭제
 	int deleteReplyLike(int replyLikeId);
 	
-	//게시글 좋아요 삭제 
+	//게시글 좋아요 삭제(병찬) 
 	int deletePostLike(int postLikeId);
 	
 	//게시글 해시태그 삭제
@@ -92,4 +94,7 @@ public interface PostMapper {
 	
 	//게시글 삭제
 	int deletePost(int postId);
+
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
 }

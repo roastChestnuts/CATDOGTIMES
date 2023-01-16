@@ -41,6 +41,7 @@
 		<result property="zipcode" column="MEMBER_ZIPCODE"/>		
 		<result property="detailAddress" column="MEMBER_DETAIL_ADDRESS"/>		
 		<result property="snsId" column="MEMBER_SNS_ID"/>		
+		<result property="animalRegNo" column="MEMBER_ANIMAL_REG_NO"/>		
 	</resultMap>
 	
 	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
@@ -98,7 +99,7 @@
 	</select>
 	
 	<!-- 카카오 회원가입 -->
-	<insert id="kakaoInsert">
+	<insert id="kakaoInsert" useGeneratedKeys="true" keyColumn="MEMBER_NO" keyProperty="no">
 	    INSERT INTO MEMBER (
 			MEMBER_NO,
 	        MEMBER_ID,
@@ -128,6 +129,10 @@
 			DEFAULT,
 		    #{snsId}
 	    )
+	    <selectKey keyProperty="no" resultType="String" order="AFTER"> 
+			SELECT SEQ_MEMBER_NO.CURRVAL
+			FROM DUAL
+        </selectKey>
 	</insert>
 	
 	<!-- 카카오 회원 로그인 -->
@@ -197,5 +202,20 @@
 		UPDATE MEMBER 
 		   SET MEMBER_PW = #{password} 
 		 WHERE MEMBER_ID = #{id}
+	</update>
+	<!-- 동물등록번호 조회 -->
+	<select id="checkAnimalNumber" parameterType="String" resultType="int">
+		SELECT count(*) 
+		  FROM MEMBER 
+		 WHERE MEMBER_ANIMAL_REG_NO = #{animalRegNo}
+		   AND MEMBER_IS = 'Y'
+	</select>
+	
+	<!-- 동물등록번호 업데이트-->
+	<update id="updateAnimalNumber" parameterType="Member">
+		UPDATE MEMBER 
+		   SET MEMBER_ANIMAL_REG_NO = #{animalRegNo},
+		       MEMBER_TYPE = 1 
+		 WHERE MEMBER_NO = #{no}
 	</update>
 </mapper>

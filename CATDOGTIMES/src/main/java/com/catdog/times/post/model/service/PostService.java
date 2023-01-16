@@ -74,4 +74,9 @@ public interface PostService {
 	//게시글 삭제
 	int deletePost(int postId);
 	
+	//게시글 좋아요버튼 인서트
+	int insertPostLike(String postId, String userId);
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
+	
 }

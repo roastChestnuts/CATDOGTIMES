@@ -150,4 +150,15 @@ public class PostServiceImpl implements PostService {
 		return mapper.deletePost(postId);
 	}
 
+	//게시글 좋아요 인서트
+	@Override
+	public int insertPostLike(String postId, String memberNo) {
+		return mapper.insertPostLike(postId, memberNo);
+	}
+	//게시글 좋아요 조회
+	@Override
+	public List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto) {
+		return mapper.readPostLike(postLikeDto);
+	}
+
 }

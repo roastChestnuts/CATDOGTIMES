@@ -13,6 +13,7 @@
 	Hello world!  
 </h1>
 <a href="${path}/member/login"><div>로그인</div></a>
+<a href="${path}/member/animalNumber"><div>등록번호 조회</div></a>
 <P>  The time on the server is ${serverTime}. </P>
 </body>
 </html>
