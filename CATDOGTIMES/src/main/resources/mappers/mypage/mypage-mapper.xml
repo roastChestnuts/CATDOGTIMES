@@ -25,6 +25,7 @@
 		<result column="POST_TOTAL" property="postTotal"/>
 		<result column="FOLLOWER_CNT" property="followerCnt"/>
 		<result column="FOLLOWING_CNT" property="followingCnt"/>
+		<result column="MEMBER_ANIMAL_REG_NO" property="animalRegNo"/>
 	</resultMap>
 
 	<resultMap id="postContentResultMap" type="PostContentDTO">
@@ -77,7 +78,8 @@
                  WHERE F.FOLLOWER_ID = M.MEMBER_NO ) AS FOLLOWER_CNT
              , (SELECT  COUNT(FOLLOWING_ID)   
                   FROM FOLLOW F 
-                 WHERE F.FOLLOWING_ID = M.MEMBER_NO ) AS FOLLOWING_CNT             
+                 WHERE F.FOLLOWING_ID = M.MEMBER_NO ) AS FOLLOWING_CNT    
+             , M.MEMBER_ANIMAL_REG_NO         
                  
 		FROM MEMBER M
 		WHERE M.MEMBER_ID = #{memberId}	
@@ -133,7 +135,8 @@
 			MEMBER_ADDRESS = 	NVL(#{memberAddress},MEMBER_ADDRESS),
 			MEMBER_DETAIL_ADDRESS = 	NVL(#{memberDetailAddress},MEMBER_DETAIL_ADDRESS),
 			MEMBER_ZIPCODE = 	NVL(#{memberZipcode},MEMBER_ZIPCODE),
-			MODIFY_DATE = 		SYSDATE
+			MODIFY_DATE = 		SYSDATE,
+			MEMBER_ANIMAL_REG_NO = 	NVL(#{animalRegNo},MEMBER_ANIMAL_REG_NO)
 		WHERE
 			MEMBER_NO = #{memberNo}
 	</update>
