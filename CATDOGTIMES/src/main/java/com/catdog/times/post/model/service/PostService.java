@@ -7,6 +7,7 @@ import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
+import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
@@ -20,7 +21,7 @@ public interface PostService {
 	// 좋아요 클릭
 	int insertLike(PostLikeDTO postLike);
 	// SNS 게시글 해시태그 등록
-	int insertHashtag(PostHashtagDTO postHashtag);
+	int insertHashtag(PostHashtagDTO postHashtagList);
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
 	// 댓글 좋아요 클릭
@@ -47,7 +48,7 @@ public interface PostService {
 	ImageDTO findImageById(int imageId);
 	
 	// 댓글 불러오기
-	List<ReplyDTO> readReply(int postId);
+	List<ReadReplyDTO> readReply(int postId);
 	
 	/* <<UPDATE>> */
 	// SNS 게시물 본문 수정

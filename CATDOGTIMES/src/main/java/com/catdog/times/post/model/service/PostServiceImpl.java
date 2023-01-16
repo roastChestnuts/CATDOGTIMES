@@ -10,6 +10,7 @@ import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
+import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
@@ -41,12 +42,13 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public int insertHashtag(PostHashtagDTO postHashtag) {		
-		return mapper.insertHashtag(postHashtag);
+	public int insertHashtag(PostHashtagDTO postHashtagList) {
+		System.out.println("이곳은 서비스(해시태그)"+ postHashtagList);
+		return mapper.insertHashtag(postHashtagList);
 	}
 
 	@Override
-	public int insertReply(ReplyDTO reply) {		
+	public int insertReply(ReplyDTO reply) {
 		return mapper.insertReply(reply);
 	}
 
@@ -64,7 +66,6 @@ public class PostServiceImpl implements PostService {
 	
 	@Override
 	public List<SNSFeedDTO> selectAllPost() {
-		System.out.println("postServiceImpl 들어가나?");
 		return mapper.selectAllPost();
 	}
 
@@ -74,8 +75,7 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public List<ReplyDTO> readReply(int postId) {
-		System.out.println("ServiceImpl" + postId);
+	public List<ReadReplyDTO> readReply(int postId) {		
 		return mapper.readReply(postId);
 	}
 	

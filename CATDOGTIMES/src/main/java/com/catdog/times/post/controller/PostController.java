@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
+import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
 import com.catdog.times.post.model.service.PostService;
@@ -21,7 +24,9 @@ import com.catdog.times.post.model.service.PostService;
 public class PostController {
 	@Autowired
 	private PostService service;
-
+	
+	@Autowired
+	private FileUploadLogic2 fileuploadservice;
 	/* SNS 게시글 */
 	// SNS 게시글 작성
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -60,19 +65,26 @@ public class PostController {
 	}
 
 	/* 해시태그 insert */
-
 	@RequestMapping(value = "/addHashtag", method = RequestMethod.POST)
-	public String insertHashtag(PostHashtagDTO postHashtag) {
-		int result = service.insertHashtag(postHashtag);
-		return "성공" + result;
+	public int insertHashtag(@RequestBody PostHashtagDTO postHashtagList) {
+		System.out.println("Controller(해시태그):" + postHashtagList);
+		int result = service.insertHashtag(postHashtagList);
+		return result;
 	}
 
+	/* 댓글*/
+	/* 댓글 insert */
+	@RequestMapping(value="/insertReply", method = RequestMethod.POST)
+	public int insertReply(@RequestBody ReplyDTO reply) {
+		System.out.println("insertReply Controller:"+ reply);
+		int result = service.insertReply(reply);
+		return result;
+	}	
+	
 	/* 댓글 불러오기 */
 	@RequestMapping(value = "/readReply", method=RequestMethod.GET)
-	public List<ReplyDTO> readReply(int postId) {
-		System.out.println("여기는 컨트롤러:"+ postId);
-		List<ReplyDTO> replyList = service.readReply(postId);
-		System.out.println("readReply 잘되나 확인:" + replyList);
+	public List<ReadReplyDTO> readReply(int postId) {
+		List<ReadReplyDTO> replyList = service.readReply(postId);	
 		return replyList;
 	}
 }
