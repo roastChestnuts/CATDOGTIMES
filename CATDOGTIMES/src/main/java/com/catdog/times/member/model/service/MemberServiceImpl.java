@@ -84,11 +84,12 @@ public class MemberServiceImpl implements MemberService {
 		return cnt;
 	}	
 	
-	//카카오로그인
+	//
     @Override
     public String kakaoJoin(Member member) {
     	member.setPassword(passwordEncoder.encode(member.getSnsId()));
-        String no = mapper.kakaoInsert(member);
+        mapper.kakaoInsert(member);
+        String no = Integer.toString(member.getNo());
         log.info("userid:: " + member.getId());
         return no;
     }
