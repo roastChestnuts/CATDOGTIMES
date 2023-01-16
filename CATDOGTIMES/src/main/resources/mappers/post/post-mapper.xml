@@ -8,11 +8,10 @@
 		<result column="writerName" property="writerName" />
 		<result column="writerPhoto" property="writerPhoto" />
 		<result column="feedImage" property="feedImage" />
-		<result column="likerName" property="likerName" />		
-		<result column="likerPhoto" property="likerPhoto" />		
-		<result column="replyLikeCount" property="replyLikeCount" />		
+		<result column="likerName" property="likerName" />
+		<result column="likerPhoto" property="likerPhoto" />
+		<result column="postLikeCount" property="postLikeCount" />
 	</resultMap>
-
 
 	<resultMap type="PostDTO" id="postResultMap">
 		<result column="POST_ID" property="postId" />
@@ -20,6 +19,7 @@
 		<result column="POST_CREATE_DATE" property="postCreateDate" />
 		<result column="POST_UPDATE_DATE" property="postUpdateDate" />
 		<result column="MEMBER_NO" property="memberNo" />
+		<result column="POST_HASHTAG" property="postHashtag" />
 	</resultMap>
 
 	<resultMap type="PostLikeDTO" id="postLikeResultMap">
@@ -53,6 +53,17 @@
 		<result column="MEMBER_NO" property="memberNo" />
 	</resultMap>
 
+	<resultMap type="ReadReplyDTO" id="ReadReplyResultMap">
+		<result column="replyId" property="replyId" />
+		<result column="replyContent" property="replyContent" />
+		<result column="REPLY_CREATED_DATE" property="replyCreatedDate" />
+		<result column="REPLY_UPDATE_DATE" property="replyUpdateDate" />
+		<result column="postId" property="postId" />
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="replyNickname" property="replyNickname" />
+		<result column="writerPhoto" property="writerPhoto" />
+	</resultMap>
+
 	<resultMap type="ReplyLikeDTO" id="ReplyLikeResultMap">
 		<result column="REPLY_LIKE_ID" property="replyLikeId" />
 		<result column="REPLY_ID" property="replyId" />
@@ -70,11 +81,12 @@
 	</resultMap>
 
 	<!-- <<<<Create>>> -->
+	<!-- 게시글 작성 (SNS 게시글 + 이미지 + 해시태그) -->
 	<!-- SNS 게시글 작성 -->
 	<insert id="insertPost" parameterType="PostDTO"
 		useGeneratedKeys="true" keyColumn="POST_ID" keyProperty="postId">
 		INSERT INTO
-		POST (
+		POST(
 		POST_ID,
 		POST_CONTENT,
 		POST_CREATE_DATE,
@@ -88,6 +100,7 @@
 		#{memberNo}
 		)
 	</insert>
+
 	<!-- 이미지 삽입 -->
 	<insert id="insertImage" parameterType="ImageDTO"
 		useGeneratedKeys="true" keyColumn="IMAGE_ID" keyProperty="imageId">
@@ -101,12 +114,41 @@
 		SEQ_IMAGE_ID.NEXTVAL,
 		#{imageSavedName},
 		#{imageOriginalName},
-		#{postId}
+		SEQ_POST_ID.CURRVAL
 		)
 	</insert>
+
+	<!-- SNS 게시글 해시태그 작성 -->
+	<insert id="insertHashtag" parameterType="PostHashtagDTO"
+		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID"
+		keyProperty="postHashtagId">
+		INSERT ALL
+		<foreach separator=" " item="file" collection="list">
+			INTO
+			POST_HASHTAG (POST_HASHTAG_ID,POST_ID,POST_HASHTAG)
+			VALUES(
+			SEQ_POST_HASHTAG_ID.NEXTVAL,
+			SEQ_POST_ID.CURRVAL,
+			#{file.postHashtag})
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	
+<!-- 	<insert id="insertHashtag" parameterType="PostHashtagDTO" useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID"
+		keyProperty="postHashtagId">		
+		INSERT 		
+			INTO
+			POST_HASHTAG (POST_HASHTAG_ID,POST_ID,POST_HASHTAG)
+			VALUES(
+			SEQ_POST_HASHTAG_ID.NEXTVAL,
+			(SELECT LAST_NUMBER FROM USER_SEQUENCES WHERE SEQUENCE_NAME = 'SEQ_POST_ID'),
+			#{postHashtag})
+	</insert> -->
+
 	<!-- 좋아요 누르면 -->
 	<insert id="insertLike" parameterType="PostLikeDTO"
-		useGeneratedKeys="true" keyColumn="POST_LIKE_ID" keyProperty="postLikeId">
+		useGeneratedKeys="true" keyColumn="POST_LIKE_ID"
+		keyProperty="postLikeId">
 		INSERT
 		INTO
 		POST_LIKE (
@@ -120,24 +162,6 @@
 		#{postId},
 		#{memberNo},
 		DEFAULT
-		)
-	</insert>
-
-	<!-- SNS 게시글 해시태그 작성 -->
-	<insert id="insertHashtag" parameterType="PostHashtagDTO"
-		useGeneratedKeys="true" keyColumn="POST_HASHTAG_ID"
-		keyProperty="postHashtagId">
-		INSERT
-		INTO
-		POST_HASHTAG (
-		POST_HASHTAG_ID,
-		POST_ID,
-		POST_HASHTAG
-		)
-		VALUES(
-		SEQ_POST_HASHTAG_ID.NEXTVAL,
-		#{postId},
-		#{postHashtag}
 		)
 	</insert>
 
@@ -207,30 +231,34 @@
 	<!-- <<<LIST, READ>>> -->
 	<!-- SNS 피드 원하는 값만 조회 -->
 	<select id="selectAllPost" resultMap="SNSFeedDTOResultMap">
-		SELECT A.POST_ID as feedId, --피드 id
-				--A.MEMBER_NO -- 게시글 작성자 닉네임 불러올 넘버
-				A.POST_CONTENT as feedContent, -- 피드 콘텐츠
-				D.MEMBER_NICKNAME as writerName, -- 작성자 닉네임
-				D.MEMBER_PHOTO as writerPhoto, -- 작성자 프로필
-				B.IMAGE_SAVED_NAME as feedImage, --피드 이미지
-				--C.MEMBER_NO, -- 댓글 사용자 닉네임 불러올 넘버
-				E.MEMBER_NICKNAME as likerName,
-				E.MEMBER_PHOTO as likerPhoto,
-				C.POST_LIKE_COUNT as replyLikeCount -- 댓글 좋아요 개수
-			FROM POST A
-			LEFT JOIN IMAGE B
-				ON A.POST_ID = B.POST_ID
-			LEFT JOIN (SELECT
-				POST_ID,
-		            count(POST_LIKE_ID) as POST_LIKE_COUNT,
-		            max(MEMBER_NO) as MEMBER_NO
-		            FROM POST_LIKE
-		            GROUP BY POST_ID) C
-				ON A.POST_ID = C.POST_ID
-			LEFT JOIN MEMBER D
-				ON A.MEMBER_NO = D.MEMBER_NO
-			LEFT JOIN MEMBER E
-				ON C.MEMBER_NO = E.MEMBER_NO
+		SELECT A.POST_ID as feedId,
+		--피드 id
+		--A.MEMBER_NO -- 게시글 작성자 닉네임 불러올 넘버
+		A.POST_CONTENT as
+		feedContent, -- 피드 콘텐츠
+		D.MEMBER_NICKNAME as writerName, -- 작성자 닉네임
+		D.MEMBER_PHOTO as writerPhoto, -- 작성자 프로필
+		B.IMAGE_SAVED_NAME as feedImage, --피드 이미지
+		--C.MEMBER_NO, -- 댓글 사용자 닉네임 불러올 넘버
+		E.MEMBER_NICKNAME as likerName,
+		E.MEMBER_PHOTO as likerPhoto,
+		C.POST_LIKE_COUNT as postLikeCount -- 댓글 좋아요 개수
+		FROM POST A
+		LEFT JOIN
+		IMAGE B
+		ON A.POST_ID = B.POST_ID
+		LEFT JOIN (SELECT
+		POST_ID,
+		count(POST_LIKE_ID) as POST_LIKE_COUNT,
+		max(MEMBER_NO) as MEMBER_NO
+		FROM POST_LIKE
+		GROUP BY POST_ID) C
+		ON A.POST_ID = C.POST_ID
+		LEFT JOIN
+		MEMBER D
+		ON A.MEMBER_NO = D.MEMBER_NO
+		LEFT JOIN MEMBER E
+		ON C.MEMBER_NO = E.MEMBER_NO
 	</select>
 
 	<!-- 특정 게시물 닉네임으로 조회 -->
@@ -274,6 +302,23 @@
 		AND i.IMAGE_ID like '%' || #{imageId} || '%'
 	</select>
 	<!-- 알림 고민 중... -->
+
+	<!-- 댓글 읽어오기 -->
+	<select id="readReply" resultMap="ReadReplyResultMap"
+		parameterType="int">
+		SELECT
+		R.REPLY_ID AS replyId, -- KEY값으로 쓸 REPLY_ID
+		R.REPLY_CONTENT AS replyContent, -- REPLY 내용
+		--R.REPLY_CREATED_DATE , --REPLY 생성일
+		--R.REPLY_UPDATE_DATE , --REPLY 수정일
+		--R.POST_ID, --REPLY 가져올 때 쓸 ID
+		M.MEMBER_NICKNAME AS replyNickname,--REPLY 작성한 사람의 닉네임
+		M.MEMBER_PHOTO AS writerPhoto-- REPLY 작성한 사람의 프로필 사진
+		FROM REPLY R, MEMBER M, POST P
+		WHERE R.MEMBER_NO = M.MEMBER_NO
+		AND R.POST_ID = P.POST_ID
+		AND R.POST_ID = #{postId}
+	</select>
 
 	<!-- <<<UPDATE>>> -->
 	<!-- 이거 <update>로 해줘야할 것 같은데... -->

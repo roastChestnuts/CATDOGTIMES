@@ -9,6 +9,7 @@ import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
+import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
@@ -22,11 +23,13 @@ public interface PostMapper {
 	// 이미지 업로드
 	int insertImage(ImageDTO image);
 
+	//게시글 좋아요
+	int insertPostLike(String postId, String memberNo);
 	// 좋아요 클릭
 	int insertLike(PostLikeDTO postLike);
 
 	// SNS 게시글 해시태그 등록
-	int insertHashtag(PostHashtagDTO postHashtag);
+	int insertHashtag(PostHashtagDTO postHashtagList);
 
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
@@ -39,9 +42,7 @@ public interface PostMapper {
 
 	/* <<<LIST, READ>>> */
 	// POST 전체조회
-	List<SNSFeedDTO> selectAllPost();
-	// List<PostContentDTO> selectPostContent(Map<String,Object> map);
-
+	List<SNSFeedDTO> selectAllPost();	
 	
 	// 특정 게시물 닉네임으로 조회. 내 파트가 아닌 것으로 보임
 /*	PostDTO findByNickname(String nickName);*/
@@ -57,7 +58,10 @@ public interface PostMapper {
 
 	// 탐색
 	ImageDTO findImageById(int imageId);
-
+	
+	// 댓글 불러오기
+	List<ReadReplyDTO> readReply(int postId);
+	
 	/* <<UPDATE>> */
 	// SNS 게시물 본문 수정
 	int postUpdate(PostDTO post);
@@ -90,4 +94,7 @@ public interface PostMapper {
 	
 	//게시글 삭제
 	int deletePost(int postId);
+
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
 }

@@ -1,5 +1,6 @@
 package com.catdog.times.member.model.service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -7,6 +8,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -83,10 +86,11 @@ public class MemberServiceImpl implements MemberService {
 	
 	//카카오로그인
     @Override
-    public void kakaoJoin(Member member) {
+    public String kakaoJoin(Member member) {
     	member.setPassword(passwordEncoder.encode(member.getSnsId()));
-        mapper.kakaoInsert(member);
+        String no = mapper.kakaoInsert(member);
         log.info("userid:: " + member.getId());
+        return no;
     }
 
     @Override
@@ -121,26 +125,34 @@ public class MemberServiceImpl implements MemberService {
         return mapper.findMemberByEmail(memberEmail);
     }
     
+    //기등록 동물번호인지 체크
 	@Override
 	public int checkAnimalNumber(String animalRegNo) {
 		log.info("snsId:: " + animalRegNo);
         return mapper.checkAnimalNumber(animalRegNo);
 	}
     
+	//동물 등록번호 업데이트
     @Override
     public int updateAnimalNumber(Member member) throws Exception{
         log.info("snsId:: " + member.getAnimalRegNo());
     	
+        Map<String, String> animalPageCookie = this.animalPageCookie();
+        String WMONID = animalPageCookie.get("WMONID");
+        String JSESSIONID_FRONT7 = animalPageCookie.get("JSESSIONID_FRONT7");
+        
+        
     	ObjectMapper objectMapper = new ObjectMapper();
 		URL url = new URL("https://www.animal.go.kr/front/awtis/record/recordConfirmDtl.do;");
 		HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+		
 		httpConn.setRequestMethod("POST");
 
 		httpConn.setRequestProperty("Accept", "application/json, text/javascript, */*; q=0.01");
 		httpConn.setRequestProperty("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
 		httpConn.setRequestProperty("Connection", "keep-alive");
 		httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-		httpConn.setRequestProperty("Cookie", "WMONID=57syYTpaec1; JSESSIONID=ab8i2La1QXHyGlxjXFBjMVACpTMT3t1C89zNOeWSjrVZEujRbl9KWkXqTB1pHQtq.aniwas_servlet_engine2; JSESSIONID_FRONT7=pYzNu1gkQmKBdIl5XaZRJKwmCFMPj1K98IWoa5t15LwqkaXibYlsA5js7oAsnVop.aniwas2_servlet_front");
+		httpConn.setRequestProperty("Cookie", "WMONID="+ WMONID +"; JSESSIONID_FRONT7="+JSESSIONID_FRONT7);
 		httpConn.setRequestProperty("Origin", "https://www.animal.go.kr");
 		httpConn.setRequestProperty("Referer", "https://www.animal.go.kr/front/awtis/record/recordConfirmList.do?menuNo=2000000011");
 		httpConn.setRequestProperty("Sec-Fetch-Dest", "empty");
@@ -177,6 +189,22 @@ public class MemberServiceImpl implements MemberService {
 			return mapper.updateAnimalNumber(member);
 		}
     }
-
+    
+    @Override
+    //동물보호관리시스템 홈페이지에서 요청시 필요한 쿠키값 리턴해주는 메서드
+    public Map<String, String> animalPageCookie() throws IOException{
+    	Connection.Response animalPageResponse = Jsoup.connect("https://www.animal.go.kr/front/awtis/record/recordConfirmList.do?")
+									                 .timeout(3000)
+									                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+									                 .header("Upgrade-Insecure-Requests", "1")
+									                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
+									                 .header("sec-ch-ua", "Not?A_Brand;v=8, Chromium;v=108, Google Chrome;v=108")
+									                 .header("sec-ch-ua-mobile", "?0")
+									                 .header("sec-ch-ua-platform", "Windows")
+									                 .method(Connection.Method.GET)
+ 									                 .execute();
+    	Map<String, String> animalPageCookie = animalPageResponse.cookies();
+    	return animalPageCookie;
+    }
 
 }
