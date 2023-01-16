@@ -104,12 +104,12 @@
 	<!-- 이미지 삽입 -->
 	<insert id="insertImage" parameterType="ImageDTO"
 		useGeneratedKeys="true" keyColumn="IMAGE_ID" keyProperty="imageId">
-		INSERT INTO
-		IMAGE (
-		IMAGE_ID,
-		IMAGE_SAVED_NAME,
-		IMAGE_ORIGINAL_NAME,
-		POST_ID
+		INSERT INTO 
+			IMAGE (
+			IMAGE_ID,
+			IMAGE_SAVED_NAME,
+			IMAGE_ORIGINAL_NAME,
+			POST_ID
 		) VALUES(
 		SEQ_IMAGE_ID.NEXTVAL,
 		#{imageSavedName},
