@@ -146,7 +146,7 @@
 	</insert> -->
 
 	<!-- 좋아요 누르면 -->
-	<insert id="insertLike" parameterType="PostLikeDTO"
+	<insert id="insertPostLike" parameterType="PostLikeDTO"
 		useGeneratedKeys="true" keyColumn="POST_LIKE_ID"
 		keyProperty="postLikeId">
 		INSERT
