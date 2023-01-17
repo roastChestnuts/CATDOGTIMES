@@ -10,30 +10,20 @@
 			p:driverClassName="${db.driver}"
 			p:url="${db.url}"
 			p:username="${db.username}"
-			p:password="${db.password}"
-	/>
+			p:password="${db.password}"/>
 	
-	<bean id="mybatisConfig" class="org.apache.ibatis.session.Configuration" 
-			p:jdbcTypeForNull="NULL"
-	/>
+	<bean id="mybatisConfig" class="org.apache.ibatis.session.Configuration" p:jdbcTypeForNull="NULL"/>
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
 			p:dataSource-ref="dataSource"
 			p:configuration-ref="mybatisConfig"
 			p:typeAliasesPackage="com.catdog.times.*.model.dto"
-			p:mapperLocations="classpath:mappers/**/*.xml"
-	/>
+			p:mapperLocations="classpath:mappers/**/*.xml"/>
 	
-	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
-			c:sqlSessionFactory-ref="sqlSessionFactory"
-	/>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" c:sqlSessionFactory-ref="sqlSessionFactory"/>
 	
-	<bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer"
-			p:basePackage="com.catdog.times.*.model.mapper"
-	/>
+	<bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer" p:basePackage="com.catdog.times.*.model.mapper"/>
 	
 	<!-- 트랜잭션 처리 빈 -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
-		p:dataSource-ref="dataSource"
-	/>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" p:dataSource-ref="dataSource"/>
 </beans>

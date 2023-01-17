@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FollowMemberDTO {
 
-	private int followNo;
+	private int followId;
 	private int memberNo;
 	private String memberId;
 	private String memberName;

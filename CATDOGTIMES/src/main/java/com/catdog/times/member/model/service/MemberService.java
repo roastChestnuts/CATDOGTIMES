@@ -1,5 +1,8 @@
 package com.catdog.times.member.model.service;
 
+import java.io.IOException;
+import java.util.Map;
+
 import com.catdog.times.member.model.dto.Member;
 
 public interface MemberService {
@@ -14,7 +17,7 @@ public interface MemberService {
 
 	public int nickNameCheck(String nickName);// 닉네임 중복체크
 	
-	void kakaoJoin(Member member); //카카오
+	String kakaoJoin(Member member); //카카오
 	
 	Member kakaoLogin(String memberSnsId);
 	
@@ -25,6 +28,12 @@ public interface MemberService {
 	String findMemberBySnsId(String memberSnsId);
 
 	String findMemberByEmail(String memberEmail);
+
+	int checkAnimalNumber(String animalRegNo);
+	
+	int updateAnimalNumber(Member member) throws Exception; //동물등록번호조회
+
+	Map<String, String> animalPageCookie() throws IOException;
 	
 	//int delete(int no); //회원삭제
 }
