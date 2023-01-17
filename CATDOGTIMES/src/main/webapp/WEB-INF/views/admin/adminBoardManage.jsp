@@ -88,7 +88,7 @@
                                             <a href="/times/admin/usermanage" class="icon_search push_side cb chp"><span>사용자관리</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="/times/admin/boardmanage" class="kalles-lbl__nav-sale"><span>게시글관리</span></a>
+                                            <a href="/times/admin/boardmanage" class="kalles-lbl__nav-sale"><span>피드관리</span></a>
                                         </li>
                                         <li class="menu-item ">
                                             <a href="/times/admin/routemanage" class="icon_search push_side cb chp"><span>산책루트관리</span></a>
@@ -109,7 +109,7 @@
 
        		<div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
-				<span style="font-size:30px;font-weight:bold;">게시글 관리</span><br/>
+				<span style="font-size:30px;font-weight:bold;">피드 관리</span><br/>
             <span>멍냥일보에 업로드 된 피드내역 입니다. &nbsp;관리자가 위반되는 피드에 대한 미노출처리를 할 수 있습니다.</span>
 						<div class="row" style="padding-top:20px;">
                         	<div class="col-xl-12">
@@ -210,50 +210,6 @@
                 <div class="widget widget_product_list text-left p-3">
                     <h5 class="widget-title pt-5">전체랭킹</h5>
                     <ul class="product_list_widget">
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
                         <li class="row mb__10 pb__10">
                             <div class="col widget_img_pr">
                                 <a class="db pr oh" href="#">

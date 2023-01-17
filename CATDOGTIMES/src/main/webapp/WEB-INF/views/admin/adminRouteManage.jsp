@@ -88,7 +88,7 @@
                                             <a href="/times/admin/usermanage" class="icon_search push_side cb chp"><span>사용자관리</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="/times/admin/boardmanage" class="icon_search push_side cb chp"><span>게시글관리</span></a>
+                                            <a href="/times/admin/boardmanage" class="icon_search push_side cb chp"><span>피드관리</span></a>
                                         </li>
                                         <li class="menu-item ">
                                             <a href="/times/admin/routemanage" class="kalles-lbl__nav-sale"><span>산책루트관리</span></a>
@@ -223,54 +223,10 @@
                             </div>
                             <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
                         </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </aside>
+                      </ul>
+                	</div>
+            	</div>
+       		 </aside>
 
         <footer id="ntfooter" class="p-5 text-center">
             copyright 멍냥일보 2023
