@@ -12,15 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
+import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
 import com.catdog.times.post.model.mapper.PostMapper;
 
 @Service
@@ -101,8 +106,6 @@ public class PostServiceImpl implements PostService {
 	public int insertLike(PostLikeDTO postLike) {		
 		return mapper.insertLike(postLike);
 	}
-
-
 
 	@Override
 	public int insertReply(ReplyDTO reply) {
@@ -216,5 +219,47 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto) {
 		return mapper.readPostLike(postLikeDto);
+	}
+
+	//검색
+	@Override
+	public List<SearchMemberDTO> searchUser(String id) {
+		return mapper.searchUser(id);
+	}
+
+	//특정 유저 탐색페이지 조회
+	@Override
+	public List<ImageDTO> searchExploreImage(int toMemberNo) {
+		return mapper.searchExploreImage(toMemberNo);
+	}
+	
+	//랜덤 탐색페이지 조회
+	@Override
+	public List<ImageDTO> searchExploreImage() {
+		return mapper.searchRandomExploreImage();
+	}
+	
+	//알림창 조회(좋아요 누른 사람들)
+	@Override
+	public List<NotificationDTO> searchNotifications(String memberNo) {
+		return mapper.searchNotifications(memberNo);
+	}
+	
+	//알림창 조회(추천인들)
+	@Override
+	public List<RecommendDTO> searchRecommends(String memberNo) {
+		return mapper.searchRecommends(memberNo);
+	}
+
+	//팔로우 저장
+	@Override
+	public FollowDTO insertFollow(FollowDTO followDto) {
+		return mapper.insertFollow(followDto);
+	}
+
+	//팔로우 취소
+	@Override
+	public int deleteFollow(FollowDTO followDto) {
+		return mapper.deleteFollow(followDto);
 	}
 }

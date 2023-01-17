@@ -83,6 +83,48 @@
 			property="bookmarkCreatedDate" />
 	</resultMap>
 
+	<resultMap type="SearchMemberDTO" id="searchMemberResultMap">
+		<id property="no" column="MEMBER_NO" />
+		<result property="id" column="MEMBER_ID"/>
+		<result property="name" column="MEMBER_NAME"/>
+		<result property="nickName" column="MEMBER_NICKNAME"/>
+		<result property="photo" column="MEMBER_PHOTO"/>				
+	</resultMap>
+	
+	<resultMap type="ImageDTO" id="exploreResultMap">
+		<id property="imageId" column="IMAGE_ID" />
+		<result property="imageSavedName" column="IMAGE_SAVED_NAME"/>
+		<result property="imageOriginalName" column="IMAGE_ORIGINAL_NAME"/>
+		<result property="postId" column="POST_ID"/>			
+	</resultMap>
+	
+	<resultMap type="NotificationDTO" id="notificationResultMap">
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="postId" column="POST_ID"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="memberNickName" column="MEMBER_NICKNAME"/>
+		<result property="memberPhoto" column="MEMBER_PHOTO"/>
+	</resultMap>
+	
+	<resultMap type="RecommendDTO" id="RecommendResultMap">
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="memberNickName" column="MEMBER_NICKNAME"/>
+		<result property="memberPhoto" column="MEMBER_PHOTO"/>		
+	</resultMap>
+	
+	<!-- 탐색페이지 조회문 -->
+	<sql id="searchExploreImageSql">
+		SELECT B.IMAGE_ID,
+		       B.IMAGE_SAVED_NAME,
+		       B.IMAGE_ORIGINAL_NAME,
+		       B.POST_ID
+		  FROM POST A
+     LEFT JOIN IMAGE B
+            ON A.POST_ID = B.POST_ID
+	</sql>
 	<!-- <<<<Create>>> -->
 	<!-- 게시글 작성 (SNS 게시글 + 이미지 + 해시태그) -->
 	<!-- SNS 게시글 작성 -->
@@ -152,13 +194,13 @@
 	<insert id="insertPostLike" parameterType="PostLikeDTO"
 		useGeneratedKeys="true" keyColumn="POST_LIKE_ID"
 		keyProperty="postLikeId">
-		INSERT INTO	POST_LIKE (
+
+		INSERT INTO POST_LIKE (
 			POST_LIKE_ID,
 			POST_ID,
 			MEMBER_NO,
 			POST_LIKE_CREATED_DATE
-		)
-		VALUES(
+		) VALUES (
 			SEQ_POST_LIKE_ID.NEXTVAL,
 			#{postId},
 			#{memberNo},
@@ -316,6 +358,89 @@
 			AND R.POST_ID = #{postId}
 	</select>
 
+	<!-- 검색 -->
+	<select id="searchUser" parameterType="String" resultMap="searchMemberResultMap">
+		SELECT MEMBER_NO,
+		       MEMBER_ID,
+		       MEMBER_NAME,
+		       MEMBER_NICKNAME
+		  FROM MEMBER
+		 WHERE MEMBER_ID LIKE '%'||#{id}||'%' 
+		   AND MEMBER_IS = 'Y'
+      ORDER BY MEMBER_ID
+	</select>
+	
+	<!-- 특정 유저 탐색페이지 조회 -->
+	<select id="searchExploreImage" parameterType="int" resultMap="exploreResultMap">
+		<include refid="searchExploreImageSql"/>
+		 WHERE 1=1 
+		   AND A.POST_SHOWYN = 'Y'
+		   AND A.MEMBER_NO = #{memberNo}
+      ORDER BY A.POST_CREATE_DATE DESC
+	</select>
+	<!-- 랜덤 탐색페이지 조회 -->
+	<select id="searchRandomExploreImage" resultMap="exploreResultMap">
+		<include refid="searchExploreImageSql"/>
+		 WHERE 1=1 
+		   AND A.POST_SHOWYN = 'Y'
+      ORDER BY DBMS_RANDOM.VALUE
+	</select>
+	<!-- 알림창 조회(좋아요 누른 사람들) -->
+	<select id="searchNotifications" parameterType="String" resultMap="notificationResultMap">
+		SELECT B.MEMBER_NO,
+		       A.POST_ID,
+         	   C.MEMBER_ID,
+               C.MEMBER_NAME,
+               C.MEMBER_NICKNAME,
+               C.MEMBER_PHOTO
+          FROM POST A
+     LEFT JOIN POST_LIKE B
+            ON A.POST_ID = B.POST_ID
+     LEFT JOIN MEMBER C
+            ON B.MEMBER_NO = C.MEMBER_NO            
+         WHERE 1=1
+           AND TO_CHAR(B.POST_LIKE_CREATED_DATE, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD')
+           AND B.POST_ID IS NOT NULL 
+      ORDER BY B.POST_LIKE_CREATED_DATE DESC
+	</select>
+	
+	<!-- 알림창 조회(추천인들) -->
+	<select id="searchRecommends" parameterType="String" resultMap="RecommendResultMap">
+		SELECT A.MEMBER_NO,
+         	   A.MEMBER_ID,
+               A.MEMBER_NAME,
+               A.MEMBER_NICKNAME,
+               A.MEMBER_PHOTO
+		  FROM MEMBER A
+	 LEFT JOIN FOLLOW B
+	        ON A.MEMBER_NO = B.FOLLOWER_ID 
+		 WHERE 1=1
+		   AND A.MEMBER_IS = 'Y'
+		   AND B.FOLLOW_ID IS NULL
+		   AND <![CDATA[ROWNUM <= 5]]> <!-- AND ROWNUM <= 5 -->
+      ORDER BY DBMS_RANDOM.VALUE
+	</select>
+	
+	<!-- 팔로우버튼 누르면 -->
+	<insert id="insertFollow" parameterType="FollowDTO" keyColumn="FOLLOW_ID" keyProperty="followId">
+	 	<selectKey resultType="int" keyProperty="followId" order="AFTER">
+			select SEQ_FOLLOW_ID.CURRVAL as followId FROM DUAL
+		</selectKey>		
+		INSERT INTO FOLLOW (
+			FOLLOW_ID,
+			FOLLOWER_ID,
+			FOLLOWING_ID
+		) VALUES (
+			SEQ_FOLLOW_ID.NEXTVAL,
+			#{followerId},
+			#{followingId}
+		)
+	</insert>
+	<!-- 팔로우 취소 -->
+	<delete id="deleteFollow" parameterType="FollowDTO">
+		DELETE FROM FOLLOW
+		WHERE FOLLOW_ID = #{followId}
+	</delete>
 	<!-- <<<UPDATE>>> -->
 	<!-- 이거 <update>로 해줘야할 것 같은데... -->
 	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->

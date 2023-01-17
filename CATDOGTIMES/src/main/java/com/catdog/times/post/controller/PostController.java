@@ -1,6 +1,9 @@
 package com.catdog.times.post.controller;
 
+
 import java.io.IOException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,16 +20,26 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.catdog.times.member.controller.MemberController;
+import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.post.model.dto.FollowDTO;
+import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
 import com.catdog.times.post.model.service.PostService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/post")
+@Slf4j
 public class PostController {
 	@Autowired
 	private PostService service;
@@ -89,12 +102,83 @@ public class PostController {
 	@PostMapping("/like")
 	public int updatePostLike(HttpServletRequest request, String postId, int postLikeId) {
 		String memberNo = (String)request.getAttribute("userId");
-		int result = 0;
+		int result = -1;
 		//게시글에 좋아요를 누르지 않은 경우
-		if(postLikeId == 0) {
+		if(postLikeId < 0) {
 			result = service.insertPostLike(postId, memberNo); //게시글 좋아요 번호 리턴
 		}else {
 			service.deletePostLike(postLikeId);
+		}
+		return result;
+	}
+	
+	//검색
+	@GetMapping("/search")
+	public List<SearchMemberDTO> searchUser(HttpServletRequest request, String id) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info(memberNo, id);
+		List<SearchMemberDTO> result = new ArrayList<>();
+		if(id != null) {
+			result = service.searchUser(id); //파라미터 아이디로 조회
+		}
+		return result;
+	}
+	
+	//탐색페이지
+	@GetMapping("/explore")
+	public List<ImageDTO> explore(HttpServletRequest request, int toMemberNo) {
+		String fromMemberNo = (String)request.getAttribute("userId");
+		log.info("탐색페이지 호출", fromMemberNo, toMemberNo);
+		
+		List<ImageDTO> result = new ArrayList<>();
+		
+		if(toMemberNo >= 0) {
+			result = service.searchExploreImage(toMemberNo); //이미지 조회
+		}else {
+			result = service.searchExploreImage(); //이미지 조회
+		}
+		return result;
+	}
+	
+	//알림창 조회(좋아요 누른 사람들)
+	@GetMapping("/notifications")
+	public List<NotificationDTO> searchNotifications(HttpServletRequest request) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info("알림창 조회[좋아요]", memberNo);
+		List<NotificationDTO> result = new ArrayList<>();
+		
+		result = service.searchNotifications(memberNo); //파라미터 아이디로 조회
+		
+		return result;
+	}
+	
+	//알림창 조회(추천인들)
+	@GetMapping("/recommends")
+	public List<RecommendDTO> searchRecommends(HttpServletRequest request) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info("알림창 조회[추천인]", memberNo);
+		List<RecommendDTO> result = new ArrayList<>();
+		
+		result = service.searchRecommends(memberNo); //파라미터 아이디로 조회
+		
+		return result;
+	}
+	
+	//팔로우 업데이트
+	@PostMapping("/follow") 												   //int followId, int followingId
+	public FollowDTO updateFollow(HttpServletRequest request, @RequestBody FollowDTO followDto) {
+		int memberNo = (int)request.getAttribute("userId");
+		followDto.setFollowerId(memberNo);
+		
+		FollowDTO result = null;
+		//팔로우 돼있지 않은 경우
+		if(followDto.getFollowId() <= 0) {
+			//followDTO 리턴
+			service.insertFollow(followDto);
+			result = followDto;
+		}else {
+			//삭제일 경우 null 리턴
+			service.deleteFollow(followDto);
 		}
 		return result;
 	}

@@ -44,7 +44,7 @@
 		<result property="animalRegNo" column="MEMBER_ANIMAL_REG_NO"/>		
 	</resultMap>
 	
-	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
+	<select id="selectMemberById" parameterType="String" resultMap="memberResultMap">
 		<include refid="selectMemberSql"/>
 		WHERE MEMBER_ID = #{id} 
 		  AND MEMBER_IS = 'Y'
@@ -99,8 +99,11 @@
 	</select>
 	
 	<!-- 카카오 회원가입 -->
-	<insert id="kakaoInsert" useGeneratedKeys="true" keyColumn="MEMBER_NO" keyProperty="no">
-	    INSERT INTO MEMBER (
+	<insert id="kakaoInsert" parameterType="Member" keyColumn="MEMBER_NO" keyProperty="no">
+		<selectKey resultType="int" keyProperty="no" order="AFTER">
+			select SEQ_MEMBER_NO.CURRVAL as no FROM DUAL
+		</selectKey>		
+ 	    INSERT INTO MEMBER (
 			MEMBER_NO,
 	        MEMBER_ID,
 	        MEMBER_PW,
@@ -115,7 +118,7 @@
 	        MODIFY_DATE,
 	        MEMBER_SNS_ID
 	    ) VALUES(
-			SEQ_MEMBER_NO.NEXTVAL,
+			SEQ_MEMBER_NO.NEXTVAL, 
 			#{id},
 			#{password},
 			#{nickName},
@@ -128,11 +131,7 @@
 			DEFAULT,
 			DEFAULT,
 		    #{snsId}
-	    )
-	    <selectKey keyProperty="no" resultType="String" order="AFTER"> 
-			SELECT SEQ_MEMBER_NO.CURRVAL
-			FROM DUAL
-        </selectKey>
+	    ) 
 	</insert>
 	
 	<!-- 카카오 회원 로그인 -->
