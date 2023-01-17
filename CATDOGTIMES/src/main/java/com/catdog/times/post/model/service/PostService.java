@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
@@ -93,5 +94,8 @@ public interface PostService {
 	List<NotificationDTO> searchNotifications(String memberNo);
 	//알림창 조회(추천인들)
 	List<RecommendDTO> searchRecommends(String memberNo);
-	
+	//팔로우 저장
+	FollowDTO insertFollow(FollowDTO followDto);
+	//팔로우 취소
+	int deleteFollow(FollowDTO followDto);
 }

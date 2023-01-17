@@ -189,19 +189,16 @@
 	<insert id="insertPostLike" parameterType="PostLikeDTO"
 		useGeneratedKeys="true" keyColumn="POST_LIKE_ID"
 		keyProperty="postLikeId">
-		INSERT
-		INTO
-		POST_LIKE (
-		POST_LIKE_ID,
-		POST_ID,
-		MEMBER_NO,
-		POST_LIKE_CREATED_DATE
-		)
-		VALUES(
-		SEQ_POST_LIKE_ID.NEXTVAL,
-		#{postId},
-		#{memberNo},
-		DEFAULT
+		INSERT INTO POST_LIKE (
+			POST_LIKE_ID,
+			POST_ID,
+			MEMBER_NO,
+			POST_LIKE_CREATED_DATE
+		) VALUES (
+			SEQ_POST_LIKE_ID.NEXTVAL,
+			#{postId},
+			#{memberNo},
+			DEFAULT
 		)
 	</insert>
 
@@ -405,19 +402,44 @@
            AND B.POST_ID IS NOT NULL 
       ORDER BY B.POST_LIKE_CREATED_DATE DESC
 	</select>
+	
 	<!-- 알림창 조회(추천인들) -->
 	<select id="searchRecommends" parameterType="String" resultMap="RecommendResultMap">
-		SELECT MEMBER_NO,
-         	   MEMBER_ID,
-               MEMBER_NAME,
-               MEMBER_NICKNAME,
-               MEMBER_PHOTO
-		  FROM MEMBER
+		SELECT A.MEMBER_NO,
+         	   A.MEMBER_ID,
+               A.MEMBER_NAME,
+               A.MEMBER_NICKNAME,
+               A.MEMBER_PHOTO
+		  FROM MEMBER A
+	 LEFT JOIN FOLLOW B
+	        ON A.MEMBER_NO = B.FOLLOWER_ID 
 		 WHERE 1=1
-		   AND MEMBER_IS = 'Y'
+		   AND A.MEMBER_IS = 'Y'
+		   AND B.FOLLOW_ID IS NULL
 		   AND <![CDATA[ROWNUM <= 5]]> <!-- AND ROWNUM <= 5 -->
       ORDER BY DBMS_RANDOM.VALUE
 	</select>
+	
+	<!-- 팔로우버튼 누르면 -->
+	<insert id="insertFollow" parameterType="FollowDTO" keyColumn="FOLLOW_ID" keyProperty="followId">
+	 	<selectKey resultType="int" keyProperty="followId" order="AFTER">
+			select SEQ_FOLLOW_ID.CURRVAL as followId FROM DUAL
+		</selectKey>		
+		INSERT INTO FOLLOW (
+			FOLLOW_ID,
+			FOLLOWER_ID,
+			FOLLOWING_ID
+		) VALUES (
+			SEQ_FOLLOW_ID.NEXTVAL,
+			#{followerId},
+			#{followingId}
+		)
+	</insert>
+	<!-- 팔로우 취소 -->
+	<delete id="deleteFollow" parameterType="FollowDTO">
+		DELETE FROM FOLLOW
+		WHERE FOLLOW_ID = #{followId}
+	</delete>
 	<!-- <<<UPDATE>>> -->
 	<!-- 이거 <update>로 해줘야할 것 같은데... -->
 	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->

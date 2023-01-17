@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
@@ -193,6 +194,18 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<RecommendDTO> searchRecommends(String memberNo) {
 		return mapper.searchRecommends(memberNo);
+	}
+
+	//팔로우 저장
+	@Override
+	public FollowDTO insertFollow(FollowDTO followDto) {
+		return mapper.insertFollow(followDto);
+	}
+
+	//팔로우 취소
+	@Override
+	public int deleteFollow(FollowDTO followDto) {
+		return mapper.deleteFollow(followDto);
 	}
 
 }

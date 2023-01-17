@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.catdog.times.member.controller.MemberController;
 import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
@@ -97,9 +98,9 @@ public class PostController {
 	@PostMapping("/like")
 	public int updatePostLike(HttpServletRequest request, String postId, int postLikeId) {
 		String memberNo = (String)request.getAttribute("userId");
-		int result = 0;
+		int result = -1;
 		//게시글에 좋아요를 누르지 않은 경우
-		if(postLikeId == 0) {
+		if(postLikeId < 0) {
 			result = service.insertPostLike(postId, memberNo); //게시글 좋아요 번호 리턴
 		}else {
 			service.deletePostLike(postLikeId);
@@ -127,7 +128,7 @@ public class PostController {
 		
 		List<ImageDTO> result = new ArrayList<>();
 		
-		if(toMemberNo > 0) {
+		if(toMemberNo >= 0) {
 			result = service.searchExploreImage(toMemberNo); //이미지 조회
 		}else {
 			result = service.searchExploreImage(); //이미지 조회
@@ -156,6 +157,25 @@ public class PostController {
 		
 		result = service.searchRecommends(memberNo); //파라미터 아이디로 조회
 		
+		return result;
+	}
+	
+	//팔로우 업데이트
+	@PostMapping("/follow") 												   //int followId, int followingId
+	public FollowDTO updateFollow(HttpServletRequest request, @RequestBody FollowDTO followDto) {
+		int memberNo = (int)request.getAttribute("userId");
+		followDto.setFollowerId(memberNo);
+		
+		FollowDTO result = null;
+		//팔로우 돼있지 않은 경우
+		if(followDto.getFollowId() <= 0) {
+			//followDTO 리턴
+			service.insertFollow(followDto);
+			result = followDto;
+		}else {
+			//삭제일 경우 null 리턴
+			service.deleteFollow(followDto);
+		}
 		return result;
 	}
 	
