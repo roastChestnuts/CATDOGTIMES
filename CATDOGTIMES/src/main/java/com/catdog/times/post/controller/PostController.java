@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.catdog.times.member.controller.MemberController;
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
 import com.catdog.times.post.model.dto.SearchMemberDTO;
@@ -131,7 +133,31 @@ public class PostController {
 			result = service.searchExploreImage(); //이미지 조회
 		}
 		return result;
-	}	
+	}
+	
+	//알림창 조회(좋아요 누른 사람들)
+	@GetMapping("/notifications")
+	public List<NotificationDTO> searchNotifications(HttpServletRequest request) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info("알림창 조회[좋아요]", memberNo);
+		List<NotificationDTO> result = new ArrayList<>();
+		
+		result = service.searchNotifications(memberNo); //파라미터 아이디로 조회
+		
+		return result;
+	}
+	
+	//알림창 조회(추천인들)
+	@GetMapping("/recommends")
+	public List<RecommendDTO> searchRecommends(HttpServletRequest request) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info("알림창 조회[추천인]", memberNo);
+		List<RecommendDTO> result = new ArrayList<>();
+		
+		result = service.searchRecommends(memberNo); //파라미터 아이디로 조회
+		
+		return result;
+	}
 	
 	/* 댓글*/
 	/* 댓글 insert */

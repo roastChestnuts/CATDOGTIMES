@@ -94,6 +94,22 @@
 		<result property="imageOriginalName" column="IMAGE_ORIGINAL_NAME"/>
 		<result property="postId" column="POST_ID"/>			
 	</resultMap>
+	<resultMap type="NotificationDTO" id="notificationResultMap">
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="postId" column="POST_ID"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="memberNickName" column="MEMBER_NICKNAME"/>
+		<result property="memberPhoto" column="MEMBER_PHOTO"/>
+	</resultMap>
+	<resultMap type="RecommendDTO" id="RecommendResultMap">
+		<id property="memberNo" column="MEMBER_NO" />
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="memberNickName" column="MEMBER_NICKNAME"/>
+		<result property="memberPhoto" column="MEMBER_PHOTO"/>		
+	</resultMap>
+	
 	<!-- 탐색페이지 조회문 -->
 	<sql id="searchExploreImageSql">
 		SELECT B.IMAGE_ID,
@@ -371,7 +387,37 @@
 		   AND A.POST_SHOWYN = 'Y'
       ORDER BY DBMS_RANDOM.VALUE
 	</select>
-	
+	<!-- 알림창 조회(좋아요 누른 사람들) -->
+	<select id="searchNotifications" parameterType="String" resultMap="notificationResultMap">
+		SELECT B.MEMBER_NO,
+		       A.POST_ID,
+         	   C.MEMBER_ID,
+               C.MEMBER_NAME,
+               C.MEMBER_NICKNAME,
+               C.MEMBER_PHOTO
+          FROM POST A
+     LEFT JOIN POST_LIKE B
+            ON A.POST_ID = B.POST_ID
+     LEFT JOIN MEMBER C
+            ON B.MEMBER_NO = C.MEMBER_NO            
+         WHERE 1=1
+           AND TO_CHAR(B.POST_LIKE_CREATED_DATE, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD')
+           AND B.POST_ID IS NOT NULL 
+      ORDER BY B.POST_LIKE_CREATED_DATE DESC
+	</select>
+	<!-- 알림창 조회(추천인들) -->
+	<select id="searchRecommends" parameterType="String" resultMap="RecommendResultMap">
+		SELECT MEMBER_NO,
+         	   MEMBER_ID,
+               MEMBER_NAME,
+               MEMBER_NICKNAME,
+               MEMBER_PHOTO
+		  FROM MEMBER
+		 WHERE 1=1
+		   AND MEMBER_IS = 'Y'
+		   AND <![CDATA[ROWNUM <= 5]]> <!-- AND ROWNUM <= 5 -->
+      ORDER BY DBMS_RANDOM.VALUE
+	</select>
 	<!-- <<<UPDATE>>> -->
 	<!-- 이거 <update>로 해줘야할 것 같은데... -->
 	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->

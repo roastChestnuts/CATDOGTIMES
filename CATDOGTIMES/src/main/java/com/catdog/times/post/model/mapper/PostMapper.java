@@ -7,10 +7,12 @@ import org.apache.ibatis.annotations.Mapper;
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
@@ -108,4 +110,10 @@ public interface PostMapper {
 
 	//랜덤 탐색페이지 조회
 	List<ImageDTO> searchRandomExploreImage();
+	
+	//알림창 조회(좋아요 누른 사람들)
+	List<NotificationDTO> searchNotifications(String memberNo);
+	
+	//알림창 조회(추천인들)
+	List<RecommendDTO> searchRecommends(String memberNo);
 }

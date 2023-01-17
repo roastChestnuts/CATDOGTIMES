@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
@@ -179,6 +181,18 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<ImageDTO> searchExploreImage() {
 		return mapper.searchRandomExploreImage();
+	}
+	
+	//알림창 조회(좋아요 누른 사람들)
+	@Override
+	public List<NotificationDTO> searchNotifications(String memberNo) {
+		return mapper.searchNotifications(memberNo);
+	}
+	
+	//알림창 조회(추천인들)
+	@Override
+	public List<RecommendDTO> searchRecommends(String memberNo) {
+		return mapper.searchRecommends(memberNo);
 	}
 
 }
