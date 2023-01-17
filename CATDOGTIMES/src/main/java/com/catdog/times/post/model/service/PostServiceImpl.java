@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.PostDTO;
@@ -14,6 +15,7 @@ import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
 import com.catdog.times.post.model.mapper.PostMapper;
 
 @Service
@@ -159,6 +161,24 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto) {
 		return mapper.readPostLike(postLikeDto);
+	}
+
+	//검색
+	@Override
+	public List<SearchMemberDTO> searchUser(String id) {
+		return mapper.searchUser(id);
+	}
+
+	//특정 유저 탐색페이지 조회
+	@Override
+	public List<ImageDTO> searchExploreImage(int toMemberNo) {
+		return mapper.searchExploreImage(toMemberNo);
+	}
+	
+	//랜덤 탐색페이지 조회
+	@Override
+	public List<ImageDTO> searchExploreImage() {
+		return mapper.searchRandomExploreImage();
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.catdog.times.post.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,17 +14,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.catdog.times.member.controller.MemberController;
+import com.catdog.times.member.model.dto.Member;
+import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
 import com.catdog.times.post.model.service.PostService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/post")
+@Slf4j
 public class PostController {
 	@Autowired
 	private PostService service;
@@ -96,6 +104,34 @@ public class PostController {
 		}
 		return result;
 	}
+	
+	//검색
+	@GetMapping("/search")
+	public List<SearchMemberDTO> searchUser(HttpServletRequest request, String id) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info(memberNo, id);
+		List<SearchMemberDTO> result = new ArrayList<>();
+		if(id != null) {
+			result = service.searchUser(id); //파라미터 아이디로 조회
+		}
+		return result;
+	}
+	
+	//탐색페이지
+	@GetMapping("/explore")
+	public List<ImageDTO> explore(HttpServletRequest request, int toMemberNo) {
+		String fromMemberNo = (String)request.getAttribute("userId");
+		log.info("탐색페이지 호출", fromMemberNo, toMemberNo);
+		
+		List<ImageDTO> result = new ArrayList<>();
+		
+		if(toMemberNo > 0) {
+			result = service.searchExploreImage(toMemberNo); //이미지 조회
+		}else {
+			result = service.searchExploreImage(); //이미지 조회
+		}
+		return result;
+	}	
 	
 	/* 댓글*/
 	/* 댓글 insert */

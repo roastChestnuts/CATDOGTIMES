@@ -80,6 +80,30 @@
 			property="bookmarkCreatedDate" />
 	</resultMap>
 
+	<resultMap type="SearchMemberDTO" id="searchMemberResultMap">
+		<id property="no" column="MEMBER_NO" />
+		<result property="id" column="MEMBER_ID"/>
+		<result property="name" column="MEMBER_NAME"/>
+		<result property="nickName" column="MEMBER_NICKNAME"/>
+		<result property="photo" column="MEMBER_PHOTO"/>				
+	</resultMap>
+	
+	<resultMap type="ImageDTO" id="exploreResultMap">
+		<id property="imageId" column="IMAGE_ID" />
+		<result property="imageSavedName" column="IMAGE_SAVED_NAME"/>
+		<result property="imageOriginalName" column="IMAGE_ORIGINAL_NAME"/>
+		<result property="postId" column="POST_ID"/>			
+	</resultMap>
+	<!-- 탐색페이지 조회문 -->
+	<sql id="searchExploreImageSql">
+		SELECT B.IMAGE_ID,
+		       B.IMAGE_SAVED_NAME,
+		       B.IMAGE_ORIGINAL_NAME,
+		       B.POST_ID
+		  FROM POST A
+     LEFT JOIN IMAGE B
+            ON A.POST_ID = B.POST_ID
+	</sql>
 	<!-- <<<<Create>>> -->
 	<!-- 게시글 작성 (SNS 게시글 + 이미지 + 해시태그) -->
 	<!-- SNS 게시글 작성 -->
@@ -320,6 +344,34 @@
 		AND R.POST_ID = #{postId}
 	</select>
 
+	<!-- 검색 -->
+	<select id="searchUser" parameterType="String" resultMap="searchMemberResultMap">
+		SELECT MEMBER_NO,
+		       MEMBER_ID,
+		       MEMBER_NAME,
+		       MEMBER_NICKNAME
+		  FROM MEMBER
+		 WHERE MEMBER_ID LIKE '%'||#{id}||'%' 
+		   AND MEMBER_IS = 'Y'
+      ORDER BY MEMBER_ID
+	</select>
+	
+	<!-- 특정 유저 탐색페이지 조회 -->
+	<select id="searchExploreImage" parameterType="int" resultMap="exploreResultMap">
+		<include refid="searchExploreImageSql"/>
+		 WHERE 1=1 
+		   AND A.POST_SHOWYN = 'Y'
+		   AND A.MEMBER_NO = #{memberNo}
+      ORDER BY A.POST_CREATE_DATE DESC
+	</select>
+	<!-- 랜덤 탐색페이지 조회 -->
+	<select id="searchRandomExploreImage" resultMap="exploreResultMap">
+		<include refid="searchExploreImageSql"/>
+		 WHERE 1=1 
+		   AND A.POST_SHOWYN = 'Y'
+      ORDER BY DBMS_RANDOM.VALUE
+	</select>
+	
 	<!-- <<<UPDATE>>> -->
 	<!-- 이거 <update>로 해줘야할 것 같은데... -->
 	<!-- SNS 게시물 본문 수정, //조건절에 memberno 넣어야 하나?// -->

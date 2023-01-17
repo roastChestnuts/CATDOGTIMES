@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.PostDTO;
@@ -13,6 +14,7 @@ import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
 
 @Mapper
 public interface PostMapper {
@@ -97,4 +99,13 @@ public interface PostMapper {
 
 	//게시글 좋아요 조회
 	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
+
+	//검색
+	List<SearchMemberDTO> searchUser(String id);
+
+	//특정 유저 탐색페이지 조회
+	List<ImageDTO> searchExploreImage(int toMemberNo);
+
+	//랜덤 탐색페이지 조회
+	List<ImageDTO> searchRandomExploreImage();
 }

@@ -47,9 +47,9 @@
       height: 368px;
     }
     .login__register, .login__create {
-      position: absolute;
+      position: fixed;
       bottom: 1rem;
-      width: 100%;
+      /* width: 20%; */
       background-color: #f2f2f2;
       padding: 2rem 1rem;
       border-radius: 1rem;
@@ -221,17 +221,20 @@
         margin-top: 0;
       }
       .login__register, .login__create {
-        left: -11rem;
+        /* left: -11rem; */
+        min-width:200px;
+        width:400px;
+        right:5rem;
       }
       .login__register {
-        bottom: -2rem;
+        bottom: 13rem;
       }
       .login__create {
-        bottom: -15.5rem;
+        bottom: 1.5rem;
       }
       .login__create {
         overflow:auto;
-        height:800px;
+        height:900px;
       }
     }
 	/* 아래의 모든 코드는 영역::코드로 사용 */
@@ -252,7 +255,7 @@
 	
       /* 비디오 */
       video {
-        width: 100%;
+        width: 113%;
         height: 100vh;
         object-fit: cover;
         transition: opacity 0.3s 1s ease;
