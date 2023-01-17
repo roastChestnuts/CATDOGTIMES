@@ -45,6 +45,10 @@ public interface PostService {
 	List<PostDTO> findByHashtag(String postHashtag);
 	// 탐색
 	ImageDTO findImageById(int imageId);
+	
+	// 댓글 불러오기
+	List<ReplyDTO> readReply(int postId);
+	
 	/* <<UPDATE>> */
 	// SNS 게시물 본문 수정
 	int postUpdate(PostDTO post);
