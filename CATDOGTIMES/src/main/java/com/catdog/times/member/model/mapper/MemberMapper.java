@@ -17,7 +17,8 @@ public interface MemberMapper {
 	public int nickNameCheck(String nickName);
 	
 	// 카카오 회원가입
-    void kakaoInsert(Member member);
+//    String kakaoInsert(Member member);
+    int kakaoInsert(Member member);
     
     //snsId로 회원정보 조회
     Member kakaoSelect(String memberSnsId);
@@ -36,4 +37,10 @@ public interface MemberMapper {
     
     //임시비밀번호로 변경
 	int updatePassword(Member member);
+	
+	//기등록동물번호인지 체크
+	int checkAnimalNumber(String animalRegNo);
+	
+	//동물등록번호 업데이트
+	int updateAnimalNumber(Member member);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.catdog.times.mypage.model.dto.FollowMemberDTO;
+import com.catdog.times.mypage.model.dto.MemberOutDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 
@@ -13,4 +14,5 @@ public interface MypageService {
 	int updateMemberInfo(MypageDTO mypagedto);
 	List<FollowMemberDTO> selectFollowList(Map<String,Object> map);
 	int deleteFollower(Map<String,Object> map);
+	int withdrawal(MemberOutDTO outinfo);
 }

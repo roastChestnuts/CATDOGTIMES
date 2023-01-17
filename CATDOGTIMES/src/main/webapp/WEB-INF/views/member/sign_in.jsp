@@ -388,8 +388,8 @@
 	    
 	    //임시비밀번호 발급
 		$("#btn-find-pw").click(function(){
-			const email = $('#find_pw_email').val(); // 이메일 주소값
-			const id = $('#find_pw_id'); // 아이디 값
+			let email = $('#find_pw_email').val(); // 이메일 주소값
+			let id = $('#find_pw_id').val(); // 아이디 값
 			let emailExpression = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 			if (email == "") {
 				Swal.fire('이메일을 입력해주세요.')
@@ -404,8 +404,8 @@
 				url : "${ path }/member/findPw",
 				type : "POST",
 				data : {
-					id : $("#find_pw_id").val(),
-					email : $("#find_pw_email").val()
+					id,
+					email
 				},
 				success: (obj) => {
 		               if(obj.result === 1) {
