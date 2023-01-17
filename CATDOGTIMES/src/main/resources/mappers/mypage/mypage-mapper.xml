@@ -51,6 +51,12 @@
 		<result column="MEMBER_PHOTO" property="memberPhoto"/>
 		<result column="TYPE" property="type"/>
 	</resultMap>	
+	<resultMap id="insertMemberOut" type="MemberOutDTO">
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="OUT_REASONS" property="outReasons"/>
+		<result column="OUT_DATE" property="outDate"/>
+	</resultMap>
+	
 	
 	<select id="findByID" resultMap="myPageResultMap" parameterType="String">
 		SELECT M.MEMBER_NO
@@ -174,5 +180,25 @@
       DELETE FROM FOLLOW 
       WHERE  FOLLOW_ID = #{followId}     
     </delete>	
+
+    <update id="withdrawal" parameterType="MemberOutDTO">
+     	UPDATE MEMBER
+		SET
+      		MODIFY_DATE = 	SYSDATE,
+			MEMBER_IS = 	NVL('N',MEMBER_IS)
+		WHERE
+			MEMBER_NO = #{memberNo}
+    </update>
+	<insert id="memberout" parameterType="MemberOutDTO">
+		INSERT INTO MEMBER_OUT (
+			MEMBER_NO,
+	        OUT_REASONS,
+	        OUT_DATE
+		) VALUES(
+			#{memberNo},
+			#{outReasons},
+			SYSDATE
+		)	
+	</insert>
 
 </mapper>
