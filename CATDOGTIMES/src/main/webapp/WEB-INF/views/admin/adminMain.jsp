@@ -468,7 +468,6 @@
 	 	     day = day >= 10 ? day : '0' + day;
 	 	        
 	 	     var nowDay = date.getFullYear() + '-' + month + '-' + day;
-	    	 console.log('nowDay ::: ' , nowDay);
 	    	 // 임시데이터
 	    	 
 	    	 	var param =
@@ -484,7 +483,6 @@
 	    		contentType:'application/json',
 	    		dataType: 'json',
 	    		success: function(data){
-	    			console.log('data ::: ' , data);
 	    			var chartData = [['daily', '가입자', '산책경로', '산책매칭', '피드']];
 	    			
 	    			for(var i = 0 ; i < data.length ; i++){
@@ -499,7 +497,6 @@
 	    					}
 	    					chartData.push(data[i]);
 	    			}
-	    			console.log('chartData ::: ' , chartData);
 	    	        var data = google.visualization.arrayToDataTable(chartData);
 
     	       			var options = {

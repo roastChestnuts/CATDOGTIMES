@@ -418,7 +418,6 @@
 	    			$('#pagingArea').append(pagingString);
 	    		},
 	    		error: function(e){
-	    			alert('실패!!');
 	    			console.log(e);
 	    		}
 	    	})
