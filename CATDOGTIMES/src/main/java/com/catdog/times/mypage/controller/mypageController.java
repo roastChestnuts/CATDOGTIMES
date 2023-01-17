@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
 import com.catdog.times.mypage.model.dto.FollowMemberDTO;
+import com.catdog.times.mypage.model.dto.MemberOutDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 import com.catdog.times.mypage.model.service.MypageService;
@@ -135,5 +136,19 @@ public class mypageController {
 		//return null;
 	}
 	
+	
+	@RequestMapping(value = "/withdrawal", method = RequestMethod.POST)
+	public String withdrawal(@RequestBody MemberOutDTO outinfo) {	
+		logger.info("리액트에서 탈퇴 요청 - " + outinfo.getMemberNo() + " - " + outinfo.getOutReasons() );
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		map.put("memberNo", memberNo);
+//		map.put("memberId", memberId);		
+//		map.put("outReasons", outReasons);
+		
+		int re = service.withdrawal(outinfo);
+		logger.info("리액트에서 탈퇴 요청 withdrawal - " + re);
+				
+		return "ok";
+	}
 	
 }

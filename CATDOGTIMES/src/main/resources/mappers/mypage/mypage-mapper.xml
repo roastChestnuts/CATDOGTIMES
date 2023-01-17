@@ -25,6 +25,7 @@
 		<result column="POST_TOTAL" property="postTotal"/>
 		<result column="FOLLOWER_CNT" property="followerCnt"/>
 		<result column="FOLLOWING_CNT" property="followingCnt"/>
+		<result column="MEMBER_ANIMAL_REG_NO" property="animalRegNo"/>
 	</resultMap>
 
 	<resultMap id="postContentResultMap" type="PostContentDTO">
@@ -50,6 +51,12 @@
 		<result column="MEMBER_PHOTO" property="memberPhoto"/>
 		<result column="TYPE" property="type"/>
 	</resultMap>	
+	<resultMap id="insertMemberOut" type="MemberOutDTO">
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="OUT_REASONS" property="outReasons"/>
+		<result column="OUT_DATE" property="outDate"/>
+	</resultMap>
+	
 	
 	<select id="findByID" resultMap="myPageResultMap" parameterType="String">
 		SELECT M.MEMBER_NO
@@ -77,7 +84,8 @@
                  WHERE F.FOLLOWER_ID = M.MEMBER_NO ) AS FOLLOWER_CNT
              , (SELECT  COUNT(FOLLOWING_ID)   
                   FROM FOLLOW F 
-                 WHERE F.FOLLOWING_ID = M.MEMBER_NO ) AS FOLLOWING_CNT             
+                 WHERE F.FOLLOWING_ID = M.MEMBER_NO ) AS FOLLOWING_CNT    
+             , M.MEMBER_ANIMAL_REG_NO         
                  
 		FROM MEMBER M
 		WHERE M.MEMBER_ID = #{memberId}	
@@ -133,7 +141,8 @@
 			MEMBER_ADDRESS = 	NVL(#{memberAddress},MEMBER_ADDRESS),
 			MEMBER_DETAIL_ADDRESS = 	NVL(#{memberDetailAddress},MEMBER_DETAIL_ADDRESS),
 			MEMBER_ZIPCODE = 	NVL(#{memberZipcode},MEMBER_ZIPCODE),
-			MODIFY_DATE = 		SYSDATE
+			MODIFY_DATE = 		SYSDATE,
+			MEMBER_ANIMAL_REG_NO = 	NVL(#{animalRegNo},MEMBER_ANIMAL_REG_NO)
 		WHERE
 			MEMBER_NO = #{memberNo}
 	</update>
@@ -171,5 +180,25 @@
       DELETE FROM FOLLOW 
       WHERE  FOLLOW_ID = #{followId}     
     </delete>	
+
+    <update id="withdrawal" parameterType="MemberOutDTO">
+     	UPDATE MEMBER
+		SET
+      		MODIFY_DATE = 	SYSDATE,
+			MEMBER_IS = 	NVL('N',MEMBER_IS)
+		WHERE
+			MEMBER_NO = #{memberNo}
+    </update>
+	<insert id="memberout" parameterType="MemberOutDTO">
+		INSERT INTO MEMBER_OUT (
+			MEMBER_NO,
+	        OUT_REASONS,
+	        OUT_DATE
+		) VALUES(
+			#{memberNo},
+			#{outReasons},
+			SYSDATE
+		)	
+	</insert>
 
 </mapper>

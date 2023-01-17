@@ -30,4 +30,5 @@ public class MypageDTO {
 	private int followerCnt;
 	private int followingCnt;
 	
+	private String animalRegNo;
 }
