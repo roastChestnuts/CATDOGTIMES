@@ -2,7 +2,10 @@ package com.catdog.times.post.model.mapper;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.catdog.times.post.model.dto.BookmarkDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
@@ -19,7 +22,9 @@ public interface PostMapper {
 	/* <<<CREATE>>> */
 	// SNS 게시글 등록
 	int insertPost(PostDTO post);
-
+	// SNS 게시글 해시태그 등록
+	int insertHashtag(PostHashtagDTO postHashtagList);
+		
 	// 이미지 업로드
 	int insertImage(ImageDTO image);
 
@@ -28,8 +33,6 @@ public interface PostMapper {
 	// 좋아요 클릭
 	int insertLike(PostLikeDTO postLike);
 
-	// SNS 게시글 해시태그 등록
-	int insertHashtag(PostHashtagDTO postHashtagList);
 
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
