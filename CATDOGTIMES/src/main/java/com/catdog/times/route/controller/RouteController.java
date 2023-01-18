@@ -1,4 +1,4 @@
-package com.catdog.times.post.controller;
+package com.catdog.times.route.controller;
 
 import java.util.List;
 
@@ -23,13 +23,11 @@ import com.catdog.times.post.model.service.PostService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/post")
-public class PostController {
+@RequestMapping("/route")
+public class RouteController {
 	@Autowired
 	private PostService service;
 	
-	@Autowired
-	private FileUploadLogic2 fileuploadservice;
 	/* SNS 게시글 */
 	// SNS 게시글 작성
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -58,14 +56,6 @@ public class PostController {
 		return result;
 	}
 	
-	// SNS 게시글 삭제 
-	@RequestMapping(value = "/delete")
-	public int deletePost(int postId) {
-		System.out.println(postId);
-		//우선 아무나 삭제 가능하게 했는데, 이것도 memberNo와 게시글 작성자 일치할 때만 삭제하게끔 만들어야 함.
-		int result = service.deletePost(postId);
-		return result;
-	}
 
 	/* 해시태그 insert */
 	@RequestMapping(value = "/addHashtag", method = RequestMethod.POST)
