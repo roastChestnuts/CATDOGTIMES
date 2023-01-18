@@ -185,22 +185,7 @@
 			#{postHashtag})
 	</insert> -->
 
-	<!-- 좋아요 누르면 -->
-	<insert id="insertPostLike" parameterType="PostLikeDTO"
-		useGeneratedKeys="true" keyColumn="POST_LIKE_ID"
-		keyProperty="postLikeId">
-		INSERT INTO POST_LIKE (
-			POST_LIKE_ID,
-			POST_ID,
-			MEMBER_NO,
-			POST_LIKE_CREATED_DATE
-		) VALUES (
-			SEQ_POST_LIKE_ID.NEXTVAL,
-			#{postId},
-			#{memberNo},
-			DEFAULT
-		)
-	</insert>
+
 
 	<!-- 댓글 작성 -->
 	<insert id="insertReply" parameterType="ReplyDTO"
@@ -419,6 +404,23 @@
 		   AND <![CDATA[ROWNUM <= 5]]> <!-- AND ROWNUM <= 5 -->
       ORDER BY DBMS_RANDOM.VALUE
 	</select>
+	<!-- 좋아요 누르면 -->
+	<insert id="insertPostLike" parameterType="PostLikeDTO" keyColumn="POST_LIKE_ID" keyProperty="postLikeId">
+		 <selectKey resultType="int" keyProperty="postLikeId" order="AFTER">
+			select SEQ_POST_LIKE_ID.CURRVAL as followId FROM DUAL
+		</selectKey>
+		INSERT INTO POST_LIKE (
+			POST_LIKE_ID,
+			POST_ID,
+			MEMBER_NO,
+			POST_LIKE_CREATED_DATE
+		) VALUES (
+			SEQ_POST_LIKE_ID.NEXTVAL,
+			#{postId},
+			#{memberNo},
+			DEFAULT
+		)
+	</insert>
 	
 	<!-- 팔로우버튼 누르면 -->
 	<insert id="insertFollow" parameterType="FollowDTO" keyColumn="FOLLOW_ID" keyProperty="followId">

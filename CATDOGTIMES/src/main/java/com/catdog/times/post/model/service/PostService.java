@@ -80,7 +80,7 @@ public interface PostService {
 	int deletePost(int postId);
 	
 	//게시글 좋아요버튼 인서트
-	int insertPostLike(String postId, String userId);
+	PostLikeDTO insertPostLike(PostLikeDTO postLikeDto);
 	//게시글 좋아요 조회
 	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
 	//검색
