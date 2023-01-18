@@ -190,10 +190,10 @@
 	</insert> -->
 
 	<!-- 좋아요 누르면 -->
-	<insert id="insertPostLike" parameterType="PostLikeDTO"
-		useGeneratedKeys="true" keyColumn="POST_LIKE_ID"
-		keyProperty="postLikeId">
-
+	<insert id="insertPostLike" parameterType="PostLikeDTO" keyColumn="POST_LIKE_ID" keyProperty="postLikeId">
+		 <selectKey resultType="int" keyProperty="postLikeId" order="AFTER">
+			select SEQ_POST_LIKE_ID.CURRVAL as followId FROM DUAL
+		</selectKey>
 		INSERT INTO POST_LIKE (
 			POST_LIKE_ID,
 			POST_ID,

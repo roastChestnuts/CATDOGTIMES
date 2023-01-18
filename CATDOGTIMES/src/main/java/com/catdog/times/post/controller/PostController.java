@@ -98,15 +98,33 @@ public class PostController {
 		return service.readPostLike(postLikeDto);
 	}
 		
+//	//게시글 좋아요 인서트, 좋아요 삭제
+//	@PostMapping("/like")
+//	public int updatePostLike(HttpServletRequest request, String postId, int postLikeId) {
+//		String memberNo = (String)request.getAttribute("userId");
+//		int result = -1;
+//		//게시글에 좋아요를 누르지 않은 경우
+//		if(postLikeId < 0) {
+//			result = service.insertPostLike(postId, memberNo); //게시글 좋아요 번호 리턴
+//		}else {
+//			service.deletePostLike(postLikeId);
+//		}
+//		return result;
+//	}
+	
 	//게시글 좋아요 인서트, 좋아요 삭제
 	@PostMapping("/like")
-	public int updatePostLike(HttpServletRequest request, String postId, int postLikeId) {
-		System.out.println("컨트롤러:" + postId + postLikeId);
-		String memberNo = (String)request.getAttribute("userId");
-		int result = -1;
+	public PostLikeDTO updatePostLike(HttpServletRequest request, //담겨와야 하는 값
+			@RequestBody PostLikeDTO postLikeDto /* ,String postId, int postLikeId */) {
+		int memberNo = (int)request.getAttribute("userId");
+		int postLikeId = postLikeDto.getPostLikeId(); 
+		
+		PostLikeDTO result = null;
+		postLikeDto.setMemberNo(memberNo);		
+
 		//게시글에 좋아요를 누르지 않은 경우
 		if(postLikeId < 0) {
-			result = service.insertPostLike(postId, memberNo); //게시글 좋아요 번호 리턴
+			result = service.insertPostLike(postLikeDto); //게시글 좋아요 번호 리턴
 		}else {
 			service.deletePostLike(postLikeId);
 		}

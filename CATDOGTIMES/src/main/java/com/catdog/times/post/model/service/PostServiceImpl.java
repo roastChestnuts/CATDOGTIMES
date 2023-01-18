@@ -212,8 +212,8 @@ public class PostServiceImpl implements PostService {
 
 	//게시글 좋아요 인서트
 	@Override
-	public int insertPostLike(String postId, String memberNo) {
-		return mapper.insertPostLike(postId, memberNo);
+	public PostLikeDTO insertPostLike(PostLikeDTO postLikeDto) {
+		return mapper.insertPostLike(postLikeDto);
 	}
 	//게시글 좋아요 조회
 	@Override
