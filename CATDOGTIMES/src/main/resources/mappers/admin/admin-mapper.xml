@@ -4,12 +4,24 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.catdog.times.admin.model.mapper.AdminMapper">
 	
-	<!-- 대시보드 게시글 정보 resultMap -->
+	<!-- 대시보드 Total값 정보 resultMap -->
 	<resultMap type="AdminStaticsDTO" id="dashboardTotalResultMap">
 		<result property="totalMemberCnt" column="TOTAL_MEMBER_CNT"></result>
 		<result property="totalRouteCnt" column="TOTAL_ROUTE_CNT"></result>
 		<result property="totalPartyCnt" column="TOTAL_PARTY_CNT"></result>	
 		<result property="totalPostCnt" column="TOTAL_POST_CNT"></result>
+	</resultMap>
+	
+	<!-- 대시보드 월별 Total 정보 resultMap -->
+	<resultMap type="AdminStaticsDTO" id="dashboardMontlyTotalResultMap">
+		<result property="monthly" column="MONTHLY"></result>
+		<result property="totalCnt" column="TOTAL_CNT"></result>
+	</resultMap>
+	
+	<!-- 대시보드 월별 Total 정보 resultMap -->
+	<resultMap type="AdminStaticsDTO" id="dashboardDailyTotalResultMap">
+		<result property="daily" column="DAILY"></result>
+		<result property="totalCnt" column="TOTAL_CNT"></result>
 	</resultMap>
 	
 	<!-- 대시보드 게시글 정보 resultMap -->
@@ -107,6 +119,40 @@
 		WHERE ROW_NUM BETWEEN ((NVL(#{pageIdx},1)-1)* NVL( #{cntPerPage},10) +1)
 						AND     NVL(#{pageIdx},1)   * NVL( #{cntPerPage},10)
 	/* ----------------------------------------------------------------------------- */
+	</sql>
+	
+	<!-- 월별 통계 공통 인라인뷰 -->
+	<sql id="monthlyInline"> 
+		(
+	    SELECT 
+	        TO_DATE(#{nowYear}||'/01','YYYY/MM') + LEVEL -1 AS dt
+	    FROM 
+	        DUAL
+	    CONNECT BY LEVEL <![CDATA[ <= ]]> (TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD') - TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') + 1)
+	    ) A
+	</sql>
+	
+	<sql id="monthlyGroup">
+		GROUP BY TO_CHAR(A.dt, 'YYYY/MM')
+		ORDER BY TO_CHAR(A.dt, 'YYYY/MM')
+	</sql>
+	
+	<sql id="dailyInline">
+	<!-- 날짜, level 변수!! -->
+		<![CDATA[
+		(  
+		 SELECT 
+		        TO_DATE(#{nowDay},'YYYY/MM/DD') - LEVEL +1 AS dt 
+		    FROM 
+		        DUAL
+		    CONNECT BY LEVEL <= #{periodVal}  
+		)A
+		]]>
+	</sql>
+	
+	<sql id="dailyGroup">
+		GROUP BY TO_CHAR(A.dt, 'YYYY-MM-DD')
+		ORDER BY TO_CHAR(A.dt, 'YYYY-MM-DD')
 	</sql>
 	
 	<!-- 대시보드 상단 Total값 조회 -->
@@ -297,5 +343,194 @@
 	<update id="updateRoutePublic" parameterType="AdminDTO">
 		UPDATE WALK_ROUTE SET ROUTE_PUBLIC  = #{routePublic} WHERE ROUTE_NO = #{routeNo}
 	</update>
+	
+	
+	<select id="selectMontly" parameterType="String" resultMap="dashboardMontlyTotalResultMap">
+		SELECT 
+    		TO_CHAR(A.dt, 'YYYYMM') AS MONTHLY
+    	FROM
+    	<include refid="monthlyInline"></include>
+    	GROUP BY TO_CHAR(A.dt, 'YYYYMM')
+		ORDER BY TO_CHAR(A.dt, 'YYYYMM')
+	</select>
+	
+	<select id="selectMontlyMember" parameterType="String" resultMap="dashboardMontlyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.MEMBER_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="monthlyInline"></include>
+    	  ,(
+		    SELECT 
+		    	TO_CHAR(MEMBER_CREATE_DATE,'YYYY-MM-DD') AS MEMBER_CREATE_DATE
+		    	,COUNT(*) AS MEMBER_CNT
+		    FROM 
+		    	MEMBER
+		    WHERE 
+		    	MEMBER_CREATE_DATE BETWEEN TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') AND TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD')
+		    GROUP BY 
+		    	MEMBER_CREATE_DATE
+		    )B
+		WHERE 1=1
+  			AND A.dt = B.MEMBER_CREATE_DATE(+)
+    	<include refid="monthlyGroup"></include>
+	</select>
+	
+	<select id="selectMontlyPost" parameterType="String" resultMap="dashboardMontlyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.POST_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="monthlyInline"></include>
+    	  ,(
+		    SELECT 
+		    	TO_CHAR(POST_CREATE_DATE,'YYYY-MM-DD') AS POST_CREATE_DATE
+        		,COUNT(*) AS POST_CNT
+		    FROM 
+		    	POST
+		    WHERE
+		    	POST_CREATE_DATE BETWEEN TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') AND TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD')
+		    GROUP BY
+		    	POST_CREATE_DATE
+		    )B
+		WHERE 1=1
+  			AND A.dt = B.POST_CREATE_DATE(+)
+    	<include refid="monthlyGroup"></include>
+	</select>
+	
+	<select id="selectMontlyRoute" parameterType="String" resultMap="dashboardMontlyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.ROUTE_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="monthlyInline"></include>
+    	,(
+    	SELECT
+    	 TO_CHAR(ROUTE_CREATE_DATE,'YYYY-MM-DD') AS ROUTE_CREATE_DATE
+        ,COUNT(*) AS ROUTE_CNT
+    	FROM
+    		WALK_ROUTE
+	    WHERE
+			ROUTE_CREATE_DATE BETWEEN TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') AND TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD')
+	    GROUP BY
+	    	ROUTE_CREATE_DATE
+    	)B 
+		WHERE 1=1
+  			AND A.dt = B.ROUTE_CREATE_DATE(+)
+    	<include refid="monthlyGroup"></include>
+	</select>
+	
+	<select id="selectMontlyParty" parameterType="String" resultMap="dashboardMontlyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.PARTY_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="monthlyInline"></include>
+    	,(
+	    SELECT 
+	    	TO_CHAR(PARTY_CREATEDATE,'YYYY-MM-DD') AS PARTY_CREATEDATE
+	        ,COUNT(*) AS PARTY_CNT
+	    FROM
+	    	WALK_PARTY
+	    WHERE
+	    	PARTY_CREATEDATE BETWEEN TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') AND TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD')
+	    GROUP BY
+	    	PARTY_CREATEDATE
+	    )B 
+		WHERE 1=1
+  			AND A.dt = B.PARTY_CREATEDATE(+)
+    	<include refid="monthlyGroup"></include>
+	</select>
+	
+	<!-- 일별 -->
+	<select id="selectDaily" parameterType="AdminStaticsDTO" resultMap="dashboardDailyTotalResultMap"> 
+	 	SELECT 
+    		TO_CHAR(A.dt, 'YYYYMMDD') AS DAILY
+    	FROM
+	    <include refid="dailyInline"></include>
+	    GROUP BY TO_CHAR(A.dt, 'YYYYMMDD')
+		ORDER BY TO_CHAR(A.dt, 'YYYYMMDD')
+	</select>
+	
+	<!--  -->
+	<select id="selectDailyMember" parameterType="AdminStaticsDTO" resultMap="dashboardDailyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.MEMBER_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="dailyInline"></include>
+    	  ,(
+		    SELECT 
+		    	TO_CHAR(MEMBER_CREATE_DATE,'YYYY-MM-DD') AS MEMBER_CREATE_DATE
+		        ,COUNT(*) AS MEMBER_CNT
+		    FROM 
+		    	MEMBER
+		    WHERE 
+		    	MEMBER_CREATE_DATE BETWEEN TO_DATE(#{nowDay})-#{periodVal} AND TO_DATE(#{nowDay})+1
+		    GROUP BY 
+		    	MEMBER_CREATE_DATE
+		    )B 
+		WHERE 1=1
+  			AND A.dt = B.MEMBER_CREATE_DATE(+)
+    	<include refid="dailyGroup"></include>
+	</select>
+	
+	<select id="selectDailyPost" parameterType="AdminStaticsDTO" resultMap="dashboardDailyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.POST_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="dailyInline"></include>
+    	  ,(
+		    SELECT 
+		    	TO_CHAR(POST_CREATE_DATE,'YYYY-MM-DD') AS POST_CREATE_DATE
+        		,COUNT(*) AS POST_CNT
+		    FROM 
+		    	POST
+		    WHERE
+		    	POST_CREATE_DATE BETWEEN TO_DATE(#{nowDay})-#{periodVal} AND TO_DATE(#{nowDay})+1
+		    GROUP BY
+		    	POST_CREATE_DATE
+		    )B
+		WHERE 1=1
+  			AND A.dt = B.POST_CREATE_DATE(+)
+    	<include refid="dailyGroup"></include>
+	</select>
+	
+	<select id="selectDailyRoute" parameterType="AdminStaticsDTO" resultMap="dashboardDailyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.ROUTE_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="dailyInline"></include>
+    	,(
+    	SELECT
+    	 TO_CHAR(ROUTE_CREATE_DATE,'YYYY-MM-DD') AS ROUTE_CREATE_DATE
+        ,COUNT(*) AS ROUTE_CNT
+    	FROM
+    		WALK_ROUTE
+	    WHERE
+			ROUTE_CREATE_DATE BETWEEN TO_DATE(#{nowDay})-#{periodVal} AND TO_DATE(#{nowDay})+1
+	    GROUP BY
+	    	ROUTE_CREATE_DATE
+    	)B 
+		WHERE 1=1
+  			AND A.dt = B.ROUTE_CREATE_DATE(+)
+    	<include refid="dailyGroup"></include>
+	</select>
+	
+	<select id="selectDailyParty" parameterType="AdminStaticsDTO" resultMap="dashboardDailyTotalResultMap">
+		SELECT 
+    		NVL(SUM(B.PARTY_CNT),0) AS TOTAL_CNT
+    	FROM
+    	<include refid="dailyInline"></include>
+    	,(
+	    SELECT 
+	    	TO_CHAR(PARTY_CREATEDATE,'YYYY-MM-DD') AS PARTY_CREATEDATE
+	        ,COUNT(*) AS PARTY_CNT
+	    FROM
+	    	WALK_PARTY
+	    WHERE
+	    	PARTY_CREATEDATE BETWEEN TO_DATE(#{nowDay})-#{periodVal} AND TO_DATE(#{nowDay})+1
+	    GROUP BY
+	    	PARTY_CREATEDATE
+	    )B 
+		WHERE 1=1
+  			AND A.dt = B.PARTY_CREATEDATE(+)
+    	<include refid="dailyGroup"></include>
+	</select>
 	
 </mapper>

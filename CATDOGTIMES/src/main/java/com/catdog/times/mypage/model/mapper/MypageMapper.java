@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.catdog.times.mypage.model.dto.FollowMemberDTO;
 import com.catdog.times.mypage.model.dto.MemberOutDTO;
+import com.catdog.times.mypage.model.dto.MyWalksDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 
@@ -20,4 +21,7 @@ public interface MypageMapper {
 	int deleteFollower(Map<String,Object> map);
 	int withdrawal(MemberOutDTO outinfo);
 	int memberout(MemberOutDTO outinfo);
+	
+	List<MyWalksDTO> mywalks(String memberNo);
+	List<MyWalksDTO> joinedwalks(String memberNo);
 }

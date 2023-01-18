@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${ pageContext.request.contextPath }"/>
 <html lang="ko">
 <head>
     <meta charset="utf-8">
@@ -67,7 +68,7 @@
                                             <a href="/times/admin/usermanage" class="icon_search push_side cb chp"><span>사용자관리</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="/times/admin/boardmanage" class="icon_search push_side cb chp"><span>게시글관리</span></a>
+                                            <a href="/times/admin/boardmanage" class="icon_search push_side cb chp"><span>피드관리</span></a>
                                         </li>
                                         <li class="menu-item ">
                                             <a href="/times/admin/routemanage" class="icon_search push_side cb chp"><span>산책루트관리</span></a>
@@ -105,7 +106,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-2">
+                    <div class="col-xl-2.5">
                    		<div class="card mb-4">
                            <div class="card-header">
                                등록된 산책경로 수
@@ -125,7 +126,7 @@
                            </div>
                        	</div>
                    	</div>
-                    <div class="col-xl-2">
+                    <div class="col-xl-2.5">
                    		<div class="card mb-4">
                            <div class="card-header">
                                산책루트 평균 평점
@@ -148,22 +149,13 @@
                         	<div class="col-xl-12">
                             	<div class="card mb-6">
                                     <div class="card-header">
-                                        <span>멍냥일보 서비스 연간 차트</span> 
+                                        <span>멍냥일보 서비스 월별 차트</span> 
                                         <div style="display: contents;">
                                     		<select class="admin_srchBox" style="width:150px;" id="yearVal">
-                                    			<option value="">2023</option>
-                                    			<option value="Y">2022</option>
-                                    			<option value="N">2021</option>
-                                    			<option value="N">2020</option>
-                                    			<option value="N">2019</option>
-                                    			<option value="N">2018</option>
                                     		</select>
                                     	</div>
                                     </div> 
                                     <div class="card-body">
-<!--                                     	<span>==========차트 구현 영역입니다.==========</span><br> -->
-<!--                                     	<br><br><br><br><br><br> -->
-<!--                                     	<br><br><br><br><br><br> -->
                                     	<div id="yearlyChartDiv" style="height: 500px;"></div>
                                     </div>
                                 </div>
@@ -171,24 +163,22 @@
                         	<div class="col-xl-12" style="padding-top:10px;">
                             	<div class="card mb-6">
                                     <div class="card-header">
-                                        <span>멍냥일보 서비스 일간 차트</span> 
+                                        <span>멍냥일보 서비스 일별 차트</span> 
                                         <div style="display: contents;">
-                                    		<select class="admin_srchBox" style="width:150px;" id="yearVal">
-                                    			<option value="">최근 7일</option>
-                                    			<option value="">최근 30일</option>
+                                    		<select class="admin_srchBox" style="width:150px;" id="periodVal">
+                                    			<option value="7">최근 7일</option>
+                                    			<option value="15">최근 15일</option>
+<!--                                     			<option value="30">최근 30일</option> -->
                                     		</select>
                                     	</div>
                                     </div> 
                                     <div class="card-body">
-<!--                                     	<span>==========차트 구현 영역입니다.==========</span><br> -->
-<!--                                     	<br><br><br><br><br><br> -->
-<!--                                     	<br><br><br><br><br><br> -->
                                     	<div id="dailyChartDiv" style="height: 500px;"></div>
                                     </div>
                                 </div>
                             </div>
                             </div>
-                            <div class="row" style="padding-top:20px;">
+<!--                             <div class="row" style="padding-top:20px;">
                         	<div class="col-xl-4">
                             	<div class="card mb-3">
                                     <div class="card-header">
@@ -272,50 +262,6 @@
                 <div class="widget widget_product_list text-left p-3">
                     <h5 class="widget-title pt-5">전체랭킹</h5>
                     <ul class="product_list_widget">
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
                         <li class="row mb__10 pb__10">
                             <div class="col widget_img_pr">
                                 <a class="db pr oh" href="#">
@@ -411,8 +357,9 @@
 	    	
 	    	var date = new Date();
 	    	var today = dateFormat(date);
-	    	
 	    	$('#updateTime').text(today);
+	    	
+	    	getBeforeYear(date.getFullYear());
 	    	
 	    	google.charts.load('current', {'packages':['corechart']});
 	   	    google.charts.setOnLoadCallback(yearlyCatDogTimesChart);
@@ -433,69 +380,141 @@
 	 	        hour = hour >= 10 ? hour : '0' + hour;
 	 	        minute = minute >= 10 ? minute : '0' + minute;
 	 	        second = second >= 10 ? second : '0' + second;
-
+	 	        
 	 	        return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 	 	}
+	    
+	    // 올해 기준 지난 5년 selectbox option 추가 함수
+	    function getBeforeYear(year){
+	    	
+	    	var beforeYear = Number(year)-5;
+	    	
+	    	for(var i = year ; i > beforeYear ; i --){
+	    		$('#yearVal').append("<option value=" + i +">" + i+ "</option>");
+	    	}
+	    }
+	    
+	    // 연도 셀렉트 박스 변경 이벤트
+	    $('#yearVal').on("change", function(){
+	    	yearlyCatDogTimesChart();
+	    })
+	    
+	    // 연도 셀렉트 박스 변경 이벤트
+	    $('#periodVal').on("change", function(){
+	    	dailyCatDogTimesChart();
+	    })
 		
 	    // 연간 차트 함수
 	    function yearlyCatDogTimesChart() {
-	        // Some raw data (not necessarily accurate)
-	        var data = google.visualization.arrayToDataTable([
-	          ['Year/Month', '가입자', '산책경로', '산책매칭', '피드'],
-	          ['2023/01',  165,      938,         522,             998,   ],
-	          ['2023/02',  165,      938,         522,             998,   ],
-	          ['2023/03',  165,      938,         522,             998,   ],
-	          ['2023/04',  165,      938,         522,             998,   ],
-	          ['2023/05',  135,      1120,        599,             1268,  ],
-	          ['2023/06',  157,      1167,        587,             807,   ],
-	          ['2023/07',  139,      1110,        615,             968,   ],
-	          ['2023/08',  165,      938,         522,             998,   ],
-	          ['2023/09',  135,      1120,        599,             1268,  ],
-	          ['2023/10',  157,      1167,        587,             807,   ],
-	          ['2023/11',  139,      1110,        615,             968,   ],
-	          ['2023/12',  136,      691,         629,             1026,  ]
-	        ]);
+	    	
+	    	var nowYear = $('#yearVal option:selected').val();
+	    	
+	    	var param =
+	    		{
+	    			"nowYear":nowYear
+	    		}
+	    	
+	    	$.ajax({
+	    		type:'GET',
+	    		url:'${ path }/admin/dashboard/monthly',
+	    		data:param,
+	    		contentType:'application/json',
+	    		dataType: 'json',
+	    		success: function(data){
+	    			// console.log('data ::: ' , data);
+	    			var chartData = [['Year/Month', '가입자', '산책경로', '산책매칭', '피드']];
+	    			
+	    			for(var i = 0 ; i < data.length ; i++){
+	    				for(var j = 0 ; j < data[0].length ; j ++)
+	    					if(j==0){
+	    						var convertStr = data[i][j].toString();
+	    						var year = convertStr.substr(0,4);
+	    						var month = convertStr.substr(4,2);
+	    						data[i][j] = year + "/" + month;
+	    					}
+	    					chartData.push(data[i]);
+	    			}
+	    			//console.log('chartData ::: ' , chartData);
+	    	        var data = google.visualization.arrayToDataTable(chartData);
 
-	        var options = {
-	          title : '',
-	          vAxis: {title: ''},
-	          hAxis: {title: ''},
-	          seriesType: 'bars',
-	          series: {5: {type: 'line'}}
-	        };
+	    	        var options = {
+	    	          title : '',
+	    	          vAxis: {title: ''},
+	    	          hAxis: {title: ''},
+	    	          seriesType: 'bars',
+	    	          series: {5: {type: 'line'}}
+	    	        };
 
-	        var chart = new google.visualization.ComboChart(document.getElementById('yearlyChartDiv'));
-	        chart.draw(data, options);
+	    	        var chart = new google.visualization.ComboChart(document.getElementById('yearlyChartDiv'));
+	    	        chart.draw(data, options);
+	    		},
+	    		error: function(e){
+	    			console.log(e);
+	    		}
+	    	})
+	    	
 	      }
 	      
 	      // 일간 차트 함수
 	      function dailyCatDogTimesChart() {
+	    	  
+	    	 var periodVal =  $('#periodVal option:selected').val();
+	    	 console.log('period ::: ' , periodVal);
+	    	 
+	    	 var date = new Date();    	 
+	    	 var month = date.getMonth() + 1;
+	 	     var day = date.getDate();
+	 	     month = month >= 10 ? month : '0' + month;
+	 	     day = day >= 10 ? day : '0' + day;
+	 	        
+	 	     var nowDay = date.getFullYear() + '-' + month + '-' + day;
 	    	 // 임시데이터
-	         var data = google.visualization.arrayToDataTable([
-		          ['daily', '가입자', '산책경로', '산책매칭', '피드'],
-		          ['2023-01-04',  1030,      540,  550, 600],
-		          ['2023-01-05',  1030,      540,  550, 600],
-		          ['2023-01-06',  1030,      540,  550, 600],
-		          ['2023-01-07',  1030,      540,  550, 600],
-		          ['2023-01-08',  660,       1120, 400, 400],
-		          ['2023-01-09',  1170,      460,  600, 800],
-		          ['2023-01-10',  1000,      400,  500, 300]
-		        ]);
+	    	 
+	    	 	var param =
+	    		{
+	    			"nowDay":nowDay,
+	    			"periodVal":periodVal
+	    		}
+	    	
+	    	$.ajax({
+	    		type:'GET',
+	    		url:'${ path }/admin/dashboard/daily',
+	    		data:param,
+	    		contentType:'application/json',
+	    		dataType: 'json',
+	    		success: function(data){
+	    			var chartData = [['daily', '가입자', '산책경로', '산책매칭', '피드']];
+	    			
+	    			for(var i = 0 ; i < data.length ; i++){
+	    				for(var j = 0 ; j < data[0].length ; j ++)
+	    					if(j==0){
+	    						var convertStr = data[i][j].toString();
+	    						var year = convertStr.substr(0,4);
+	    						var month = convertStr.substr(4,2);
+	    						console.log(month);
+	    						var day = convertStr.substr(6,2);
+	    						data[i][j] = year + "/" + month + "/" + day;
+	    					}
+	    					chartData.push(data[i]);
+	    			}
+	    	        var data = google.visualization.arrayToDataTable(chartData);
 
-		        var options = {
-		          title: 'Company Performance',
-		          curveType: 'function',
-		          legend: { position: 'bottom' }
-		        };
-	        var chart = new google.visualization.LineChart(document.getElementById('dailyChartDiv'));
-	        chart.draw(data, options);
+    	       			var options = {
+	    			          title: '',
+	    			          curveType: 'function',
+	    			          legend: { position: 'bottom' }
+	    			        };
+	    		        var chart = new google.visualization.LineChart(document.getElementById('dailyChartDiv'));
+	    		        chart.draw(data, options);
+	    		},
+	    		error: function(e){
+	    			console.log(e);
+	    		}
+	    	})
+	    	 
 	      }
 	      
-	      function getTotalValue(date){
-	    	  
-	    	  
-	    	  
-	      }
+	     
     </script>
 </body>
 
