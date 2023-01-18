@@ -101,6 +101,7 @@ public class PostController {
 	//게시글 좋아요 인서트, 좋아요 삭제
 	@PostMapping("/like")
 	public int updatePostLike(HttpServletRequest request, String postId, int postLikeId) {
+		System.out.println("컨트롤러:" + postId + postLikeId);
 		String memberNo = (String)request.getAttribute("userId");
 		int result = -1;
 		//게시글에 좋아요를 누르지 않은 경우

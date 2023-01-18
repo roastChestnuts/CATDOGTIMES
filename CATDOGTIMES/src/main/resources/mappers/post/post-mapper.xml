@@ -30,8 +30,7 @@
 		<result column="POST_LIKE_ID" property="postLikeId" />
 		<result column="POST_ID" property="postId" />
 		<result column="MEMBER_NO" property="memberNo" />
-		<result column="POST_LIKE_CREATED_DATE"
-			property="postLikeCreatedDate" />
+		<result column="POST_LIKE_CREATED_DATE" property="postLikeCreatedDate" />
 	</resultMap>
 
 	<resultMap type="PostHashtagDTO" id="postHashtagResultMap">
