@@ -22,6 +22,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.catdog.times.mypage.model.dto.FollowMemberDTO;
 import com.catdog.times.mypage.model.dto.MemberOutDTO;
+import com.catdog.times.mypage.model.dto.MyWalksDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 import com.catdog.times.mypage.model.service.MypageService;
@@ -149,6 +150,22 @@ public class mypageController {
 		logger.info("리액트에서 탈퇴 요청 withdrawal - " + re);
 				
 		return "ok";
+	}
+	
+	@RequestMapping(value = "/mypage/myWalks", method = RequestMethod.POST)
+	public List<MyWalksDTO> myWalksSearch(String memberNo) {	
+		logger.info("리액트에서 요청오면, memberNo-" +  memberNo );
+		List<MyWalksDTO> mywalksdto = service.mywalks(memberNo);
+		logger.info("리액트에서 요청오면, mymalksdto-" +  mywalksdto );
+		return mywalksdto;
+	}
+	
+	@RequestMapping(value = "/mypage/joinedWalks", method = RequestMethod.POST)
+	public List<MyWalksDTO> joinedWalksSearch(String memberNo) {	
+		logger.info("리액트에서 요청오면, memberNo-" +  memberNo );
+		List<MyWalksDTO> jowalksdto = service.joinedwalks(memberNo);
+		logger.info("리액트에서 요청오면, joinedwalks-" +  jowalksdto );
+		return jowalksdto;
 	}
 	
 }
