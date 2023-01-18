@@ -47,7 +47,8 @@
 		<interceptor>
 			<mapping path="/member/anonymous/**"/>
 			<!-- <mapping path="/memberinfo"/> -->
-			<exclude-mapping path="/member/**"/>
+			<mapping path="/post/like"/>
+			<exclude-mapping path="/member/**"/>			
 			<beans:bean id="jwtInterceptor" class="com.catdog.times.common.interceptor.JwtInterceptor"/>
 		</interceptor>
 	</interceptors>
