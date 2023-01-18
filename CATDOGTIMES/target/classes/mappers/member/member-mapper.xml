@@ -44,7 +44,7 @@
 		<result property="animalRegNo" column="MEMBER_ANIMAL_REG_NO"/>		
 	</resultMap>
 	
-	<select id="selectMemberById" parameterType="string" resultMap="memberResultMap">
+	<select id="selectMemberById" parameterType="String" resultMap="memberResultMap">
 		<include refid="selectMemberSql"/>
 		WHERE MEMBER_ID = #{id} 
 		  AND MEMBER_IS = 'Y'

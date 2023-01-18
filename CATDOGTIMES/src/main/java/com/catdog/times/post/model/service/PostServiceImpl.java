@@ -1,50 +1,110 @@
 package com.catdog.times.post.model.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.WebUtils;
 
+import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
 import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
 import com.catdog.times.post.model.dto.ReplyLikeDTO;
 import com.catdog.times.post.model.dto.SNSFeedDTO;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
 import com.catdog.times.post.model.mapper.PostMapper;
 
 @Service
 public class PostServiceImpl implements PostService {
+	
 	@Autowired
 	private PostMapper mapper;
 	
-	//등록
+	//등록	
+	//글쓰기+insertHashtag+insertImage	
+	@Override
+	@Transactional
+	public int insertPost(PostDTO post, MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
+		//insertPost	
+		mapper.insertPost(post);
+		int postId = post.getPostId();
+		
+		//insertPostHashtag
+		String postHashtag = post.getPostHashtag();
+		PostHashtagDTO hashtag = new PostHashtagDTO();
+		hashtag.setPostId(postId);
+		hashtag.setPostHashtag(postHashtag);
+		mapper.insertHashtag(hashtag);
+		
+		//insertImage
+		System.out.println("서비스 file 들어왔을까?:"+file);
+		
+		String ImageOriginalName = post.getImageOriginalName();
+		String ImageSavedName = post.getImageSavedName();
+		
+		ImageDTO image = new ImageDTO();				
+		image.setImageOriginalName(ImageOriginalName);
+		image.setImageSavedName(ImageSavedName);
+		image.setPostId(postId);
+		
+		String path = WebUtils.getRealPath(session.getServletContext(), "/resources/upload");
+		System.out.println("post서비스 업로드 실제경로:"+path);
+		
+		if(!file.isEmpty()) {
+			file.transferTo(new File(path+File.separator+image.getImageSavedName()));
+		}
+		
+		mapper.insertImage(image);
+		
+		return 0; 
+	}
 	
-	//글쓰기, image 넣기가 분리되어 있는데, 이럴 땐 transactional 어떻게 하나?
-	//같이 해야 하나?
-	@Override
-	public int insertPost(PostDTO post) {		
-		return mapper.insertPost(post);
-	}
-
-	@Override
-	public int insertImage(ImageDTO image) {
-		//첨부파일... transactional 처리해야하나?
-		return mapper.insertImage(image);
-	}
-
-	@Override
-	public int insertLike(PostLikeDTO postLike) {		
-		return mapper.insertLike(postLike);
-	}
-
 	@Override
 	public int insertHashtag(PostHashtagDTO postHashtagList) {
 		System.out.println("이곳은 서비스(해시태그)"+ postHashtagList);
 		return mapper.insertHashtag(postHashtagList);
+	}
+	
+	@Override
+	public int insertImage(ImageDTO image) {
+		return mapper.insertImage(image);
+	}
+	
+	
+//	@Override
+//	public int insertImage(ImageDTO image, MultipartFile photofile, HttpSession session) throws IllegalStateException, IOException {	
+//		String path = WebUtils.getRealPath(session.getServletContext(), "/resources/upload");
+//		System.out.println("ServiceImpl: 실제경로" + path);
+//				
+//		if(photofile != null){
+//			String filename = fileuploadservice.uploadFile(photofile, path);			
+//			image.setImageSavedName(filename);
+//		}			
+//		return 0;
+//	}
+
+//	@Override
+////	public int insertImage(@RequestPart("image") ImageDTO image, @RequestPart(required = false) MultipartFile photofile, HttpSession session) {
+////		return mapper.insertImage(image);
+////	}
+
+	@Override
+	public int insertLike(PostLikeDTO postLike) {		
+		return mapper.insertLike(postLike);
 	}
 
 	@Override
@@ -152,8 +212,8 @@ public class PostServiceImpl implements PostService {
 
 	//게시글 좋아요 인서트
 	@Override
-	public int insertPostLike(String postId, String memberNo) {
-		return mapper.insertPostLike(postId, memberNo);
+	public PostLikeDTO insertPostLike(PostLikeDTO postLikeDto) {
+		return mapper.insertPostLike(postLikeDto);
 	}
 	//게시글 좋아요 조회
 	@Override
@@ -161,4 +221,45 @@ public class PostServiceImpl implements PostService {
 		return mapper.readPostLike(postLikeDto);
 	}
 
+	//검색
+	@Override
+	public List<SearchMemberDTO> searchUser(String id) {
+		return mapper.searchUser(id);
+	}
+
+	//특정 유저 탐색페이지 조회
+	@Override
+	public List<ImageDTO> searchExploreImage(int toMemberNo) {
+		return mapper.searchExploreImage(toMemberNo);
+	}
+	
+	//랜덤 탐색페이지 조회
+	@Override
+	public List<ImageDTO> searchExploreImage() {
+		return mapper.searchRandomExploreImage();
+	}
+	
+	//알림창 조회(좋아요 누른 사람들)
+	@Override
+	public List<NotificationDTO> searchNotifications(String memberNo) {
+		return mapper.searchNotifications(memberNo);
+	}
+	
+	//알림창 조회(추천인들)
+	@Override
+	public List<RecommendDTO> searchRecommends(String memberNo) {
+		return mapper.searchRecommends(memberNo);
+	}
+
+	//팔로우 저장
+	@Override
+	public FollowDTO insertFollow(FollowDTO followDto) {
+		return mapper.insertFollow(followDto);
+	}
+
+	//팔로우 취소
+	@Override
+	public int deleteFollow(FollowDTO followDto) {
+		return mapper.deleteFollow(followDto);
+	}
 }
