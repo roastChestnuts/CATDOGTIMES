@@ -1,9 +1,13 @@
 package com.catdog.times.post.controller;
 
+
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.catdog.times.member.controller.MemberController;
 import com.catdog.times.member.model.dto.Member;
@@ -20,7 +26,6 @@ import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostDTO;
-import com.catdog.times.post.model.dto.PostHashtagDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
 import com.catdog.times.post.model.dto.RecommendDTO;
@@ -38,17 +43,16 @@ import lombok.extern.slf4j.Slf4j;
 public class PostController {
 	@Autowired
 	private PostService service;
-	
-	@Autowired
-	private FileUploadLogic2 fileuploadservice;
+
 	/* SNS 게시글 */
 	// SNS 게시글 작성
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String insertPost(@RequestBody PostDTO post) {
+	public String insertPost(@RequestPart("post") PostDTO post, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
 		System.out.println(post);
-		int result = service.insertPost(post);
-		System.out.println("insert 결과값:" + result);
-		System.out.println("return값:" + post.getPostId());
+		System.out.println("컨트롤러:"+ file);
+		int result = service.insertPost(post, file, session);	
+		System.out.println("=====insertPost========");
+		System.out.println("insertPost 결과값:" + result);		
 		return "성공";
 	}
 
@@ -79,12 +83,12 @@ public class PostController {
 	}
 
 	/* 해시태그 insert */
-	@RequestMapping(value = "/addHashtag", method = RequestMethod.POST)
-	public int insertHashtag(@RequestBody PostHashtagDTO postHashtagList) {
-		System.out.println("Controller(해시태그):" + postHashtagList);
-		int result = service.insertHashtag(postHashtagList);
-		return result;
-	}
+//	@RequestMapping(value = "/addHashtag", method = RequestMethod.POST)
+//	public int insertHashtag(@RequestBody PostHashtagDTO postHashtagList) {
+//		System.out.println("Controller(해시태그):" + postHashtagList);
+//		int result = service.insertHashtag(postHashtagList);
+//		return result;
+//	}
 	
 	//게시글 좋아요 조회(Dto엔 postId만 담겨올 것)
 	@GetMapping("/like")

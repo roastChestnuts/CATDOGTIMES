@@ -15,4 +15,9 @@ public class PostDTO {
 	private Date postCreateDate;
 	private Date postUpdateDate;
 	private int memberNo;
+	
+	private String postHashtag;
+	
+	private String imageSavedName;
+	private String imageOriginalName;
 }

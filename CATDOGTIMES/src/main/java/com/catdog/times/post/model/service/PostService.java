@@ -1,6 +1,13 @@
 package com.catdog.times.post.model.service;
 
+import java.io.IOException;
 import java.util.List;
+
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.multipart.MultipartFile;
+
 
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
@@ -20,13 +27,15 @@ import com.catdog.times.post.model.dto.SearchMemberDTO;
 public interface PostService {
 	/* <<<CREATE>>> */
 	// SNS 게시글 등록
-	int insertPost(PostDTO post);
+	int insertPost(PostDTO post, MultipartFile file, HttpSession session) throws IllegalStateException, IOException;
 	// 이미지 업로드
 	int insertImage(ImageDTO image);
+	
+	//int insertImage(@RequestPart("image") ImageDTO image, @RequestPart(required = false) MultipartFile photofile, HttpSession session) throws IllegalStateException, IOException;
 	// 좋아요 클릭
 	int insertLike(PostLikeDTO postLike);
 	// SNS 게시글 해시태그 등록
-	int insertHashtag(PostHashtagDTO postHashtagList);
+	int insertHashtag(PostHashtagDTO postHashtag);
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
 	// 댓글 좋아요 클릭
