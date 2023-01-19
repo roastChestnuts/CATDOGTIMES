@@ -22,6 +22,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.catdog.times.mypage.model.dto.FollowMemberDTO;
 import com.catdog.times.mypage.model.dto.MemberOutDTO;
+import com.catdog.times.mypage.model.dto.MyWalksDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 import com.catdog.times.mypage.model.service.MypageService;
@@ -63,17 +64,19 @@ public class mypageController {
 //	}
 	
 	
-	@RequestMapping(value = "/memberinfo", method = RequestMethod.POST)
+	@RequestMapping(value = "/mypage/memberinfo", method = RequestMethod.GET)
 //	public MypageDTO memberinfo(ModelAndView mdel, @RequestBody Map<String,Object> body) {	
 	public MypageDTO memberinfo(String id) {	
 		logger.info("리액트에서 요청오면, mypagedto 스타트" + id);
+				
+		
 		MypageDTO mypagedto = service.findByID(id);
 		logger.info(mypagedto.toString());
 				
 		return mypagedto;
 	}
 	
-	@RequestMapping(value = "/memberPostSearch", method = RequestMethod.POST)
+	@RequestMapping(value = "/mypage/postSearch", method = RequestMethod.POST)
 	public List<PostContentDTO> memberPostSearch(String searchType, String memberNo) {	
 	//public MypageDTO memberPostSearch(String id) {	
 		logger.info("리액트에서 요청오면, memberPostSearch-" + searchType+ "-" + memberNo );
@@ -88,7 +91,7 @@ public class mypageController {
 	}
 
 	
-	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
+	@RequestMapping(value = "/mypage/memberUpdate", method = RequestMethod.POST)
 //	public MypageDTO memberinfoUpdate(@RequestBody MypageDTO mypage) throws IllegalStateException, IOException {		
 	public MypageDTO memberinfoUpdate(@RequestPart("mypage") MypageDTO mypage, @RequestPart(required = false) MultipartFile photofile, HttpSession session) throws IllegalStateException, IOException {		
 		//logger.info("리액트에서 정보 수정 요청오면, 회원정보 수정 스타트"+mypage.toString()+"-"+photofile.toString());
@@ -107,7 +110,7 @@ public class mypageController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/memberFollowSearch", method = RequestMethod.POST)
+	@RequestMapping(value = "/mypage/followSearch", method = RequestMethod.POST)
 	public List<FollowMemberDTO> memberFollowSearch(String type, String memberNo) {	
 		logger.info("리액트에서 요청오면, memberFollowSearch-" + type+ "-" + memberNo );
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -120,7 +123,7 @@ public class mypageController {
 		return followList;
 	}
 	
-	@RequestMapping(value = "/deleteFollower", method = RequestMethod.POST)
+	@RequestMapping(value = "/mypage/deleteFollower", method = RequestMethod.POST)
 	public List<FollowMemberDTO> deleteFollower(String type, String memberNo, String followId) {	
 		logger.info("리액트에서 요청오면, deleteFollower-" + memberNo + "-" + followId );
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -137,7 +140,7 @@ public class mypageController {
 	}
 	
 	
-	@RequestMapping(value = "/withdrawal", method = RequestMethod.POST)
+	@RequestMapping(value = "/mypage/delete/account", method = RequestMethod.POST)
 	public String withdrawal(@RequestBody MemberOutDTO outinfo) {	
 		logger.info("리액트에서 탈퇴 요청 - " + outinfo.getMemberNo() + " - " + outinfo.getOutReasons() );
 //		Map<String,Object> map = new HashMap<String,Object>();
@@ -149,6 +152,22 @@ public class mypageController {
 		logger.info("리액트에서 탈퇴 요청 withdrawal - " + re);
 				
 		return "ok";
+	}
+	
+	@RequestMapping(value = "/mypage/myWalks", method = RequestMethod.POST)
+	public List<MyWalksDTO> myWalksSearch(String memberNo) {	
+		logger.info("리액트에서 요청오면, memberNo-" +  memberNo );
+		List<MyWalksDTO> mywalksdto = service.mywalks(memberNo);
+		logger.info("리액트에서 요청오면, mymalksdto-" +  mywalksdto );
+		return mywalksdto;
+	}
+	
+	@RequestMapping(value = "/mypage/joinedWalks", method = RequestMethod.POST)
+	public List<MyWalksDTO> joinedWalksSearch(String memberNo) {	
+		logger.info("리액트에서 요청오면, memberNo-" +  memberNo );
+		List<MyWalksDTO> jowalksdto = service.joinedwalks(memberNo);
+		logger.info("리액트에서 요청오면, joinedwalks-" +  jowalksdto );
+		return jowalksdto;
 	}
 	
 }
