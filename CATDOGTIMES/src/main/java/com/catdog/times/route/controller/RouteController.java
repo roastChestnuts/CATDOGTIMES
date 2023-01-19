@@ -33,8 +33,8 @@ public class RouteController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String insertPost(@RequestBody PostDTO post) {
 		System.out.println(post);
-		int result = service.insertPost(post);
-		System.out.println("insert 결과값:" + result);
+
+
 		System.out.println("return값:" + post.getPostId());
 		return "성공";
 	}
@@ -80,7 +80,7 @@ public class RouteController {
 		int result = 0;
 		//게시글에 좋아요를 누르지 않은 경우
 		if(postLikeId == 0) {
-			result = service.insertPostLike(postId, memberNo); //게시글 좋아요 번호 리턴
+
 		}else {
 			service.deletePostLike(postLikeId);
 		}
