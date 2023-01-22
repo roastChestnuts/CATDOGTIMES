@@ -34,7 +34,7 @@ public interface PostMapper {
 	int insertImage(ImageDTO image);
 
 	//게시글 좋아요
-	PostLikeDTO insertPostLike(PostLikeDTO postLikeDto);
+	int insertPostLike(PostLikeDTO postLikeDto);
 	// 좋아요 클릭
 	int insertLike(PostLikeDTO postLike);
 
@@ -104,7 +104,8 @@ public interface PostMapper {
 	int deletePost(int postId);
 
 	//게시글 좋아요 조회
-	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
+	//List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
+	List<PostLikeDTO> readPostLike(PostLikeDTO postDto);
 
 	//검색
 	List<SearchMemberDTO> searchUser(String id);
@@ -120,9 +121,12 @@ public interface PostMapper {
 	
 	//알림창 조회(추천인들)
 	List<RecommendDTO> searchRecommends(String memberNo);
-
+	
+	//팔로우 읽어오기
+	public List<FollowDTO> readFollow(FollowDTO followDto);
+	
 	//팔로우 저장
-	FollowDTO insertFollow(FollowDTO followDto);
+	int insertFollow(FollowDTO followDto);
 
 	//팔로우 취소
 	int deleteFollow(FollowDTO followDto);

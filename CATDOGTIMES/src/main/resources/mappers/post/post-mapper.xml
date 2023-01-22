@@ -11,6 +11,8 @@
 		<result column="likerName" property="likerName" />
 		<result column="likerPhoto" property="likerPhoto" />
 		<result column="postLikeCount" property="postLikeCount" />
+		<result column="memberNo" property="memberNo" />
+		
 	</resultMap>
 
 	<resultMap type="PostDTO" id="postResultMap">
@@ -114,6 +116,12 @@
 		<result property="memberPhoto" column="MEMBER_PHOTO"/>		
 	</resultMap>
 	
+	<resultMap type="FollowDTO" id="FollowResultMap">
+		<result property="followId" column="FOLLOW_ID"/>
+		<result property="followerId" column="FOLLOWER_ID"/>
+		<result property="followingId" column="FOLLOWING_ID"/>		
+	</resultMap>
+	
 	<!-- 탐색페이지 조회문 -->
 	<sql id="searchExploreImageSql">
 		SELECT B.IMAGE_ID,
@@ -136,13 +144,15 @@
 			POST_CONTENT,
 			POST_CREATE_DATE,
 			POST_UPDATE_DATE,
-			MEMBER_NO
+			MEMBER_NO,
+			POST_SHOWYN
 		) VALUES(
 			SEQ_POST_ID.NEXTVAL,
 			#{postContent},
 			DEFAULT,
 			DEFAULT,
-			#{memberNo}
+			#{memberNo},
+			'Y'
 		)
 	</insert>
 	
@@ -273,9 +283,8 @@
 	<!-- SNS 피드 원하는 값만 조회 -->
 	<select id="selectAllPost" resultMap="SNSFeedDTOResultMap">
 		SELECT A.POST_ID as feedId,	--피드 id 	
-			--A.MEMBER_NO -- 게시글 작성자 닉네임 불러올 넘버
-			A.POST_CONTENT as
-			feedContent, -- 피드 콘텐츠
+			A.MEMBER_NO as memberNo, -- 게시글 작성자 닉네임 불러올 넘버
+			A.POST_CONTENT as feedContent, -- 피드 콘텐츠
 			D.MEMBER_NICKNAME as writerName, -- 작성자 닉네임
 			D.MEMBER_PHOTO as writerPhoto, -- 작성자 프로필
 			B.IMAGE_SAVED_NAME as feedImage, --피드 이미지
@@ -338,8 +347,18 @@
 		WHERE i.POST_ID = p.POST_ID
 			AND i.IMAGE_ID like '%' || #{imageId} || '%'
 	</select>
-	<!-- 알림 고민 중... -->
-
+	
+	<!-- postLike 읽기 -->
+	<select id="readPostLike" resultMap="postLikeResultMap">
+		SELECT pl.*
+        FROM POST_LIKE pl, POST p, MEMBER m
+		WHERE #{postId} = p.POST_ID
+			AND #{memberNo} = m.MEMBER_NO
+			AND #{memberNo} = pl.MEMBER_NO		
+	</select>	
+	
+	<!-- 알림 고민 중... -->	
+	
 	<!-- 댓글 읽어오기 -->
 	<select id="readReply" resultMap="ReadReplyResultMap"
 		parameterType="int">
@@ -362,7 +381,8 @@
 		SELECT MEMBER_NO,
 		       MEMBER_ID,
 		       MEMBER_NAME,
-		       MEMBER_NICKNAME
+		       MEMBER_NICKNAME,
+		       MEMBER_PHOTO
 		  FROM MEMBER
 		 WHERE MEMBER_ID LIKE '%'||#{id}||'%' 
 		   AND MEMBER_IS = 'Y'
@@ -418,6 +438,14 @@
 		   AND B.FOLLOW_ID IS NULL
 		   AND <![CDATA[ROWNUM <= 5]]> <!-- AND ROWNUM <= 5 -->
       ORDER BY DBMS_RANDOM.VALUE
+	</select>
+	
+	<!-- 팔로우 -->
+	<!-- 팔로우 버튼 누르기 전 읽어오기 -->
+	<select id="readFollow" resultMap="FollowResultMap">
+		SELECT *
+		FROM FOLLOW
+		WHERE FOLLOWER_ID = #{followerId}
 	</select>
 	
 	<!-- 팔로우버튼 누르면 -->
