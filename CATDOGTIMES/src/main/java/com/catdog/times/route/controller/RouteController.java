@@ -1,8 +1,12 @@
 package com.catdog.times.route.controller;
 
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,95 +15,172 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.catdog.times.post.model.dto.PostDTO;
-import com.catdog.times.post.model.dto.PostHashtagDTO;
+import com.catdog.times.mypage.model.dto.MypageDTO;
+import com.catdog.times.post.model.dto.FollowDTO;
+import com.catdog.times.post.model.dto.ImageDTO;
+import com.catdog.times.post.model.dto.NotificationDTO;
 import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.catdog.times.post.model.dto.ReadReplyDTO;
+import com.catdog.times.post.model.dto.RecommendDTO;
 import com.catdog.times.post.model.dto.ReplyDTO;
-import com.catdog.times.post.model.dto.SNSFeedDTO;
-import com.catdog.times.post.model.service.PostService;
+import com.catdog.times.post.model.dto.SearchMemberDTO;
+import com.catdog.times.route.model.dto.RouteRatingDTO;
+import com.catdog.times.route.model.dto.UserRatingDTO;
+import com.catdog.times.route.model.dto.WalkMyRouteDTO;
+import com.catdog.times.route.model.dto.WalkParticipantDTO;
+import com.catdog.times.route.model.dto.WalkPartyDTO;
+import com.catdog.times.route.model.dto.WalkRouteDTO;
+import com.catdog.times.route.model.service.RouteService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/route")
+@Slf4j
 public class RouteController {
 	@Autowired
-	private PostService service;
-	
-	/* SNS 게시글 */
-	// SNS 게시글 작성
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String insertPost(@RequestBody PostDTO post) {
-		System.out.println(post);
+	private RouteService service;
 
-
-		System.out.println("return값:" + post.getPostId());
+	/* Route 등록 */
+	// Route 들록
+	@RequestMapping(value = "/addroute", method = RequestMethod.POST)
+	public String insertWalkRoute(@RequestPart("post") WalkRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
+		System.out.println(route);
+		System.out.println("컨트롤러:"+ file);
+		int result = service.insertWalkRoute(route, file, session);	
+		System.out.println("=====Route Create========");
+		System.out.println("Route 결과값:" + result);		
 		return "성공";
 	}
-
-	// SNS 게시글(Post) 전체조회
-
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<SNSFeedDTO> selectAllPost() {
-		List<SNSFeedDTO> postList = service.selectAllPost();
-		System.out.println("잘들어오나 확인:" + postList);
-		return postList;
-	}
-
-	// SNS 게시글 id 조회
-
-	// SNS 게시글 수정
-	public int postUpdate(PostDTO post) {
-		int result = service.postUpdate(post);
-		return result;
+	
+	// myRoute 들록
+	@RequestMapping(value = "/addmyroute", method = RequestMethod.POST)
+	public String insertWalkMyRoute(@RequestPart("post") WalkMyRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
+		System.out.println(route);
+		System.out.println("컨트롤러:"+ file);
+		int result = service.insertWalkMyRoute(route, file, session);	
+		System.out.println("=====Route Create========");
+		System.out.println("Route 결과값:" + result);		
+		return "성공";
 	}
 	
+	/* 산책파티 등록 */
+	// Walk Party 등록
+	@RequestMapping(value = "/addparty", method = RequestMethod.POST)
+	public String insertWalkParty(WalkPartyDTO party) {
+		System.out.println(party);
+		int result = service.insertWalkParty(party);
+		System.out.println("잘들어오나 확인:" + result);
+		return "산책파티등록됨";
+	}
 
-	/* 해시태그 insert */
-	@RequestMapping(value = "/addHashtag", method = RequestMethod.POST)
-	public int insertHashtag(@RequestBody PostHashtagDTO postHashtagList) {
-		System.out.println("Controller(해시태그):" + postHashtagList);
-		int result = service.insertHashtag(postHashtagList);
-		return result;
+	// Party Participant 등록
+	@RequestMapping(value = "/addparticipant", method = RequestMethod.POST)
+	public String insertWalkParticipant(WalkParticipantDTO participant) {
+		System.out.println(participant);
+		int result = service.insertWalkParticipant(participant);
+		System.out.println("잘들어오나 확인:" + result);
+		return "산책참가됨";
 	}
 	
-	//게시글 좋아요 조회(Dto엔 postId만 담겨올 것)
-	@GetMapping("/like")
-	public List<PostLikeDTO> selectPostLike(@RequestBody PostLikeDTO postLikeDto, HttpServletRequest request) {
-		int memberNo = (int)request.getAttribute("userId");
-		postLikeDto.setMemberNo(memberNo);
-		return service.readPostLike(postLikeDto);
+	
+	/* 평점 등록 */
+	// Route Rating 등록
+	@RequestMapping(value = "/addrouterating", method = RequestMethod.POST)
+	public String insertRouteRating(RouteRatingDTO userRating){
+		System.out.println(userRating);
+		int result = service.insertRouteRating(userRating);
+		System.out.println("잘들어오나 확인:" + result);
+		return "루트 평점 등록됨";
 	}
-		
-	//게시글 좋아요 인서트, 좋아요 삭제
-	@PostMapping("/like")
-	public int updatePostLike(HttpServletRequest request, String postId, int postLikeId) {
+	
+	// User Rating 등록
+	@RequestMapping(value = "/addrouterating", method = RequestMethod.POST)
+	public String insertUserRating(UserRatingDTO userRating){
+		System.out.println(userRating);
+		int result = service.insertUserRating(userRating);
+		System.out.println("잘들어오나 확인:" + result);
+		return "루트 평점 등록됨";
+	}
+
+	/* 루트 조회 */
+	
+	// 루트리스트 조회
+	@RequestMapping(value = "/routelist", method = RequestMethod.GET)
+	public List<WalkRouteDTO> getRouteList(@RequestBody int MemberNo, HttpServletRequest request) {
 		String memberNo = (String)request.getAttribute("userId");
-		int result = 0;
-		//게시글에 좋아요를 누르지 않은 경우
-		if(postLikeId == 0) {
-
-		}else {
-			service.deletePostLike(postLikeId);
+		log.info(memberNo, MemberNo);
+		 List<WalkRouteDTO> result = new ArrayList<>();
+		if(MemberNo >= 0) {
+			result = service.getRouteList(MemberNo); //파라미터 아이디로 조회
 		}
 		return result;
 	}
 	
-	/* 댓글*/
-	/* 댓글 insert */
-	@RequestMapping(value="/insertReply", method = RequestMethod.POST)
-	public int insertReply(@RequestBody ReplyDTO reply) {
-		System.out.println("insertReply Controller:"+ reply);
-		int result = service.insertReply(reply);
+	// 마이루트리스트 조회
+	@GetMapping("/routeMylist")
+	public List<WalkMyRouteDTO> getMyRouteList(@RequestBody int MemberNo, HttpServletRequest request) {
+		String memberNo = (String)request.getAttribute("userId");
+		log.info(memberNo, MemberNo);
+		 List<WalkMyRouteDTO> result = new ArrayList<>();
+		if(MemberNo >= 0) {
+			result = service.getMyRouteList(MemberNo); //파라미터 아이디로 조회
+		}
 		return result;
-	}	
-	
-	/* 댓글 불러오기 */
-	@RequestMapping(value = "/readReply", method=RequestMethod.GET)
-	public List<ReadReplyDTO> readReply(int postId) {
-		List<ReadReplyDTO> replyList = service.readReply(postId);	
-		return replyList;
 	}
+	
+	// 특정 루트조회
+	@RequestMapping(value = "/getRoute", method = RequestMethod.GET)
+		public WalkRouteDTO getRoute(int routeNo) {	
+				
+		WalkRouteDTO walkRoutedto = service.getRoute(routeNo);	
+		return walkRoutedto;
+	}
+	
+	// 특정 마이루트조회
+	@RequestMapping(value = "/getMyRoute", method = RequestMethod.GET)
+		public WalkMyRouteDTO getMyRoute(int myRouteNo) {	
+				
+		WalkMyRouteDTO walkMyRoutedto = service.getMyRoute(myRouteNo);	
+		return walkMyRoutedto;
+	}
+	
+	// 특정 루트 평점조회
+	@RequestMapping(value = "/getRouteRating", method = RequestMethod.GET)
+		public RouteRatingDTO getRouteRating(int routeRatingNo) {	
+				
+		RouteRatingDTO routeRatingdto = service.getRouteRating(routeRatingNo);	
+		return routeRatingdto;
+	}
+	
+	// 특정 사용자 평점조회
+	@RequestMapping(value = "/getUserRating", method = RequestMethod.GET)
+		public UserRatingDTO getUserRating(int memberNo) {	
+				
+		UserRatingDTO userRatingdto = service.getUserRating(memberNo);	
+		return userRatingdto;
+	}
+	
+	// 특정 파티조회
+	@RequestMapping(value = "/getWalkParty", method = RequestMethod.GET)
+		public WalkPartyDTO getWalkParty(int partyNo) {	
+				
+		WalkPartyDTO walkPartydto = service.getWalkParty(partyNo);	
+		return walkPartydto;
+	}
+	
+	// 특정 파티 참가자 리스트 조회
+	@RequestMapping(value = "/getWalkParticipant", method = RequestMethod.GET)
+		public List<WalkParticipantDTO> getPartyParticipant(int partyNo) {	
+				
+		List<WalkParticipantDTO> walkParticipantdto = service.getPartyParticipant(partyNo);	
+		return walkParticipantdto;
+	}
+	
+
 }

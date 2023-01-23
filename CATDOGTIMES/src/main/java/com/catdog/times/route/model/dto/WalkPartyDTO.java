@@ -18,6 +18,6 @@ public class WalkPartyDTO {
 	private String partyDestination;
 	private Date partyCreateDate;
 	private Date partyDepartureDate;
-	private int mamberNo;
+	private int memberNo;
 	private int routeNo;
 }

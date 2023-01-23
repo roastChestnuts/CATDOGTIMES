@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRatingDTO {
-	private int RatingUserNo;
-	private int RatingTargetMemberNo;
-	private int WalkRatingScore;
+	private int userRatingNo;
+	private int ratingTargetMemberNo;
+	private int userRatingScore;
 	private int memberNo;
 }
