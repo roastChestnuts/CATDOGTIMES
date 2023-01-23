@@ -12,11 +12,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.catdog.times.member.controller.MemberController;
 import com.catdog.times.member.model.service.JwtServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 @PropertySource("classpath:jwt.properties")
 public class JwtInterceptor implements HandlerInterceptor {
 	@Value("${jwt.secretkey}")
@@ -34,8 +38,14 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-        System.out.println("Interceptor Pre / Request Url : " + request.getRequestURI());
+        log.info("Interceptor Pre / Request Url : " + request.getRequestURI());
 
+		if (request.getMethod().equals("OPTIONS")) {
+			log.info("preflight, 통과");
+			
+			return true;
+		}
+        
         Map<String, Object> map = new HashMap<>();
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
@@ -68,7 +78,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 map.put("status", 403);
             }
             else {
-                request.setAttribute("userId", Integer.parseInt(ret));
+                request.setAttribute("userId", ret);
                 map.put("status", 200);// AccessToken이 유효할 때
             }
         }

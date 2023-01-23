@@ -10,6 +10,6 @@ public class WebConfig implements WebMvcConfigurer{
 				.allowedOrigins("*")
 				.allowedMethods("*")
 				.allowedHeaders("*")
-				.exposedHeaders("jwt-auth-token");
+				.exposedHeaders("ACCESS_TOKEN", "REFRESH_TOKEN"); //url에 담겨서 가니 필요는없음
 	}
 }
