@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class FileUploadLogic {
+public class FileUploadLogic3 {
 	
 	
 	public String uploadFiles(MultipartFile multipartFile, String path) throws IllegalStateException, IOException {

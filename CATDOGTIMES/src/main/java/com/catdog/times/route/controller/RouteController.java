@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,15 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.catdog.times.mypage.model.dto.MypageDTO;
-import com.catdog.times.post.model.dto.FollowDTO;
-import com.catdog.times.post.model.dto.ImageDTO;
-import com.catdog.times.post.model.dto.NotificationDTO;
-import com.catdog.times.post.model.dto.PostLikeDTO;
-import com.catdog.times.post.model.dto.ReadReplyDTO;
-import com.catdog.times.post.model.dto.RecommendDTO;
-import com.catdog.times.post.model.dto.ReplyDTO;
-import com.catdog.times.post.model.dto.SearchMemberDTO;
+
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
 import com.catdog.times.route.model.dto.WalkMyRouteDTO;
@@ -100,7 +91,7 @@ public class RouteController {
 	}
 	
 	// User Rating 등록
-	@RequestMapping(value = "/addrouterating", method = RequestMethod.POST)
+	@RequestMapping(value = "/adduserrating", method = RequestMethod.POST)
 	public String insertUserRating(UserRatingDTO userRating){
 		System.out.println(userRating);
 		int result = service.insertUserRating(userRating);
