@@ -77,13 +77,22 @@ public class MemberController {
 		
 		if(loginMember != null) {
 			model.addObject("loginMember", loginMember);
-			User user = new User(Integer.toString(loginMember.getNo()), loginMember.getName(), loginMember.getType());
-			Map<String, String> tokenMap = jwtService.createToken(user);
-			String accessToken = tokenMap.get("accessToken");
-			String refreshToken = tokenMap.get("refreshToken");
-			return ResponseEntity.status(HttpStatus.FOUND)
-		             .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
-		             .body(null);
+			
+			//관리자라면 관리자 페이지로 이동
+			if(loginMember.getType() == 2) {
+				model.addObject("msg", "관리자님 환영합니다.");
+				model.addObject("location", "/admin/dashboard");
+				model.setViewName("common/msg");
+				return model;
+			}else {//일반 유저라면 post페이지로 이동
+				User user = new User(Integer.toString(loginMember.getNo()), loginMember.getName(), loginMember.getType());
+				Map<String, String> tokenMap = jwtService.createToken(user);
+				String accessToken = tokenMap.get("accessToken");
+				String refreshToken = tokenMap.get("refreshToken");
+				return ResponseEntity.status(HttpStatus.FOUND)
+			             .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+			             .body(null);
+			}
 		} else {
 			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
 			model.addObject("location", "/member/login");
