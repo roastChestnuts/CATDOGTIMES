@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.catdog.times.post.model.dto.PostDTO;
-import com.catdog.times.post.model.dto.PostHashtagDTO;
-import com.catdog.times.post.model.dto.PostLikeDTO;
-import com.catdog.times.post.model.dto.ReplyDTO;
+
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
 import com.catdog.times.route.model.dto.WalkMyRouteDTO;
@@ -30,7 +27,7 @@ public interface RouteMapper {
 	int insertWalkParticipant(WalkParticipantDTO participant);
 	
 	// 루트 평점 등록
-	int insertRouteRating(RouteRatingDTO userRating);
+	int insertRouteRating(RouteRatingDTO rate);
 
 	// 루트 사용자 평점 등록
 	int insertUserRating(UserRatingDTO post);
@@ -71,6 +68,11 @@ public interface RouteMapper {
 	
 	// 파티 참여자 삭제
 	int deleteWalkParticipant(int walkParticipantNo);
+	
+	WalkRouteDTO getRoute(int memberNo, String routeName);
+	
+	
+	List<WalkRouteDTO> getRouteList(int memberNo, String routeName);
 	
 
 	

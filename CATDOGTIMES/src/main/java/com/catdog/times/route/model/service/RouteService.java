@@ -72,7 +72,11 @@ public interface RouteService {
 	
 	// 파티 참여자 삭제
 	int deleteWalkParticipant(int walkParticipantNo);
-	
+
+	WalkRouteDTO getRoute(int memberNo, String routeName);
+
+	List<WalkRouteDTO> getRouteList(int memberNo, String routeName);
+
 
 	
 }
