@@ -234,6 +234,7 @@ public class PostServiceImpl implements PostService {
 	//특정 유저 탐색페이지 조회
 	@Override
 	public List<ImageDTO> searchExploreImage(int toMemberNo) {
+		System.out.println("여기는 exploreImage 서비스 임플" + toMemberNo);
 		return mapper.searchExploreImage(toMemberNo);
 	}
 	
