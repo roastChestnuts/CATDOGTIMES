@@ -83,9 +83,9 @@ public class RouteController {
 	/* 평점 등록 */
 	// Route Rating 등록
 	@RequestMapping(value = "/addrouterating", method = RequestMethod.POST)
-	public String insertRouteRating(@RequestPart("routeRating") RouteRatingDTO routeRating)throws IllegalStateException, IOException {
-		System.out.println("routeRating from front:"+routeRating);
-		int result = service.insertRouteRating(routeRating);
+	public String insertRouteRating(@RequestPart("rate") RouteRatingDTO rate)throws IllegalStateException, IOException {
+		System.out.println("routeRating from front:"+rate);
+		int result = service.insertRouteRating(rate);
 		System.out.println("잘들어오나 확인:" + result);
 		return "루트 평점 등록됨";
 	}
@@ -115,9 +115,9 @@ public class RouteController {
 	}
 	
 	// 마이루트리스트 조회
-	@GetMapping("/routeMylist")
+	@GetMapping("/myRoutelist")
 	public List<WalkMyRouteDTO> getMyRouteList(@RequestBody int MemberNo, HttpServletRequest request) {
-		String memberNo = (String)request.getAttribute("userId");
+		String memberNo = (String)request.getAttribute("MemberNo");
 		log.info(memberNo, MemberNo);
 		 List<WalkMyRouteDTO> result = new ArrayList<>();
 		if(MemberNo >= 0) {

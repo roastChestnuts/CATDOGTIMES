@@ -27,7 +27,7 @@ public interface RouteMapper {
 	int insertWalkParticipant(WalkParticipantDTO participant);
 	
 	// 루트 평점 등록
-	int insertRouteRating(RouteRatingDTO userRating);
+	int insertRouteRating(RouteRatingDTO rate);
 
 	// 루트 사용자 평점 등록
 	int insertUserRating(UserRatingDTO post);
@@ -70,6 +70,9 @@ public interface RouteMapper {
 	int deleteWalkParticipant(int walkParticipantNo);
 	
 	WalkRouteDTO getRoute(int memberNo, String routeName);
+	
+	
+	List<WalkRouteDTO> getRouteList(int memberNo, String routeName);
 	
 
 	

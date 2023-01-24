@@ -89,7 +89,6 @@
 		#{routePublic},
 		DEFAULT,
 		#{memberNo}
-
 		)
 	</insert>
 
@@ -123,7 +122,7 @@
 	</insert>
 
 	<!-- 사용자 평점 작성 -->
-	<insert id="inertUserRating" parameterType="UserRatingDTO"
+	<insert id="insertUserRating" parameterType="UserRatingDTO"
 		useGeneratedKeys="true" keyColumn="USER_RATING_NO"
 		keyProperty="userRatingNo">
 		INSERT INTO USER_RATING
@@ -143,27 +142,29 @@
 	</insert>
 
 	<!-- 루트 평점 작성 -->
-	<insert id="inserRouteRating" parameterType="RouteRatingDTO"
+	<insert id="insertRouteRating" parameterType="RouteRatingDTO"
 		useGeneratedKeys="true" keyColumn="ROUTE_RATING_NO"
 		keyProperty="routeRatingNo">
+		<selectKey keyProperty="routeRatingNo" resultType="int"
+			order="AFTER">
+			SELECT SEQ_ROUTE_RATING_NO.NEXTVAL AS routeRatingNo FROM DUAL
+		</selectKey>
 		INSERT INTO ROUTE_RATING
 		(
-		ROUTE_RATING_NO,
-		ROUTE_NO,
+		MEMBER_NO,
 		ROUTE_RATING_SCORE,
-		MEMBER_NO
-		)
-		VALUES
-		(
-		SEQ_ROUTE_RATING_NO.NEXTVAL,
-		#{routeNo},
-		#{routeRatingScore},
+		ROUTE_RATING_NO,
+		ROUTE_NO
+		) VALUES(
 		#{memberNo},
+		#{routeRatingScore},
+		SEQ_ROUTE_RATING_NO.NEXTVAL,
+		#{routeNo}
 		)
 	</insert>
 
 	<!-- 파티 참가자 작성 -->
-	<insert id="inserWalkParticipant"
+	<insert id="insertWalkParticipant"
 		parameterType="WalkParticipantDTO" useGeneratedKeys="true"
 		keyColumn="ROUTE_RATING_NO" keyProperty="routeRatingNo">
 		INSERT INTO WALK_PARTICIPANT
@@ -214,7 +215,8 @@
 		SELECT ROUTE_NO as ROUTE_NO,
 		ROUTE_NAME as ROUTE_NAME,
 		ROUTE_THUMBNAIL as ROUTE_THUMBNAIL,
-		ROUTE_DEPARTURES as ROUTE_DEPARTURES,
+		ROUTE_DEPARTURES as
+		ROUTE_DEPARTURES,
 		ROUTE_DESTINATION as ROUTE_DESTINATION,
 		ROUTE_LOCATIONS as
 		ROUTE_LOCATIONS,
@@ -222,11 +224,32 @@
 		ROUTE_CREATE_DATE as
 		ROUTE_CREATE_DATE,
 		MEMBER_NO as MEMBER_NO
-		FROM WALK_ROUTE
+		FROM
+		WALK_ROUTE
 		WHERE MEMBER_NO
 		= #{MemberNo}
 	</select>
-	
+
+	<select id="getMyRouteList" resultMap="WalkMyRouteResultMap"
+		parameterType="int">
+		SELECT ROUTE_NO as ROUTE_NO,
+		ROUTE_NAME as ROUTE_NAME,
+		ROUTE_THUMBNAIL as ROUTE_THUMBNAIL,
+		ROUTE_DEPARTURES as
+		ROUTE_DEPARTURES,
+		ROUTE_DESTINATION as ROUTE_DESTINATION,
+		ROUTE_LOCATIONS as
+		ROUTE_LOCATIONS,
+		ROUTE_PUBLIC as ROUTE_PUBLIC,
+		ROUTE_CREATE_DATE as
+		ROUTE_CREATE_DATE,
+		MEMBER_NO as MEMBER_NO
+		FROM
+		WALK_ROUTE
+		WHERE MEMBER_NO
+		= #{MemberNo}
+	</select>
+
 
 
 </mapper>

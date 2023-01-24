@@ -137,6 +137,11 @@ public class RouteServiceImpl implements RouteService {
 	public WalkRouteDTO getRoute(int memberNo, String routeName) {
 		// TODO Auto-generated method stub
 		return mapper.getRoute(memberNo,routeName);
+	}
+	@Override
+	public List<WalkRouteDTO> getRouteList(int memberNo, String routeName) {
+		// TODO Auto-generated method stub
+		return mapper.getRouteList(memberNo,routeName);
 	};
 	
 

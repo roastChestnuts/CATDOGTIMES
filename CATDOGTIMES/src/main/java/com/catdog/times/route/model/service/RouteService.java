@@ -75,6 +75,8 @@ public interface RouteService {
 
 	WalkRouteDTO getRoute(int memberNo, String routeName);
 
+	List<WalkRouteDTO> getRouteList(int memberNo, String routeName);
+
 
 	
 }
