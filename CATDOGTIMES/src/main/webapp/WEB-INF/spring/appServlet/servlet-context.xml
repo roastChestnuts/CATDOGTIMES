@@ -47,7 +47,10 @@
 		<interceptor>
 			<mapping path="/member/anonymous/**"/>
 			<!-- <mapping path="/memberinfo"/> -->
-			<mapping path="/post/like"/>
+			<mapping path="/post/add"/>
+			<mapping path="/post/delete"/>
+			<mapping path="/post/insertReply"/>	
+			<mapping path="/post/like"/>			
 			<mapping path="/post/list"/>
 			<mapping path="/post/explore"/>
 			<mapping path="/post/follow"/>

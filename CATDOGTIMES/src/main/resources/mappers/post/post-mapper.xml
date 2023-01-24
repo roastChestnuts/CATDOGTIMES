@@ -122,6 +122,11 @@
 		<result property="followingId" column="FOLLOWING_ID"/>		
 	</resultMap>
 	
+	<resultMap type="DeletePostDTO" id="DeltePostResultMap">
+		<result property="postId" column="POST_ID"/>
+		<result property="memberNo" column="MEMBER_NO"/>	
+	</resultMap>
+	
 	<!-- 탐색페이지 조회문 -->
 	<sql id="searchExploreImageSql">
 		SELECT B.IMAGE_ID,
@@ -532,7 +537,7 @@
 		WHERE IMAGE_ID = #{imageId}
 	</delete>
 	<!-- 게시글 삭제 -->
-	<delete id="deletePost" parameterType="int">
+	<delete id="deletePost" parameterType="DeletePostDTO">
 		DELETE FROM POST
 		WHERE POST_ID = #{postId}
 	</delete>

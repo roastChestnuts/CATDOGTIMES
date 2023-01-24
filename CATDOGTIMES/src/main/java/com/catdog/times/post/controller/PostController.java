@@ -1,7 +1,6 @@
 package com.catdog.times.post.controller;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.catdog.times.member.controller.MemberController;
-import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
@@ -46,7 +43,10 @@ public class PostController {
 	/* SNS 게시글 */
 	// SNS 게시글 작성
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String insertPost(@RequestPart("post") PostDTO post, @RequestPart(required = false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
+	public String insertPost(@RequestPart("post") PostDTO post, @RequestPart(required = false) MultipartFile file, HttpServletRequest request, HttpSession session) throws IllegalStateException, IOException {
+		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
+		System.out.println(memberNo);
+		post.setMemberNo(memberNo);		
 		System.out.println(post);
 		System.out.println("컨트롤러:" + file);
 		int result = service.insertPost(post, file, session);
@@ -72,10 +72,9 @@ public class PostController {
 	}
 
 	// SNS 게시글 삭제
-	@RequestMapping(value = "/delete")
+	@PostMapping("/delete")
 	public int deletePost(int postId) {
-		System.out.println(postId);
-		// 우선 아무나 삭제 가능하게 했는데, 이것도 memberNo와 게시글 작성자 일치할 때만 삭제하게끔 만들어야 함.
+//		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
 		int result = service.deletePost(postId);
 		return result;
 	}
@@ -220,7 +219,9 @@ public class PostController {
 	/* 댓글 */
 	/* 댓글 insert */
 	@RequestMapping(value = "/insertReply", method = RequestMethod.POST)
-	public int insertReply(@RequestBody ReplyDTO reply) {
+	public int insertReply(@RequestBody ReplyDTO reply, HttpServletRequest request) {
+		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
+		reply.setMemberNo(memberNo);
 		System.out.println("insertReply Controller:" + reply);
 		int result = service.insertReply(reply);
 		return result;
