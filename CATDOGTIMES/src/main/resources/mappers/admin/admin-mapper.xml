@@ -10,6 +10,7 @@
 		<result property="totalRouteCnt" column="TOTAL_ROUTE_CNT"></result>
 		<result property="totalPartyCnt" column="TOTAL_PARTY_CNT"></result>	
 		<result property="totalPostCnt" column="TOTAL_POST_CNT"></result>
+		<result property="totalAvgRoute" column="TOTAL_AVG_RATING"></result>
 	</resultMap>
 	
 	<!-- 대시보드 월별 Total 정보 resultMap -->
@@ -159,10 +160,11 @@
 	<select id="selectAllTotalCount" resultMap="dashboardTotalResultMap">
 		SELECT *
 		FROM
-		     (SELECT COUNT(*) AS TOTAL_MEMBER_CNT FROM MEMBER WHERE MEMBER_TYPE != 2) 	/* 가입자 수 */
-		    ,(SELECT COUNT(*) AS TOTAL_ROUTE_CNT FROM WALK_ROUTE)						/* 산책경로 수 */	
-		    ,(SELECT COUNT(*) AS TOTAL_PARTY_CNT FROM WALK_PARTY)						/* 산책매칭 수 */
-		    ,(SELECT COUNT(*) AS TOTAL_POST_CNT FROM POST)								/* 피드 수 */
+		     (SELECT COUNT(*) AS TOTAL_MEMBER_CNT FROM MEMBER WHERE MEMBER_TYPE != 2) 				/* 가입자 수 */
+		    ,(SELECT COUNT(*) AS TOTAL_ROUTE_CNT FROM WALK_ROUTE)									/* 산책경로 수 */	
+		    ,(SELECT COUNT(*) AS TOTAL_PARTY_CNT FROM WALK_PARTY)									/* 산책매칭 수 */
+		    ,(SELECT CEIL(SUM(ROUTE_RATING_SCORE)/COUNT(*)) AS TOTAL_AVG_RATING FROM ROUTE_RATING)  /* 산책평점평균 */
+		    ,(SELECT COUNT(*) AS TOTAL_POST_CNT FROM POST)											/* 피드 수 */
 	</select>
 	
 	
@@ -366,7 +368,8 @@
 		    FROM 
 		    	MEMBER
 		    WHERE 
-		    	MEMBER_CREATE_DATE BETWEEN TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') AND TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD')
+		    	MEMBER_TYPE != 2	
+		    	AND MEMBER_CREATE_DATE BETWEEN TO_DATE(#{nowYear}||'-01-01','YYYY-MM-DD') AND TO_DATE(#{nowYear}||'-12-31','YYYY-MM-DD')
 		    GROUP BY 
 		    	MEMBER_CREATE_DATE
 		    )B
@@ -461,7 +464,8 @@
 		    FROM 
 		    	MEMBER
 		    WHERE 
-		    	MEMBER_CREATE_DATE BETWEEN TO_DATE(#{nowDay})-#{periodVal} AND TO_DATE(#{nowDay})+1
+		    	MEMBER_TYPE != 2
+		    	AND MEMBER_CREATE_DATE BETWEEN TO_DATE(#{nowDay})-#{periodVal} AND TO_DATE(#{nowDay})+1
 		    GROUP BY 
 		    	MEMBER_CREATE_DATE
 		    )B 
