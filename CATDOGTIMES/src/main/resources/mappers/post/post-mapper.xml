@@ -11,8 +11,7 @@
 		<result column="likerName" property="likerName" />
 		<result column="likerPhoto" property="likerPhoto" />
 		<result column="postLikeCount" property="postLikeCount" />
-		<result column="memberNo" property="memberNo" />
-		
+		<result column="memberNo" property="memberNo" />		
 	</resultMap>
 
 	<resultMap type="PostDTO" id="postResultMap">
@@ -266,9 +265,10 @@
 	</insert>
 
 	<!-- 북마크 -->
-	<insert id="insertBookmark" parameterType="BookmarkDTO"
-		useGeneratedKeys="true" keyColumn="BOOKMARK_ID"
-		keyProperty="bookmarkId">
+	<insert id="insertBookmark" parameterType="BookmarkDTO" keyColumn="BOOKMARK_ID" keyProperty="bookmarkId">
+		<selectKey resultType="int" keyProperty="bookmarkId" order="AFTER">
+			select SEQ_BOOKMARK_ID.CURRVAL as bookmarkId FROM DUAL 
+		</selectKey>
 		INSERT INTO BOOKMARK 
 		(
 			BOOKMARK_ID,
@@ -357,6 +357,15 @@
 		WHERE #{postId} = p.POST_ID
 			AND #{memberNo} = m.MEMBER_NO
 			AND #{memberNo} = pl.MEMBER_NO		
+	</select>	
+	
+	<!-- 북마크 읽어오기 -->
+	<select id="readBookmark" resultMap="BookmarkResultMap">
+		SELECT b.*
+        FROM  BOOKMARK b, POST p, MEMBER m
+		WHERE #{postId} = p.POST_ID
+			AND #{memberNo} = m.MEMBER_NO
+			AND #{memberNo} = b.MEMBER_NO		
 	</select>	
 	
 	<!-- 알림 고민 중... -->	
@@ -503,8 +512,7 @@
 	<!-- 북마크 삭제 -->
 	<delete id="deleteBookmark" parameterType="int">
 		DELETE FROM BOOKMARK
-		WHERE
-		BOOKMARK_ID = #{bookmarkId}
+		WHERE BOOKMARK_ID = #{bookmarkId}
 	</delete>
 	<!-- 댓글 좋아요 삭제 -->
 	<delete id="deleteReplyLike" parameterType="int">

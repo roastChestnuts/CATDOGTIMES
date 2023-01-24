@@ -101,12 +101,13 @@ public class PostServiceImpl implements PostService {
 ////	public int insertImage(@RequestPart("image") ImageDTO image, @RequestPart(required = false) MultipartFile photofile, HttpSession session) {
 ////		return mapper.insertImage(image);
 ////	}
-
+	
+	//게시글 좋아요 인서트
 	@Override
-	public int insertLike(PostLikeDTO postLike) {		
-		return mapper.insertLike(postLike);
+	public int insertPostLike(PostLikeDTO postLikeDto) {
+		return mapper.insertPostLike(postLikeDto);
 	}
-
+	
 	@Override
 	public int insertReply(ReplyDTO reply) {
 		return mapper.insertReply(reply);
@@ -137,6 +138,11 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<ReadReplyDTO> readReply(int postId) {		
 		return mapper.readReply(postId);
+	}
+	
+	@Override
+	public List<BookmarkDTO> readBookmark(BookmarkDTO bookmarkDto) {		
+		return mapper.readBookmark(bookmarkDto);
 	}
 	
 	@Override
@@ -210,11 +216,6 @@ public class PostServiceImpl implements PostService {
 		return mapper.deletePost(postId);
 	}
 
-	//게시글 좋아요 인서트
-	@Override
-	public int insertPostLike(PostLikeDTO postLikeDto) {
-		return mapper.insertPostLike(postLikeDto);
-	}
 	//게시글 좋아요 조회
 //	@Override
 //	public List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto) {

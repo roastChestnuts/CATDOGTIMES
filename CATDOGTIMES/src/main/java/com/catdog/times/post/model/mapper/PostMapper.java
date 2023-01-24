@@ -32,9 +32,6 @@ public interface PostMapper {
 
 	//게시글 좋아요
 	int insertPostLike(PostLikeDTO postLikeDto);
-	// 좋아요 클릭
-	int insertLike(PostLikeDTO postLike);
-
 
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
@@ -60,7 +57,13 @@ public interface PostMapper {
 
 	// 특정 게시물 해시태그로 조회
 	List<PostDTO> findByHashtag(String postHashtag);
-
+	
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postDto);	
+	
+	//게시글 북마크 조회
+	List<BookmarkDTO> readBookmark(BookmarkDTO bookmarkDto);
+	
 	// 탐색
 	ImageDTO findImageById(int imageId);
 	
@@ -99,10 +102,6 @@ public interface PostMapper {
 	
 	//게시글 삭제
 	int deletePost(int postId);
-
-	//게시글 좋아요 조회
-	//List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
-	List<PostLikeDTO> readPostLike(PostLikeDTO postDto);
 
 	//검색
 	List<SearchMemberDTO> searchUser(String id);
