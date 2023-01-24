@@ -116,7 +116,6 @@
     <div id="nt_wrapper">
         <!-- header -->
 		<%@ include file="./adminHeader.jsp"  %>
-			
         <div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
             <span style="font-size:30px;font-weight:bold;">사용자 관리</span><br/>
@@ -209,7 +208,6 @@
              </div>    
             <!-- end 메인 콘텐트 -->
 	<%@ include file="./adminSide.jsp"  %> 
-	
         <footer id="ntfooter" class="p-5 text-center">
             copyright 멍냥일보 2023
         </footer>

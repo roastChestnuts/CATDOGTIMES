@@ -53,9 +53,7 @@
     class="lazy_icons btnt4_style_2 zoom_tp_2 css_scrollbar template-index cart_pos_side kalles_toolbar_true hover_img2 swatch_style_rounded swatch_list_size_small label_style_rounded wrapper_full_width header_full_true header_sticky_true hide_scrolld_true des_header_7 h_banner_true top_bar_true prs_bordered_grid_1 search_pos_full lazyload">
 
     <div id="nt_wrapper">
-	
 	<%@ include file="./adminHeader.jsp"  %>
-	
        		<div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
 				<span style="font-size:30px;font-weight:bold;">산책루트 관리</span><br/>

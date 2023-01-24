@@ -40,21 +40,21 @@
                             <div class="col-lg-12 col-6 tc">
                                 <div class="branding ts__05 lh__1">
                                     <a class="dib" href="">
-                                        <img class="w__95 logo_normal dn db_lg rounded-circle " src="../images/photo.jpg"
+                                        <img class="w__95 logo_normal dn db_lg rounded-circle " src="../images/catdog.svg"
                                             alt="photo">
-                                        <img class="w__100 logo_sticky dn rounded-circle" src="../images/photo.jpg"
+                                        <img class="w__100 logo_sticky dn rounded-circle" src="../images/catdog.svg"
                                             alt="photo">
-                                        <img class="w__100 logo_mobile dn_lg rounded-circle" src="../images/photo.jpg"
+                                        <img class="w__100 logo_mobile dn_lg rounded-circle" src="../images/catdog.svg"
                                             alt="">
                                         <span class="nickname pt-3 d-inline-block">${loginMember.name}</span>
                                     </a>
-                                    <div class="myranking pt-2">
+                                    <div class="myranking pt-2" style="margin-bottom: 10px;">
                                         (<span class="">${loginMember.email}</span>) 
                                     </div>
                                 </div>
                                 <div class="profile-btns pt-3">
 <!--                                     <a href="#" class="d-inline-block p-3">정보수정</a> -->
-                                    <a href="/times/member/logout" class="d-inline-block p-3">로그아웃</a>
+                                    <a class="member-logout" href="/times/member/login">로그아웃</a>
                                 </div>
                             </div>
                         </div>
