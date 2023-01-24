@@ -83,7 +83,7 @@
     }
     .login__box__addr__btn {
       display: inline-block;
-      width:20%;
+      width:38%;
     }   
     
     .login__icon {
@@ -254,11 +254,11 @@
 	}
 	
       /* 비디오 */
-      video {
+    video {
         width: 113%;
         height: 100vh;
         object-fit: cover;
         transition: opacity 0.3s 1s ease;
-      }
+    }
 
 

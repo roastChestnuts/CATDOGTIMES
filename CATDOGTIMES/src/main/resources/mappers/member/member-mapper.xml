@@ -91,17 +91,22 @@
 	</insert>
 	<!-- 아이디 중복 체크 -->
 	<select id="idCheck" parameterType="String" resultType="int">
-		SELECT COUNT(MEMBER_ID) FROM MEMBER WHERE MEMBER_ID= #{id}
+		SELECT COUNT(MEMBER_ID) 
+		  FROM MEMBER 
+		 WHERE MEMBER_ID= #{id}
 	</select>
 	<!-- 닉네임 중복 체크 -->
 	<select id="nickNameCheck" parameterType="String" resultType="int">
-		SELECT COUNT(MEMBER_NICKNAME) FROM MEMBER WHERE MEMBER_NICKNAME= #{nickName}
+		SELECT COUNT(MEMBER_NICKNAME) 
+		  FROM MEMBER 
+		 WHERE MEMBER_NICKNAME= #{nickName}
 	</select>
 	
 	<!-- 카카오 회원가입 -->
 	<insert id="kakaoInsert" parameterType="Member" keyColumn="MEMBER_NO" keyProperty="no">
 		<selectKey resultType="int" keyProperty="no" order="AFTER">
-			select SEQ_MEMBER_NO.CURRVAL as no FROM DUAL
+			SELECT SEQ_MEMBER_NO.CURRVAL AS no 
+			  FROM DUAL
 		</selectKey>		
  	    INSERT INTO MEMBER (
 			MEMBER_NO,
@@ -141,8 +146,19 @@
 		 WHERE MEMBER_SNS_ID = #{snsId}
 	</select>
 	
+	<!-- 네이버 회원 로그인 -->
+	<select id="naverSelect" parameterType="String" resultMap="memberResultMap">
+		SELECT MEMBER_NO
+		  FROM MEMBER
+		 WHERE MEMBER_SNS_ID = #{snsId}
+	</select>
+	
 	<!-- 네이버 회원가입 -->
 	<insert id="naverInsert">
+		<selectKey resultType="int" keyProperty="no" order="AFTER">
+			SELECT SEQ_MEMBER_NO.CURRVAL AS no 
+			  FROM DUAL
+		</selectKey>	
 	    INSERT INTO MEMBER (
 			MEMBER_NO,
 	        MEMBER_ID,
@@ -173,13 +189,6 @@
 		    #{snsId}
 	    )
 	</insert>
-	
-	<!-- 네이버 회원 로그인 -->
-	<select id="naverSelect" parameterType="String" resultMap="memberResultMap">
-		SELECT MEMBER_NO
-		  FROM MEMBER
-		 WHERE MEMBER_SNS_ID = #{snsId}
-	</select>
 	
 	<!-- snsid로 회원조회 -->
 	<select id="findMemberBySnsId" parameterType="String" resultType="String">

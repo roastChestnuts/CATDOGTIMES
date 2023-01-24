@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.DeletePostDTO;
 import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
@@ -89,9 +90,10 @@ public interface PostService {
 	int deletePost(int postId);
 	
 	//게시글 좋아요버튼 인서트
-	PostLikeDTO insertPostLike(PostLikeDTO postLikeDto);
+	int insertPostLike(PostLikeDTO postLikeDto);
 	//게시글 좋아요 조회
 	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
+	
 	//검색
 	List<SearchMemberDTO> searchUser(String id);
 	
@@ -103,8 +105,11 @@ public interface PostService {
 	List<NotificationDTO> searchNotifications(String memberNo);
 	//알림창 조회(추천인들)
 	List<RecommendDTO> searchRecommends(String memberNo);
+	
+	//팔로우 조회
+	List<FollowDTO> readFollow(FollowDTO followDto);
 	//팔로우 저장
-	FollowDTO insertFollow(FollowDTO followDto);
+	int insertFollow(FollowDTO followDto);
 	//팔로우 취소
 	int deleteFollow(FollowDTO followDto);
 }

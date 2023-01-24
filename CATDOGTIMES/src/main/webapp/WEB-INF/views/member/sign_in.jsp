@@ -68,10 +68,11 @@
             <i class='bx bx-lock login__icon'></i>
             <input type="password" placeholder="Password" class="login__input" id="password" name="password">
           </div>
-          
+          <!-- <div class="form-check form-check-inline">
+          	<input type="checkbox" value="saveId" id="saveId" name="saveId"> 아이디저장
+          </div> -->
           <span class="find__pw" id="find-pw-span">/비밀번호 찾기</span>
           <span class="find__id" id="find-id-span">아이디</span>
-          
           <a href="#" class="login__button" onclick="return login()">로그인</a> <!-- return받은 값이 true이면 제출 -->
           
           <div>
@@ -131,7 +132,7 @@
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
             <input type="text" placeholder="Email" class="login__input" id="sign_up_email" name="email">
-            <input type="button" id="btnEmailCheck" value="인증하기">
+            <input type="button" class="btn btn-primary" id="btnEmailCheck" value="인증하기">
           </div>
           
           <div class="login__box">
@@ -146,7 +147,7 @@
           </div>
           
           <div class="login__box__addr__btn">
-          	<input type="button" value="주소찾기" onclick="execute_daum_address()">
+          	<input type="button" class="btn btn-primary" value="주소찾기" onclick="execute_daum_address()">
           </div>
           
           <div class="login__box">
@@ -211,14 +212,12 @@
    <script type="text/javascript" src="${ path }/resources/js/member/sign_in.js?v=<%=System.currentTimeMillis() %>"></script>
    <script type="text/javascript">
       //네이버 로그인
-	  var naverLogin = new naver.LoginWithNaverId(
-			  {
-				  clientId: "mxxEZM0mxB_D9crAuaD9",
-				  callbackUrl: "http://localhost:8088/times/member/naverLogin",// 본인의 callBack url
-				  isPopup: false,
-				  loginButton: {color: "white", type: 1, height:60}
-			  }
-		  );
+	  var naverLogin = new naver.LoginWithNaverId({
+		  clientId: "mxxEZM0mxB_D9crAuaD9",
+		  callbackUrl: "http://localhost:8088/times/member/naverLogin",// 본인의 callBack url
+		  isPopup: false,
+		  loginButton: {color: "white", type: 1, height:60}
+	  });
 	  naverLogin.init();
 	  $(document).on("click", "#naverLogin", function(){ 
 		  var btnNaverLogin = document.getElementById("naverIdLogin").firstChild;

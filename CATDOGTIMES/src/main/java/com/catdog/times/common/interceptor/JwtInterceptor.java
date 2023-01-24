@@ -42,7 +42,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 
 		if (request.getMethod().equals("OPTIONS")) {
 			log.info("preflight, 통과");
-			
 			return true;
 		}
         
@@ -63,7 +62,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             map = jwtService.validRefreshToken(acToken, rfToken);
             if((int) map.get("status") == 200) {
                 response.setHeader(REFRESH_TOKEN, rfToken);
-                response.setHeader(ACCESS_TOKEN, (String) map.get("token"));  // Access 토큰이 성공적으로 재 발행 되었을 때
+                // Access 토큰이 성공적으로 재 발행 되었을 때
+                response.setHeader(ACCESS_TOKEN, (String) map.get("token"));  
                 request.setAttribute("userId", map.get("userId"));
             }
         }

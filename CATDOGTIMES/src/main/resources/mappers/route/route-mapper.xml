@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper
+	namespace="com.catdog.times.route.model.mapper.RouteMapper">
+	<resultMap type="RouteRatingDTO" id="RouteRatingDTOResultMap">
+		<result column="ROUTE_RATING_NO" property="routeRatingNo" />
+		<result column="ROUTE_NO" property="routeNo" />
+		<result column="ROUTE_RATING_SOCRE" property="routeRatingScore" />
+		<result column="MEMBER_NO" property="memberNo" />
+	</resultMap>
+
+	<resultMap type="UserRatingDTO" id="UserRatingDTOResultMap">
+		<result column="RATING_USER_NO" property="userRatingNo" />
+		<result column="RATING_TARGET_MEMBER_NO"
+			property="ratingTargetMemberNo" />
+		<result column="WALK_RATING_SCORE" property="walkRatingScore" />
+		<result column="MEMBER_NO" property="memberNo" />
+	</resultMap>
+
+	<resultMap type="WalkMyRouteDTO" id="WalkMyRouteResultMap">
+		<result column="myRouteNo" property="myRouteNo" />
+		<result column="myRouteName" property="myRouteName" />
+		<result column="myRouteThumbnail" property="myRouteThumbnail" />
+		<result column="myRouteDepartures" property="myRouteDepartures" />
+		<result column="myRouteDestination"
+			property="myRouteDestination" />
+		<result column="myRouteLocations" property="myRouteLocations" />
+		<result column="myRouteCreateDate" property="myRouteCreateDate" />
+		<result column="memberNo" property="memberNo" />
+	</resultMap>
+
+	<resultMap type="WalkParticipantDTO"
+		id="WalkParticipantResultMap">
+		<result column="walkParticipantNo" property="walkParticipantNo" />
+		<result column="partyNo" property="partyNo" />
+		<result column="memberNo" property="memberNo" />
+	</resultMap>
+
+	<resultMap type="WalkPartyDTO" id="WalkPartyResultMap">
+		<result column="partyNo" property="partyNo" />
+		<result column="partyName" property="partyName" />
+		<result column="partyThumbnail" property="partyThumbnail" />
+		<result column="partyCategory" property="partyCategory" />
+		<result column="partyDepartures" property="partyDepartures" />
+		<result column="partyDestination" property="partyDestination" />
+		<result column="memberNo" property="memberNo" />
+		<result column="routeNo" property="routeNo" />
+	</resultMap>
+
+
+	<resultMap type="WalkRouteDTO" id="WalkRouteResultMap">
+		<result column="ROUTE_NO" property="routeNo" />
+		<result column="ROUTE_NAME" property="routeName" />
+		<result column="ROUTE_THUMBNAIL" property="routeThumbnail" />
+		<result column="ROUTE_DEPARTURES" property="routeDepartures" />
+		<result column="ROUTE_DESTINATION" property="routeDestination" />
+		<result column="ROUTE_LOCATIONS" property="routeLocations" />
+		<result column="ROUTE_PUBLIC" property="routePublic" />
+		<result column="ROUTE_CREATE_DATE" property="routeCreateDate" />
+		<result column="MEMBER_NO" property="memberNo" />
+	</resultMap>
+
+	<!-- <<<<Create>>> -->
+	<!-- 루트 작성 -->
+	<insert id="insertWalkRoute" parameterType="WalkRouteDTO"
+		useGeneratedKeys="true" keyColumn="ROUTE_NO" keyProperty="routeNo">
+		<selectKey keyProperty="routeNo" resultType="int"
+			order="AFTER">
+			SELECT SEQ_ROUTE_NO.NEXTVAL AS routeNo FROM DUAL
+		</selectKey>
+		INSERT INTO WALK_ROUTE(
+		ROUTE_NO,
+		ROUTE_NAME,
+		ROUTE_THUMBNAIL,
+		ROUTE_DEPARTURES,
+		ROUTE_DESTINATION,
+		ROUTE_LOCATIONS,
+		ROUTE_PUBLIC,
+		ROUTE_CREATE_DATE,
+		MEMBER_NO
+		) VALUES(
+		SEQ_ROUTE_NO.NEXTVAL,
+		#{routeName},
+		#{routeThumbnail},
+		#{routeDepartures},
+		#{routeDestination},
+		#{routeLocations},
+		#{routePublic},
+		DEFAULT,
+		#{memberNo}
+		)
+	</insert>
+
+	<!-- 마이루트 작성 -->
+	<insert id="insertWalkMyRoute" parameterType="WalkMyRouteDTO"
+		useGeneratedKeys="true" keyColumn="MY_ROUTE_NO"
+		keyProperty="myRouteNo">
+		<selectKey keyProperty="myRouteNo" resultType="int"
+			order="AFTER">
+			SELECT SEQ_MY_ROUTE_NO.CURRVAL AS myRouteNo FROM DUAL
+		</selectKey>
+		INSERT INTO WALK_MY_ROUTE(
+		MY_ROUTE_NO,
+		MY_ROUTE_NAME,
+		MY_ROUTE_THUMBNAIL,
+		MY_ROUTE_DEPARTURES,
+		MY_ROUTE_DESTINATION,
+		MY_ROUTE_LOCATIONS,
+		ROUTE_CREATE_DATE
+		MEMBER_NO,
+		) VALUES(
+		SEQ_MY_ROUTE_NO.NEXTVAL,
+		#{myRouteName},
+		#{myRouteThumbnail},
+		#{myRouteDepartures},
+		#{myRouteDestination},
+		#{myRouteLocations},
+		DEFAULT,
+		#{memberNo}
+		)
+	</insert>
+
+	<!-- 사용자 평점 작성 -->
+	<insert id="insertUserRating" parameterType="UserRatingDTO"
+		useGeneratedKeys="true" keyColumn="USER_RATING_NO"
+		keyProperty="userRatingNo">
+		INSERT INTO USER_RATING
+		(
+		RATING_USER_NO,
+		RATING_TARGET_MEMBER_NO,
+		WALK_RATING_SCORE,
+		MEMBER_NO
+		)
+		VALUES
+		(
+		SEQ_RATING_USER_NO.NEXTVAL,
+		#{ratingTargetMemberNo},
+		#{walkRatingScore},
+		#{memberNo},
+		)
+	</insert>
+
+	<!-- 루트 평점 작성 -->
+	<insert id="insertRouteRating" parameterType="RouteRatingDTO"
+		useGeneratedKeys="true" keyColumn="ROUTE_RATING_NO"
+		keyProperty="routeRatingNo">
+		<selectKey keyProperty="routeRatingNo" resultType="int"
+			order="AFTER">
+			SELECT SEQ_ROUTE_RATING_NO.NEXTVAL AS routeRatingNo FROM DUAL
+		</selectKey>
+		INSERT INTO ROUTE_RATING
+		(
+		MEMBER_NO,
+		ROUTE_RATING_SCORE,
+		ROUTE_RATING_NO,
+		ROUTE_NO
+		) VALUES(
+		#{memberNo},
+		#{routeRatingScore},
+		SEQ_ROUTE_RATING_NO.NEXTVAL,
+		#{routeNo}
+		)
+	</insert>
+
+	<!-- 파티 참가자 작성 -->
+	<insert id="insertWalkParticipant"
+		parameterType="WalkParticipantDTO" useGeneratedKeys="true"
+		keyColumn="ROUTE_RATING_NO" keyProperty="routeRatingNo">
+		INSERT INTO WALK_PARTICIPANT
+		(
+		WALK_PARTICIPANT_NO,
+		PARTY_NO,
+		MEMBER_NO
+		)
+		VALUES
+		(
+		SEQ_WALK_PARTICIPANT_NO.NEXTVAL,
+		#{partyNo},
+		#{memberNo}
+		)
+	</insert>
+
+	<!-- 파티 작성 -->
+	<insert id="insertWalkParty" parameterType="WalkPartyDTO"
+		useGeneratedKeys="true" keyColumn="PARTY_NO" keyProperty="partyNo">
+		INSERT INTO
+		WALK_PARTY
+		(
+		PARTY_NO,
+		PARTY_NAME,
+		PARTY_CATEGORY,
+		PARTY_DEPARTURES,
+		PARTY_DESTINATION,
+		PARTY_CREATEDATE,
+		PARTY_DEPARTUREDATE,
+		MEMBER_NO
+		ROUTE_NO
+		)
+		VALUES
+		(
+		SEQ_PARTY_NO.NEXTVAL,
+		#{partyName},
+		#{partyCategory},
+		#{partyDepartures},
+		#{partyDestination},
+		DEFAULT,
+		DEFAULT,
+		#{memberNo},
+		#{routeNo}
+		)
+	</insert>
+	<select id="getRouteList" resultMap="WalkRouteResultMap"
+		parameterType="int">
+		SELECT ROUTE_NO as ROUTE_NO,
+		ROUTE_NAME as ROUTE_NAME,
+		ROUTE_THUMBNAIL as ROUTE_THUMBNAIL,
+		ROUTE_DEPARTURES as
+		ROUTE_DEPARTURES,
+		ROUTE_DESTINATION as ROUTE_DESTINATION,
+		ROUTE_LOCATIONS as
+		ROUTE_LOCATIONS,
+		ROUTE_PUBLIC as ROUTE_PUBLIC,
+		ROUTE_CREATE_DATE as
+		ROUTE_CREATE_DATE,
+		MEMBER_NO as MEMBER_NO
+		FROM
+		WALK_ROUTE
+		WHERE MEMBER_NO
+		= #{MemberNo}
+	</select>
+
+	<select id="getMyRouteList" resultMap="WalkMyRouteResultMap"
+		parameterType="int">
+		SELECT ROUTE_NO as ROUTE_NO,
+		ROUTE_NAME as ROUTE_NAME,
+		ROUTE_THUMBNAIL as ROUTE_THUMBNAIL,
+		ROUTE_DEPARTURES as
+		ROUTE_DEPARTURES,
+		ROUTE_DESTINATION as ROUTE_DESTINATION,
+		ROUTE_LOCATIONS as
+		ROUTE_LOCATIONS,
+		ROUTE_PUBLIC as ROUTE_PUBLIC,
+		ROUTE_CREATE_DATE as
+		ROUTE_CREATE_DATE,
+		MEMBER_NO as MEMBER_NO
+		FROM
+		WALK_ROUTE
+		WHERE MEMBER_NO
+		= #{MemberNo}
+	</select>
+
+
+
+</mapper>

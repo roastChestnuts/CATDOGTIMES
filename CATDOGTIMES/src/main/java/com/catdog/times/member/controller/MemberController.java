@@ -68,8 +68,7 @@ public class MemberController {
     }
 	
 	@PostMapping("/member/login")
-	public Object login(ModelAndView model,
-				@RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
+	public Object login(ModelAndView model, @RequestParam("id") String userId, @RequestParam("password") String userPwd) {	
 		
 		log.info("{}, {}", userId, userPwd);
 		
@@ -90,8 +89,8 @@ public class MemberController {
 				String accessToken = tokenMap.get("accessToken");
 				String refreshToken = tokenMap.get("refreshToken");
 				return ResponseEntity.status(HttpStatus.FOUND)
-			             .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
-			             .body(null);
+			             			 .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+			             			 .body(null);
 			}
 		} else {
 			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
@@ -103,8 +102,7 @@ public class MemberController {
 	
 	// 카카오 로그인
 	@GetMapping("/member/kakaoLogin")
-	public ResponseEntity<?> redirectkakao(ModelAndView model, @RequestParam String code, HttpSession session)
-			throws IOException {
+	public ResponseEntity<?> redirectkakao(ModelAndView model, @RequestParam String code, HttpSession session) throws IOException {
 		// 접속토큰 get
 		String kakaoToken = kakaoService.getReturnAccessToken(code);
 
@@ -156,8 +154,69 @@ public class MemberController {
 		model.addObject("kakaoToken", kakaoToken);
 		
 		return ResponseEntity.status(HttpStatus.FOUND)
-	             .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
-	             .body(null);
+	             			 .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+	             			 .body(null);
+	}
+	
+	//네이버 로그인 콜백(성공시 요청 - 데이터를 받는 곳)
+	@RequestMapping("/member/naverLogin")
+	public String naver() {
+		return "common/naverCallBack";
+	}
+	
+	@PostMapping("/member/naverSave")
+	public Object naverSave(ModelAndView model, @RequestBody Member memberDto) {
+		String result;
+		//토큰 생성용 객체
+		User user = new User();
+		String no = "";
+		String nickName = "";
+		int type = 0;
+		
+		if(memberDto == null) { //넘어온 값이 null이라면 로그인 실패니까
+			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
+			model.addObject("location", "/member/login");
+			model.setViewName("common/msg");
+			return model;
+		}else {
+			String snsId = memberDto.getSnsId();
+			String email = memberDto.getEmail();
+			nickName = memberDto.getNickName();
+			
+			// 일치하는 snsId 없을 시 회원가입
+			if (service.naverLogin(snsId) == null) {
+				log.warn("네이버로 회원가입");
+				memberDto.setId(email);
+				service.naverJoin(memberDto);
+				no = Integer.toString(memberDto.getNo());//멤버No값 세팅
+				
+				model.addObject("loginMember", memberDto);
+			} else {
+				// 일치하는 snsId가 있으면 멤버객체에 담음.
+				log.warn("네이버로 로그인");
+				String MemberId = service.findMemberBySnsId(snsId);
+				Member dto = service.findMemberById(MemberId);
+				log.warn("member:: " + dto);
+				no = Integer.toString(dto.getNo());//멤버No값 세팅
+				type = dto.getType();
+				model.addObject("loginMember", dto);
+			}
+			//result = "ok";
+		}
+		
+		//토큰 객체 세팅
+		user.setId(no);
+		user.setName(nickName);
+		user.setMemberType(type);
+		
+		//토큰 생성
+		Map<String, String> tokenMap = jwtService.createToken(user);
+		String accessToken = tokenMap.get("accessToken");
+		String refreshToken = tokenMap.get("refreshToken");
+	
+		return ResponseEntity.status(HttpStatus.FOUND)
+			    			 .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+			    			 .body(null);
 	}
 	
 	@GetMapping("/member/logout")
@@ -191,7 +250,6 @@ public class MemberController {
 	@PostMapping("/member/idCheck")
 	@ResponseBody
 	public int idCheck(@RequestParam("id") String id) {
-		
 		int cnt = service.idCheck(id);
 		return cnt;
 	}
@@ -206,7 +264,6 @@ public class MemberController {
 	@PostMapping("/member/nickNameCheck")
 	@ResponseBody
 	public int nickNameCheck(@RequestParam("nickName") String nickName) {
-		
 		int cnt = service.nickNameCheck(nickName);
 		return cnt;
 	}
@@ -221,42 +278,6 @@ public class MemberController {
     public String termconditionsModal() {
         return "common/termconditions";
     }
-    
-	//네이버 로그인 콜백(성공시 요청 - 데이터를 받는 곳)
-	@RequestMapping("/member/naverLogin")
-	public String naver() {
-		return "common/naverCallBack";
-	}
-	
-	@PostMapping("/member/naverSave")
-	public @ResponseBody String naverSave(ModelAndView model, @RequestBody Member memberDto) {
-		String result;
-		if(memberDto == null) { //넘어온 값이 null이라면 로그인 실패니까
-			result = "no";
-		}else {
-			String snsId = memberDto.getSnsId();
-			String email = memberDto.getEmail();
-			
-			// 일치하는 snsId 없을 시 회원가입
-			if (service.naverLogin(snsId) == null) {
-				log.warn("네이버로 회원가입");
-				memberDto.setId(email);
-				service.naverJoin(memberDto);
-	
-				model.addObject("loginMember", memberDto);
-			} else {
-				// 일치하는 snsId가 있으면 멤버객체에 담음.
-				log.warn("네이버로 로그인");
-				String MemberId = service.findMemberBySnsId(snsId);
-				Member dto = service.findMemberById(MemberId);
-				log.warn("member:: " + dto);
-				model.addObject("loginMember", dto);
-			}
-			result = "ok";
-		}
-	
-		return result;
-	}
 	
     @PostMapping("/member/findId")
     @ResponseBody
@@ -298,7 +319,7 @@ public class MemberController {
 		}
 	}
     
-    //동물등록조회 테스트
+    //동물등록조회
     @GetMapping("/member/animalNumber")
     @ResponseBody
 	public int updateAnimalNumber(Member member /*int memberNo, String name, String animalRegNo */) throws Exception{
@@ -310,8 +331,6 @@ public class MemberController {
     		result = service.updateAnimalNumber(member);
     		return result;
     	}
-
-    	
 	}
 }
 
