@@ -59,7 +59,6 @@ public class PostController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<SNSFeedDTO> selectAllPost() {
 		List<SNSFeedDTO> postList = service.selectAllPost();
-		System.out.println("잘들어오나 확인:" + postList);
 		return postList;
 	}
 
@@ -118,7 +117,6 @@ public class PostController {
 		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
 		System.out.println(memberNo);
 		int postLikeId = postLikeDto.getPostLikeId();
-
 		PostLikeDTO result = null;
 		postLikeDto.setMemberNo(memberNo);
 

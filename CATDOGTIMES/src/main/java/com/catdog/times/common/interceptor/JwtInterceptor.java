@@ -12,11 +12,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.catdog.times.member.controller.MemberController;
 import com.catdog.times.member.model.service.JwtServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 @PropertySource("classpath:jwt.properties")
 public class JwtInterceptor implements HandlerInterceptor {
 	@Value("${jwt.secretkey}")
@@ -34,8 +38,13 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-        System.out.println("Interceptor Pre / Request Url : " + request.getRequestURI());
+        log.info("Interceptor Pre / Request Url : " + request.getRequestURI());
 
+		if (request.getMethod().equals("OPTIONS")) {
+			log.info("preflight, 통과");
+			return true;
+		}
+        
         Map<String, Object> map = new HashMap<>();
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
@@ -53,7 +62,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             map = jwtService.validRefreshToken(acToken, rfToken);
             if((int) map.get("status") == 200) {
                 response.setHeader(REFRESH_TOKEN, rfToken);
-                response.setHeader(ACCESS_TOKEN, (String) map.get("token"));  // Access 토큰이 성공적으로 재 발행 되었을 때
+                // Access 토큰이 성공적으로 재 발행 되었을 때
+                response.setHeader(ACCESS_TOKEN, (String) map.get("token"));  
                 request.setAttribute("userId", map.get("userId"));
             }
         }

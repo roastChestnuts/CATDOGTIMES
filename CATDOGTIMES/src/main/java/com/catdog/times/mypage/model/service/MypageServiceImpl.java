@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.catdog.times.mypage.model.dto.FollowMemberDTO;
 import com.catdog.times.mypage.model.dto.MemberOutDTO;
+import com.catdog.times.mypage.model.dto.MyWalksDTO;
 import com.catdog.times.mypage.model.dto.MypageDTO;
 import com.catdog.times.mypage.model.dto.PostContentDTO;
 import com.catdog.times.mypage.model.mapper.MypageMapper;
@@ -24,8 +25,8 @@ public class MypageServiceImpl implements MypageService {
 	private MypageMapper mapper;
 	
 	@Override
-	public MypageDTO findByID(String memberId) {
-		return mapper.findByID(memberId);
+	public MypageDTO findByID(String memberNo) {
+		return mapper.findByID(memberNo);
 	}
 	
 	@Override
@@ -58,5 +59,13 @@ public class MypageServiceImpl implements MypageService {
 		return 0;
 	}
 
-
+	@Override
+	public List<MyWalksDTO> mywalks(String memberNo) {
+		return mapper.mywalks(memberNo);
+	}
+	@Override
+	public List<MyWalksDTO> joinedwalks(String memberNo) {
+		return mapper.joinedwalks(memberNo);
+	}
+	
 }

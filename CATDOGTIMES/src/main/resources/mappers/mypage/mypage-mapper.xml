@@ -57,6 +57,23 @@
 		<result column="OUT_DATE" property="outDate"/>
 	</resultMap>
 	
+	<resultMap id="walksMap" type="MyWalksDTO" >
+		<result column="MEMBER_NO"  property="memberNo"/>
+		<result column="ROUTE_NO"  property="routeNo"/>
+		<result column="ROUTE_NAME"  property="routeName"/>
+		<result column="ROUTE_THUMBNAIL"  property="routeThumbnail"/>
+		<result column="ROUTE_DEPARTURES"  property="routeDepartures"/>
+		<result column="ROUTE_DESTINATION"  property="routeDestination"/>
+		<result column="ROUTE_PUBLIC"  property="routePublic"/>
+		<result column="PARTY_MEMBER_NICKNAME"  property="partyMemberNickname"/>
+		<result column="PARTY_NAME"  property="partyName"/>
+		<result column="PARTY_THUMBNAIL"  property="partyThumbnail"/>
+		<result column="PARTY_CATEGORY"  property="partyCategory"/>
+		<result column="PARTY_DEPARTURES"  property="partyDepartures"/>
+		<result column="PARTY_DESTINATION"  property="partyDestination"/>
+		<result column="PARTY_CREATEDATE"  property="partyCreatedate"/>
+		<result column="PARTY_DEPARTUREDATE"  property="partyDeparturedate"/>		
+	</resultMap>
 	
 	<select id="findByID" resultMap="myPageResultMap" parameterType="String">
 		SELECT M.MEMBER_NO
@@ -88,7 +105,7 @@
              , M.MEMBER_ANIMAL_REG_NO         
                  
 		FROM MEMBER M
-		WHERE M.MEMBER_ID = #{memberId}	
+		WHERE M.MEMBER_NO = #{memberNo}	
 	</select>
 	
 	<select id="selectPostContent" resultMap="postContentResultMap" parameterType="Map">
@@ -126,6 +143,7 @@
           AND P.MEMBER_NO = #{memberNo} 
         </otherwise>
       </choose>
+      ORDER BY P.POST_CREATE_DATE DESC
 	</select>
 	
 	
@@ -201,4 +219,53 @@
 		)	
 	</insert>
 
+
+	<select id="mywalks" resultMap="walksMap" parameterType="String">
+	    SELECT R.MEMBER_NO
+		     , R.ROUTE_NO
+		     , R.ROUTE_NAME
+		     , R.ROUTE_THUMBNAIL
+		     , R.ROUTE_DEPARTURES
+		     , R.ROUTE_DESTINATION
+		     , R.ROUTE_PUBLIC
+			 , PA.PARTY_MEMBER_NICKNAME
+			 , P.PARTY_NAME
+			 , P.PARTY_THUMBNAIL
+			 , P.PARTY_CATEGORY
+			 , P.PARTY_DEPARTURES
+			 , P.PARTY_DESTINATION
+			 , P.PARTY_CREATEDATE
+			 , P.PARTY_DEPARTUREDATE
+		FROM WALK_ROUTE R
+   LEFT JOIN WALK_PARTY P ON R.ROUTE_NO = P.ROUTE_NO 		
+   LEFT JOIN ( SELECT LISTAGG(M.MEMBER_NICKNAME,',') 
+			             WITHIN GROUP(ORDER BY M.MEMBER_NICKNAME) AS PARTY_MEMBER_NICKNAME
+			        , W.PARTY_NO 
+			     FROM MEMBER M 
+           INNER JOIN WALK_PARTICIPANT W ON M.MEMBER_NO = W.MEMBER_NO
+             GROUP BY W.PARTY_NO ) PA ON PA.PARTY_NO = P.PARTY_NO		
+		WHERE R.MEMBER_NO = #{memberNo}	
+     ORDER BY P.PARTY_CREATEDATE DESC
+	</select>
+	
+	<select id="joinedwalks" resultMap="walksMap" parameterType="String">
+  	    SELECT PA.PARTY_MEMBER_NICKNAME
+			 , P.PARTY_NAME
+			 , P.PARTY_THUMBNAIL
+			 , P.PARTY_CATEGORY
+			 , P.PARTY_DEPARTURES
+			 , P.PARTY_DESTINATION
+			 , P.PARTY_CREATEDATE
+			 , P.PARTY_DEPARTUREDATE
+	      FROM WALK_PARTY P
+	 LEFT JOIN WALK_PARTICIPANT WM ON P.PARTY_NO = WM.PARTY_NO  
+     LEFT JOIN ( SELECT LISTAGG(M.MEMBER_NICKNAME,',') 
+			             WITHIN GROUP(ORDER BY M.MEMBER_NICKNAME) AS PARTY_MEMBER_NICKNAME
+			        , W.PARTY_NO 
+			     FROM MEMBER M 
+           INNER JOIN WALK_PARTICIPANT W ON M.MEMBER_NO = W.MEMBER_NO
+             GROUP BY W.PARTY_NO ) PA ON PA.PARTY_NO = P.PARTY_NO		 
+         WHERE WM.MEMBER_NO = #{memberNo}
+	  ORDER BY P.PARTY_CREATEDATE DESC	 
+	</select>
 </mapper>

@@ -11,13 +11,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:300,300i,400,400i,500,500i&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/font-icon.min.css">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/defined.css">
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/home-fashion-vertical.css">
+    <link rel="stylesheet" href="../css/bootstrap/font-icon.min.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap/reset.css">
+    <link rel="stylesheet" href="../css/bootstrap/defined.css">
+    <link rel="stylesheet" href="../css/bootstrap/base.css">
+    <link rel="stylesheet" href="../css/bootstrap/style.css">
+    <link rel="stylesheet" href="../css/bootstrap/home-fashion-vertical.css">
 
     <style>
 /* 전체 레이아웃 */
@@ -132,7 +132,7 @@
                                산책루트 평균 평점
                            </div> 
                            <div class="card-body">
-                           		<span>0</span><br>
+                           		<span>${totalList[0].totalAvgRoute}</span><br>
                            </div>
                        	</div>
                    	</div>
@@ -341,16 +341,16 @@
     <a id="nt_backtop" class="pf br__50 z__100 des_bt1" href="#"><span class="tc br__50 db cw"><i
                 class="pr pegk pe-7s-angle-up"></i></span></a>
 
-    <script src="../js/jquery-3.5.1.min.js"></script>
-    <script src="../js/jarallax.min.js"></script>
-    <script src="../js/packery.pkgd.min.js"></script>
-    <script src="../js/jquery.hoverIntent.min.js"></script>
-    <script src="../js/magnific-popup.min.js"></script>
-    <script src="../js/flickity.pkgd.min.js"></script>
-    <script src="../js/lazysizes.min.js"></script>
-    <script src="../js/js-cookie.min.js"></script>
-    <script src="../js/jquery.countdown.min.js"></script>
-    <script src="../js/interface.js"></script>
+    <script src="../js/bootstrap/jquery-3.5.1.min.js"></script>
+    <script src="../js/bootstrap/jarallax.min.js"></script>
+    <script src="../js/bootstrap/packery.pkgd.min.js"></script>
+    <script src="../js/bootstrap/jquery.hoverIntent.min.js"></script>
+    <script src="../js/bootstrap/magnific-popup.min.js"></script>
+    <script src="../js/bootstrap/flickity.pkgd.min.js"></script>
+    <script src="../js/bootstrap/lazysizes.min.js"></script>
+    <script src="../js/bootstrap/js-cookie.min.js"></script>
+    <script src="../js/bootstrap/jquery.countdown.min.js"></script>
+    <script src="../js/bootstrap/interface.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
 	    $(document).ready(function(){
