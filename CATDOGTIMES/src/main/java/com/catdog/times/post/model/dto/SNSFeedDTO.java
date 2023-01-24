@@ -15,5 +15,6 @@ public class SNSFeedDTO {
 	private String feedImage;
 	private String likerName;
 	private String likerPhoto;
-	private int postLikeCount; // 멤버번호(여러개)	
+	private int postLikeCount; // 멤버번호(여러개)
+	private int memberNo;
 }
