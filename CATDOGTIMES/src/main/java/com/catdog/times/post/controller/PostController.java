@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.catdog.times.member.controller.MemberController;
-import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;

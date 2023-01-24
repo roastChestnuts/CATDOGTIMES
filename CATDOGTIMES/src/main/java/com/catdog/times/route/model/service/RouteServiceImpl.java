@@ -132,6 +132,11 @@ public class RouteServiceImpl implements RouteService {
 	@Override
 	public int deleteWalkParticipant(int walkParticipantNo){		
 		return mapper.deleteWalkParticipant(walkParticipantNo);
+	}
+	@Override
+	public WalkRouteDTO getRoute(int memberNo, String routeName) {
+		// TODO Auto-generated method stub
+		return mapper.getRoute(memberNo,routeName);
 	};
 	
 
