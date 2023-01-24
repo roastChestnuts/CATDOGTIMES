@@ -57,11 +57,9 @@ public class PostController {
 	}
 
 	// SNS 게시글(Post) 전체조회
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<SNSFeedDTO> selectAllPost() {
 		List<SNSFeedDTO> postList = service.selectAllPost();
-		System.out.println("잘들어오나 확인:" + postList);
 		return postList;
 	}
 
@@ -113,8 +111,8 @@ public class PostController {
 //	}
 	//게시글 좋아요 인서트, 좋아요 삭제
 	@PostMapping("/like")
-	public PostLikeDTO updatePostLike(HttpServletRequest request, //담겨와야 하는 값
-			@RequestBody PostLikeDTO postLikeDto /* ,String postId, int postLikeId */) {
+	public PostLikeDTO updatePostLike(HttpServletRequest request, 
+			                          @RequestBody PostLikeDTO postLikeDto) {
 		int memberNo = (int)request.getAttribute("userId");
 		int postLikeId = postLikeDto.getPostLikeId(); 
 		
@@ -183,7 +181,7 @@ public class PostController {
 	}
 	
 	//팔로우 업데이트
-	@PostMapping("/follow") 												   //int followId, int followingId
+	@PostMapping("/follow") 												   
 	public FollowDTO updateFollow(HttpServletRequest request, @RequestBody FollowDTO followDto) {
 		int memberNo = (int)request.getAttribute("userId");
 		followDto.setFollowerId(memberNo);

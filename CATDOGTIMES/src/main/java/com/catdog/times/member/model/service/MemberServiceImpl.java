@@ -42,11 +42,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member login(String id, String password) {
 		Member member = null;
-//		System.out.println(id);
-//		System.out.println(password);
 		member = this.findMemberById(id);
 		
-//		System.out.println(member);
 		if(member != null && passwordEncoder.matches(password, member.getPassword())) {
 			return member;
 		} else {
@@ -195,15 +192,15 @@ public class MemberServiceImpl implements MemberService {
     //동물보호관리시스템 홈페이지에서 요청시 필요한 쿠키값 리턴해주는 메서드
     public Map<String, String> animalPageCookie() throws IOException{
     	Connection.Response animalPageResponse = Jsoup.connect("https://www.animal.go.kr/front/awtis/record/recordConfirmList.do?")
-									                 .timeout(3000)
-									                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-									                 .header("Upgrade-Insecure-Requests", "1")
-									                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
-									                 .header("sec-ch-ua", "Not?A_Brand;v=8, Chromium;v=108, Google Chrome;v=108")
-									                 .header("sec-ch-ua-mobile", "?0")
-									                 .header("sec-ch-ua-platform", "Windows")
-									                 .method(Connection.Method.GET)
- 									                 .execute();
+									                  .timeout(3000)
+									                  .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+									                  .header("Upgrade-Insecure-Requests", "1")
+									                  .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
+									                  .header("sec-ch-ua", "Not?A_Brand;v=8, Chromium;v=108, Google Chrome;v=108")
+									                  .header("sec-ch-ua-mobile", "?0")
+									                  .header("sec-ch-ua-platform", "Windows")
+									                  .method(Connection.Method.GET)
+ 									                  .execute();
     	Map<String, String> animalPageCookie = animalPageResponse.cookies();
     	return animalPageCookie;
     }
