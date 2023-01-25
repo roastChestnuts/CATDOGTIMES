@@ -25,8 +25,8 @@ public class MypageServiceImpl implements MypageService {
 	private MypageMapper mapper;
 	
 	@Override
-	public MypageDTO findByID(String memberNo) {
-		return mapper.findByID(memberNo);
+	public MypageDTO findByID(String memberId) {
+		return mapper.findByID(memberId);
 	}
 	
 	@Override
