@@ -2,13 +2,10 @@ package com.catdog.times.post.model.mapper;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.DeletePostDTO;
 import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
@@ -34,10 +31,7 @@ public interface PostMapper {
 	int insertImage(ImageDTO image);
 
 	//게시글 좋아요
-	PostLikeDTO insertPostLike(PostLikeDTO postLikeDto);
-	// 좋아요 클릭
-	int insertLike(PostLikeDTO postLike);
-
+	int insertPostLike(PostLikeDTO postLikeDto);
 
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
@@ -63,7 +57,13 @@ public interface PostMapper {
 
 	// 특정 게시물 해시태그로 조회
 	List<PostDTO> findByHashtag(String postHashtag);
-
+	
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postDto);	
+	
+	//게시글 북마크 조회
+	List<BookmarkDTO> readBookmark(BookmarkDTO bookmarkDto);
+	
 	// 탐색
 	ImageDTO findImageById(int imageId);
 	
@@ -103,9 +103,6 @@ public interface PostMapper {
 	//게시글 삭제
 	int deletePost(int postId);
 
-	//게시글 좋아요 조회
-	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
-
 	//검색
 	List<SearchMemberDTO> searchUser(String id);
 
@@ -120,9 +117,12 @@ public interface PostMapper {
 	
 	//알림창 조회(추천인들)
 	List<RecommendDTO> searchRecommends(String memberNo);
-
+	
+	//팔로우 읽어오기
+	public List<FollowDTO> readFollow(FollowDTO followDto);
+	
 	//팔로우 저장
-	FollowDTO insertFollow(FollowDTO followDto);
+	int insertFollow(FollowDTO followDto);
 
 	//팔로우 취소
 	int deleteFollow(FollowDTO followDto);

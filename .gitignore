@@ -14,6 +14,8 @@ local.properties
 .loadpath
 .recommenders
 
+driver.properties
+
 # Spring 팀프로젝트 충돌 방지
 MANIFEST.MF
 pom.properties
@@ -230,6 +232,6 @@ buildNumber.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/maven
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,java,eclipse
-CATDOGTIMES/src/main/webapp/resources/images/movie/movie3.mp4
 CATDOGTIMES/src/main/webapp/resources/images/movie/movie1.mp4
 CATDOGTIMES/src/main/webapp/resources/images/movie/movie2.mp4
+CATDOGTIMES/src/main/webapp/resources/images/movie/movie3.mp4

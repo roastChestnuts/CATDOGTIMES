@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
-import com.catdog.times.member.model.dto.Member;
 import com.catdog.times.post.model.dto.BookmarkDTO;
+import com.catdog.times.post.model.dto.DeletePostDTO;
 import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
@@ -101,12 +101,13 @@ public class PostServiceImpl implements PostService {
 ////	public int insertImage(@RequestPart("image") ImageDTO image, @RequestPart(required = false) MultipartFile photofile, HttpSession session) {
 ////		return mapper.insertImage(image);
 ////	}
-
+	
+	//게시글 좋아요 인서트
 	@Override
-	public int insertLike(PostLikeDTO postLike) {		
-		return mapper.insertLike(postLike);
+	public int insertPostLike(PostLikeDTO postLikeDto) {
+		return mapper.insertPostLike(postLikeDto);
 	}
-
+	
 	@Override
 	public int insertReply(ReplyDTO reply) {
 		return mapper.insertReply(reply);
@@ -137,6 +138,11 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<ReadReplyDTO> readReply(int postId) {		
 		return mapper.readReply(postId);
+	}
+	
+	@Override
+	public List<BookmarkDTO> readBookmark(BookmarkDTO bookmarkDto) {		
+		return mapper.readBookmark(bookmarkDto);
 	}
 	
 	@Override
@@ -210,15 +216,14 @@ public class PostServiceImpl implements PostService {
 		return mapper.deletePost(postId);
 	}
 
-	//게시글 좋아요 인서트
-	@Override
-	public PostLikeDTO insertPostLike(PostLikeDTO postLikeDto) {
-		return mapper.insertPostLike(postLikeDto);
-	}
 	//게시글 좋아요 조회
+//	@Override
+//	public List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto) {
+//		return mapper.readPostLike(postLikeDto);
+//	}
 	@Override
-	public List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto) {
-		return mapper.readPostLike(postLikeDto);
+	public List<PostLikeDTO> readPostLike(PostLikeDTO postDto) {
+		return mapper.readPostLike(postDto);
 	}
 
 	//검색
@@ -230,6 +235,7 @@ public class PostServiceImpl implements PostService {
 	//특정 유저 탐색페이지 조회
 	@Override
 	public List<ImageDTO> searchExploreImage(int toMemberNo) {
+		System.out.println("여기는 exploreImage 서비스 임플" + toMemberNo);
 		return mapper.searchExploreImage(toMemberNo);
 	}
 	
@@ -250,10 +256,15 @@ public class PostServiceImpl implements PostService {
 	public List<RecommendDTO> searchRecommends(String memberNo) {
 		return mapper.searchRecommends(memberNo);
 	}
-
+	
+	//팔로우 읽어오기
+	@Override
+	public List<FollowDTO> readFollow(FollowDTO followDto) {		
+		return mapper.readFollow(followDto);
+	}
 	//팔로우 저장
 	@Override
-	public FollowDTO insertFollow(FollowDTO followDto) {
+	public int insertFollow(FollowDTO followDto) {
 		return mapper.insertFollow(followDto);
 	}
 
