@@ -1,6 +1,5 @@
 package com.catdog.times.route.model.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.WebUtils;
 
-import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
 import com.catdog.times.route.model.dto.WalkMyRouteDTO;
@@ -33,13 +30,6 @@ public class RouteServiceImpl implements RouteService {
 	@Override
 	public int insertWalkRoute(WalkRouteDTO route, @RequestPart(required=false) MultipartFile file,HttpSession session) throws IllegalStateException, IOException
 	{		
-		String ImageSavedName = route.getRouteThumbnail();
-		
-		String path = WebUtils.getRealPath(session.getServletContext(), "/resources/upload");
-		if(!file.isEmpty()) {
-			file.transferTo(new File(path+File.separator+ImageSavedName));
-		}
-		
 		return mapper.insertWalkRoute(route);
 	}
 	// Route Party Create

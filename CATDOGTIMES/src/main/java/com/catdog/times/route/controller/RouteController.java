@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.WebUtils;
 
-import com.catdog.times.mypage.controller.FileUploadLogic;
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
 import com.catdog.times.route.model.dto.WalkMyRouteDTO;
@@ -36,8 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/route")
 @Slf4j
 public class RouteController {
-
-	
 	@Autowired
 	private RouteService service;
 
@@ -47,9 +43,6 @@ public class RouteController {
 	public String insertWalkRoute(@RequestPart("route") WalkRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
 		System.out.println("route which come from front:"+route);
 		System.out.println("컨트롤러:"+ file);
-		String path = WebUtils.getRealPath(session.getServletContext(), "/resources/upload");
-		log.info("path ===== "+ path);
-
 		int result = service.insertWalkRoute(route, file, session);	
 		System.out.println("=====Route Create========");
 		System.out.println("Route 결과값:" + result);		
