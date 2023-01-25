@@ -11344,3 +11344,13 @@ body .tooltip_bottom_right:hover .tt_txt {
 .kalles-section-pr_summary .product_title {
     font-size: 20px;
 }
+
+
+
+.member-logout{
+  border-radius: 15px;
+  text-align: center;
+  font-size: 17px;
+  padding: 15px;
+  background-color: #f9cdbd;
+}

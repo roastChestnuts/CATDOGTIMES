@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
@@ -40,8 +40,8 @@ public class RouteController {
 	/* Route 등록 */
 	// Route 들록
 	@RequestMapping(value = "/addroute", method = RequestMethod.POST)
-	public String insertWalkRoute(@RequestPart("post") WalkRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
-		System.out.println(route);
+	public String insertWalkRoute(@RequestPart("route") WalkRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
+		System.out.println("route which come from front:"+route);
 		System.out.println("컨트롤러:"+ file);
 		int result = service.insertWalkRoute(route, file, session);	
 		System.out.println("=====Route Create========");
@@ -51,7 +51,7 @@ public class RouteController {
 	
 	// myRoute 들록
 	@RequestMapping(value = "/addmyroute", method = RequestMethod.POST)
-	public String insertWalkMyRoute(@RequestPart("post") WalkMyRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
+	public String insertWalkMyRoute(@RequestPart("r") WalkMyRouteDTO route, @RequestPart(required=false) MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
 		System.out.println(route);
 		System.out.println("컨트롤러:"+ file);
 		int result = service.insertWalkMyRoute(route, file, session);	
@@ -83,9 +83,9 @@ public class RouteController {
 	/* 평점 등록 */
 	// Route Rating 등록
 	@RequestMapping(value = "/addrouterating", method = RequestMethod.POST)
-	public String insertRouteRating(RouteRatingDTO userRating){
-		System.out.println(userRating);
-		int result = service.insertRouteRating(userRating);
+	public String insertRouteRating(@RequestPart("rate") RouteRatingDTO rate)throws IllegalStateException, IOException {
+		System.out.println("routeRating from front:"+rate);
+		int result = service.insertRouteRating(rate);
 		System.out.println("잘들어오나 확인:" + result);
 		return "루트 평점 등록됨";
 	}
@@ -102,21 +102,22 @@ public class RouteController {
 	/* 루트 조회 */
 	
 	// 루트리스트 조회
-	@RequestMapping(value = "/routelist", method = RequestMethod.GET)
-	public List<WalkRouteDTO> getRouteList(@RequestBody int MemberNo, HttpServletRequest request) {
-		String memberNo = (String)request.getAttribute("userId");
+	@GetMapping("/routelist")
+	public List<WalkRouteDTO> getRouteList(@RequestParam int MemberNo, HttpServletRequest request) {
+		String memberNo = (String)request.getAttribute("MemberNo");
 		log.info(memberNo, MemberNo);
 		 List<WalkRouteDTO> result = new ArrayList<>();
 		if(MemberNo >= 0) {
 			result = service.getRouteList(MemberNo); //파라미터 아이디로 조회
+			System.out.println(result);
 		}
 		return result;
 	}
 	
 	// 마이루트리스트 조회
-	@GetMapping("/routeMylist")
+	@GetMapping("/myRoutelist")
 	public List<WalkMyRouteDTO> getMyRouteList(@RequestBody int MemberNo, HttpServletRequest request) {
-		String memberNo = (String)request.getAttribute("userId");
+		String memberNo = (String)request.getAttribute("MemberNo");
 		log.info(memberNo, MemberNo);
 		 List<WalkMyRouteDTO> result = new ArrayList<>();
 		if(MemberNo >= 0) {
@@ -126,10 +127,14 @@ public class RouteController {
 	}
 	
 	// 특정 루트조회
-	@RequestMapping(value = "/getRoute", method = RequestMethod.GET)
-		public WalkRouteDTO getRoute(int routeNo) {	
-				
-		WalkRouteDTO walkRoutedto = service.getRoute(routeNo);	
+
+	@GetMapping("/route")
+		public WalkRouteDTO getRoute(@RequestParam int MemberNo, String RouteName, HttpServletRequest request) {	
+		String memberNo = (String) request.getAttribute("MamberNo");
+		String routeName = (String)request.getAttribute("RouteName");
+		log.info(memberNo, MemberNo);
+		log.info(routeName, RouteName);
+		WalkRouteDTO walkRoutedto = service.getRoute(MemberNo);	
 		return walkRoutedto;
 	}
 	

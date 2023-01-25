@@ -68,10 +68,11 @@
             <i class='bx bx-lock login__icon'></i>
             <input type="password" placeholder="Password" class="login__input" id="password" name="password">
           </div>
-          
+          <!-- <div class="form-check form-check-inline">
+          	<input type="checkbox" value="saveId" id="saveId" name="saveId"> 아이디저장
+          </div> -->
           <span class="find__pw" id="find-pw-span">/비밀번호 찾기</span>
           <span class="find__id" id="find-id-span">아이디</span>
-          
           <a href="#" class="login__button" onclick="return login()">로그인</a> <!-- return받은 값이 true이면 제출 -->
           
           <div>
