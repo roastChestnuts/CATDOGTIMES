@@ -15,6 +15,7 @@ public class SNSFeedDTO {
 	private String feedImage;
 	private String likerName;
 	private String likerPhoto;
-	private int postLikeCount; // 멤버번호(여러개)
+	private int postLikeCount; // 게시글 좋아요 개수
+	private int replyCount; // 게시글당 댓글 개수
 	private int memberNo;
 }

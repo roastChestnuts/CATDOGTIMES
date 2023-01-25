@@ -22,6 +22,9 @@ pom.properties
 target/
 Servers/
 
+#video
+*.mp4
+
 # External tool builders
 .externalToolBuilders/
 
