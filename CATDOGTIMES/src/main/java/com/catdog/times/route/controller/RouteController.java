@@ -3,7 +3,9 @@ package com.catdog.times.route.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.catdog.times.mypage.model.dto.FollowMemberDTO;
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
 import com.catdog.times.route.model.dto.WalkMyRouteDTO;
@@ -71,14 +75,18 @@ public class RouteController {
 	}
 
 	// Party Participant 등록
+	
+	/* 평점 등록 */
+	// Route Rating 등록
 	@RequestMapping(value = "/addparticipant", method = RequestMethod.POST)
-	public String insertWalkParticipant(WalkParticipantDTO participant) {
-		System.out.println(participant);
+	public String insertWalkParticipant(@RequestPart("participant") WalkParticipantDTO participant)throws IllegalStateException, IOException {
+		System.out.println("userRating from front:"+participant);
 		int result = service.insertWalkParticipant(participant);
 		System.out.println("잘들어오나 확인:" + result);
-		return "산책참가됨";
+		return "파티 신청 등록됨";
 	}
-	
+
+
 	
 	/* 평점 등록 */
 	// Route Rating 등록
@@ -171,12 +179,18 @@ public class RouteController {
 	}
 	
 	// 특정 파티 참가자 리스트 조회
-	@RequestMapping(value = "/getWalkParticipant", method = RequestMethod.GET)
-		public List<WalkParticipantDTO> getPartyParticipant(int partyNo) {	
-				
-		List<WalkParticipantDTO> walkParticipantdto = service.getPartyParticipant(partyNo);	
-		return walkParticipantdto;
+	@GetMapping("/getWalkParticipant")
+	public List<WalkParticipantDTO> getPartyParticipant(@RequestParam int WalkParticipantNo, HttpServletRequest request) {
+		String walkParticipantNo = (String)request.getAttribute("WalkParticipantNo");
+		log.info(walkParticipantNo, WalkParticipantNo);
+		 List<WalkParticipantDTO> result = new ArrayList<>();
+		if(WalkParticipantNo >= 0) {
+			result = service.getPartyParticipant(WalkParticipantNo); //파라미터 아이디로 조회
+			System.out.println(result);
+		}
+		return result;
 	}
+	
 	
 
 }

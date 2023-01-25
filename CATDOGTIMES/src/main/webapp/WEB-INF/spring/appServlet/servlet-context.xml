@@ -58,6 +58,7 @@
 			<mapping path="/post/follow"/>
 			<mapping path="/mypage/**"/>	
 			<exclude-mapping path="/member/**"/>
+			
 
 			<beans:bean id="jwtInterceptor" class="com.catdog.times.common.interceptor.JwtInterceptor"/>
 		</interceptor>

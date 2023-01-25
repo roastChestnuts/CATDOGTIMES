@@ -3,6 +3,7 @@ package com.catdog.times.route.model.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
-import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.route.model.dto.RouteRatingDTO;
 import com.catdog.times.route.model.dto.UserRatingDTO;
 import com.catdog.times.route.model.dto.WalkMyRouteDTO;
@@ -152,6 +152,11 @@ public class RouteServiceImpl implements RouteService {
 	public List<WalkRouteDTO> getRouteList(int memberNo, String routeName) {
 		// TODO Auto-generated method stub
 		return mapper.getRouteList(memberNo,routeName);
+	}
+	@Override
+	public List<WalkParticipantDTO> insertWalkParticipant(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return  mapper.insertWalkParticipant(map);
 	};
 	
 

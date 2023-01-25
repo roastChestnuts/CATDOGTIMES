@@ -2,6 +2,7 @@ package com.catdog.times.route.model.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -59,7 +60,7 @@ public interface RouteService {
 	WalkPartyDTO getWalkParty(int partyNo);
 
 	// 파티 참가자 조회
-	List<WalkParticipantDTO> getPartyParticipant(int partyNo);	
+	List<WalkParticipantDTO> getPartyParticipant(int walkParticipantNo);	
 
 
 	/* <<<DELETE>>> */
@@ -76,6 +77,8 @@ public interface RouteService {
 	WalkRouteDTO getRoute(int memberNo, String routeName);
 
 	List<WalkRouteDTO> getRouteList(int memberNo, String routeName);
+
+	List<WalkParticipantDTO> insertWalkParticipant(Map<String, Object> map);
 
 
 	
