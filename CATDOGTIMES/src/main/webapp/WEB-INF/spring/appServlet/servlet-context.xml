@@ -54,6 +54,7 @@
 			<mapping path="/post/like"/>			
 			<mapping path="/post/bookmark"/>			
 			<mapping path="/post/list"/>
+	<!-- 		<mapping path="/post/searchId"/> -->
 			<mapping path="/post/explore"/>
 			<mapping path="/post/follow"/>
 			<mapping path="/mypage/**"/>	

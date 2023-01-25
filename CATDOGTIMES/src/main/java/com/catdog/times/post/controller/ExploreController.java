@@ -24,6 +24,9 @@ public class ExploreController {
 	private PostService service;
 	
 	// 탐색페이지
+	
+	
+	// 탐색페이지
 	@GetMapping("/explore")
 	public List<ImageDTO> explore(HttpServletRequest request, int toMemberNo) {
 		String fromMemberNo = (String) request.getAttribute("userId");

@@ -129,7 +129,18 @@ public class PostServiceImpl implements PostService {
 	public List<SNSFeedDTO> selectAllPost() {
 		return mapper.selectAllPost();
 	}
-
+	
+	@Override
+	public List<SNSFeedDTO> selectPostRandom() {
+		return mapper.selectPostRandom();
+	}
+	
+	// POST 특정 아이디의 게시물 모음 조회
+	@Override
+	public List<SNSFeedDTO> selectPostById(Integer memberNo) {
+		return mapper.selectPostById(memberNo);
+	}
+	
 	@Override
 	public PostDTO readPost(int postId) {		
 		return mapper.readPost(postId);

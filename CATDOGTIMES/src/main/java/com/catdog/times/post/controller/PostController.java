@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,8 +64,22 @@ public class PostController {
 		return postList;
 	}
 
-	// SNS 게시글 id 조회
-
+	// SNS 게시글 랜덤 조회(탐색창용)
+	@RequestMapping(value = "/random", method = RequestMethod.GET)
+	public List<SNSFeedDTO> selectPostRandom() {
+		List<SNSFeedDTO> randomPostList = service.selectPostRandom();
+		return randomPostList;
+	}
+	
+	// SNS 게시글 멤버번호로 조회(검색 후 접속용)
+	@RequestMapping(value = "/searchId", method = RequestMethod.POST)
+	public List<SNSFeedDTO> selectPostById(@RequestParam String memberNo, HttpServletRequest request) {
+		System.out.println(memberNo);
+		int MemberNo = Integer.parseInt(memberNo);
+		List<SNSFeedDTO> searchByIdList = service.selectPostById(MemberNo);
+		return searchByIdList;
+	}
+	
 	// SNS 게시글 수정
 	public int postUpdate(PostDTO post) {
 		int result = service.postUpdate(post);
@@ -175,25 +190,6 @@ public class PostController {
 		}
 		return result;
 	}
-
-	// 탐색페이지
-//	@GetMapping("/explore")
-//	public List<ImageDTO> explore(HttpServletRequest request, int toMemberNo) {
-//		String fromMemberNo = (String) request.getAttribute("userId");
-//		log.info("탐색페이지 호출", fromMemberNo, toMemberNo);
-//
-//		List<ImageDTO> result = new ArrayList<>();
-//
-//		if (toMemberNo >= 0) {
-//			result = service.searchExploreImage(toMemberNo); // 이미지 조회
-//		} else {
-//			result = service.searchExploreImage(); // 이미지 조회
-//		}
-//		System.out.println(result.get(0));
-//		System.out.println(result.get(0).getImageSavedName());
-//
-//		return result;
-//	}
 
 	// 알림창 조회(좋아요 누른 사람들)
 	@GetMapping("/notifications")

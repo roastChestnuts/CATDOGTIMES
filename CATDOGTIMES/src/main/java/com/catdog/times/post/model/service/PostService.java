@@ -51,11 +51,10 @@ public interface PostService {
 	/* <<<LIST, READ>>> */
 	// POST 전체조회
 	List<SNSFeedDTO> selectAllPost();
-	// List<PostContentDTO> selectPostContent(Map<String,Object> map);
-
-	
-	// 특정 게시물 닉네임으로 조회. 내 파트가 아닌 것으로 보임
-/*	PostDTO findByNickname(String nickName);*/
+	// POST 랜덤조회 [탐색창용]
+	List<SNSFeedDTO> selectPostRandom();
+	// POST 특정 아이디의 게시물 모음 조회
+	List<SNSFeedDTO> selectPostById(Integer memberNo);	
 	
 	// 특정 게시물 상세조회 
 	PostDTO readPost(int postId);	
