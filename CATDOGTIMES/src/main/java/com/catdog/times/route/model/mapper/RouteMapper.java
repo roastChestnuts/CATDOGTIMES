@@ -1,6 +1,7 @@
 package com.catdog.times.route.model.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -73,6 +74,7 @@ public interface RouteMapper {
 	
 	
 	List<WalkRouteDTO> getRouteList(int memberNo, String routeName);
+	List<WalkParticipantDTO> insertWalkParticipant(Map<String, Object> map);
 	
 
 	
