@@ -14,7 +14,7 @@ import com.catdog.times.mypage.model.dto.PostContentDTO;
 
 @Mapper
 public interface MypageMapper {
-	MypageDTO findByID(String memberId);	
+	MypageDTO findByID(String memberNo);	
 	List<PostContentDTO> selectPostContent(Map<String,Object> map);
 	int updateMemberInfo(MypageDTO mypagedto);
 	List<FollowMemberDTO> selectFollowList(Map<String,Object> map);
