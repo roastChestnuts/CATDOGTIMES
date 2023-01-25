@@ -259,6 +259,7 @@
 		PARTY_NO as PARTY_NO,
 		MEMBER_NO as MEMBER_NO
 		FROM
+		WALK_PARTICIPANT
 		WHERE MEMBER_NO
 		= #{MemberNo}
 	</select>
