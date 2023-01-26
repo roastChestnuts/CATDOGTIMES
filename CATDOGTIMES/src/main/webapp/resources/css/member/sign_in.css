@@ -88,14 +88,14 @@
     
     .login__icon {
       font-size: 1.5rem;
-      color: #4AD395;
+      color: #D38B9B;
     }
     .login__input {
       border: none;
       outline: none;
       font-size: 0.938rem;
       font-weight: 700;
-      color: #23004d;
+      color: #f9cdbd;
       width: 100%;
     }
     .login__input::placeholder {
@@ -116,7 +116,7 @@
       display: block;
       padding: 1rem;
       margin: 2rem 0;
-      background-color: #4AD395;
+      background-color: #f9cdbd;
       color: #fff;
       font-weight: 600;
       text-align: center;
@@ -124,7 +124,7 @@
       transition: 0.3s;
     }
     .login__button:hover {
-      background-color: #65bf97;
+      background-color: #f9cdbd;
     }
     .login__account, .login__signin, .login__signup, .find__id, .find__pw{
       font-weight: 600;
@@ -134,7 +134,7 @@
       color: #23004d;
     }
     .login__account--signin, .login__account--signup, .login__signin--signin, .login__signin--signup, .login__signup--signin, .login__signup--signup, .find__id, .find__pw {
-      color: #4AD395;
+      color: #D38B9B;
       cursor: pointer;
     }
     .find__pw, .find__id{
@@ -244,7 +244,7 @@
 	
 	.login__create::-webkit-scrollbar-thumb {
 	    height: 30%; /* 스크롤바의 길이 */
-	    background: #217af4; /* 스크롤바의 색상 */
+	    background: #f9cdbd; /* 스크롤바의 색상 */
 	    
 	    border-radius: 10px;
 	}

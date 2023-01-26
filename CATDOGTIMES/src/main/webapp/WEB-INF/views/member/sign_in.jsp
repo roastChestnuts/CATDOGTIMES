@@ -111,18 +111,19 @@
           <span id="pwd_chk2"></span>
 
           <div class="login__box">
-            <i class='bx bx-at login__icon'></i>
+            <i class='bx bx-happy-beaming login__icon'></i>
             <input type="text" placeholder="name" class="login__input" id="sign_up_name" name="name" >
           </div>
                     
           <div class="login__box">
-            <i class='bx bx-lock login__icon'></i>
+            <i class='bx bx-male login__icon'></i>
+            <i class='bx bx-female login__icon'></i>
             <label><input type="radio" id="male" name="gender" value="M">남자</label>
             <label><input type="radio" id="female" name="gender" value="W">여자</label>
           </div>
 
           <div class="login__box">
-            <i class='bx bx-at login__icon'></i>
+            <i class='bx bx-upside-down login__icon'></i>
             <input type="text" placeholder="nickname" class="login__input" id="sign_up_nickName" name="nickName" onchange="checkNickName()">
             <input type="hidden" name="nickNameCheckValue" value="0" />
           </div>
@@ -132,11 +133,11 @@
           <div class="login__box">
             <i class='bx bx-at login__icon'></i>
             <input type="text" placeholder="Email" class="login__input" id="sign_up_email" name="email">
-            <input type="button" class="btn btn-primary" id="btnEmailCheck" value="인증하기">
+            <input type="button" class="btn btn-primary" id="btnEmailCheck" style="background-color: #f9cdbd; border: none;" value="인증하기">
           </div>
           
           <div class="login__box">
-            <i class='bx bx-at login__icon'></i>
+            <i class='bx bx-bell login__icon'></i>
             <input type="text" placeholder="인증번호 6자리 입력" class="login__input" id="sign_up_email_check" disabled="disabled" maxlength="6">
             <input type="hidden" id="emailCheckValue" name="emailCheckValue" value="0" />
           </div>
@@ -147,7 +148,7 @@
           </div>
           
           <div class="login__box__addr__btn">
-          	<input type="button" class="btn btn-primary" value="주소찾기" onclick="execute_daum_address()">
+          	<input type="button" class="btn btn-primary" value="주소찾기" style="background-color: #f9cdbd; border: none;" onclick="execute_daum_address()">
           </div>
           
           <div class="login__box">
