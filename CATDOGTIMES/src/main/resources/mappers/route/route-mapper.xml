@@ -32,9 +32,9 @@
 
 	<resultMap type="WalkParticipantDTO"
 		id="WalkParticipantResultMap">
-		<result column="walkParticipantNo" property="walkParticipantNo" />
-		<result column="partyNo" property="partyNo" />
-		<result column="memberNo" property="memberNo" />
+		<result column="WALK_PARTICIPANT_NO" property="walkParticipantNo" />
+		<result column="PARTY_NO" property="partyNo" />
+		<result column="MEMBER_NO" property="memberNo" />
 	</resultMap>
 
 	<resultMap type="WalkPartyDTO" id="WalkPartyResultMap">
@@ -164,9 +164,13 @@
 	</insert>
 
 	<!-- 파티 참가자 작성 -->
-	<insert id="insertWalkParticipant"
-		parameterType="WalkParticipantDTO" useGeneratedKeys="true"
-		keyColumn="ROUTE_RATING_NO" keyProperty="routeRatingNo">
+	<insert id="insertWalkParticipant" parameterType="WalkParticipantDTO"
+		useGeneratedKeys="true" keyColumn="WALK_PARTICIPANT_NO"
+		keyProperty="walkParticipantNo">
+		<selectKey keyProperty="walkParticipantNo" resultType="int"
+			order="AFTER">
+			SELECT SEQ_WALK_PARTICIPANT_NO.NEXTVAL AS walkParticipantNo FROM DUAL
+		</selectKey>
 		INSERT INTO WALK_PARTICIPANT
 		(
 		WALK_PARTICIPANT_NO,
@@ -249,7 +253,16 @@
 		WHERE MEMBER_NO
 		= #{MemberNo}
 	</select>
-
+	<select id="getPartyParticipant" resultMap="WalkParticipantResultMap"
+		parameterType="int">
+		SELECT WALK_PARTICIPANT_NO as WALK_PARTICIPANT_NO,
+		PARTY_NO as PARTY_NO,
+		MEMBER_NO as MEMBER_NO
+		FROM
+		WALK_PARTICIPANT
+		WHERE MEMBER_NO
+		= #{MemberNo}
+	</select>
 
 
 </mapper>

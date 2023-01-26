@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.catdog.times.post.model.dto.BookmarkDTO;
 import com.catdog.times.post.model.dto.FollowDTO;
 import com.catdog.times.post.model.dto.ImageDTO;
 import com.catdog.times.post.model.dto.NotificationDTO;
@@ -62,8 +64,22 @@ public class PostController {
 		return postList;
 	}
 
-	// SNS 게시글 id 조회
-
+	// SNS 게시글 랜덤 조회(탐색창용)
+	@RequestMapping(value = "/random", method = RequestMethod.GET)
+	public List<SNSFeedDTO> selectPostRandom() {
+		List<SNSFeedDTO> randomPostList = service.selectPostRandom();
+		return randomPostList;
+	}
+	
+	// SNS 게시글 멤버번호로 조회(검색 후 접속용)
+	@RequestMapping(value = "/searchId", method = RequestMethod.POST)
+	public List<SNSFeedDTO> selectPostById(@RequestParam String memberNo, HttpServletRequest request) {
+		System.out.println(memberNo);
+		int MemberNo = Integer.parseInt(memberNo);
+		List<SNSFeedDTO> searchByIdList = service.selectPostById(MemberNo);
+		return searchByIdList;
+	}
+	
 	// SNS 게시글 수정
 	public int postUpdate(PostDTO post) {
 		int result = service.postUpdate(post);
@@ -73,6 +89,7 @@ public class PostController {
 	// SNS 게시글 삭제
 	@PostMapping("/delete")
 	public int deletePost(int postId) {
+		System.out.println("deltePost 프론트에서 넘어온 포스트아이디 :"+postId);
 //		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
 		int result = service.deletePost(postId);
 		return result;
@@ -114,14 +131,16 @@ public class PostController {
 	@PostMapping("/like")
 	public PostLikeDTO updatePostLike(HttpServletRequest request, // 담겨와야 하는 값
 			@RequestBody PostLikeDTO postLikeDto /* ,String postId, int postLikeId */) {
-		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
-		System.out.println(memberNo);
+		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));		
 		int postLikeId = postLikeDto.getPostLikeId();
+		
+		System.out.println("포스트라이크아이디:"+postLikeId);
+		
 		PostLikeDTO result = null;
 		postLikeDto.setMemberNo(memberNo);
 
 		// 게시글에 좋아요를 누르지 않은 경우
-		if (postLikeId < 0) {
+		if (postLikeId <= 0) {
 			// PostLikeDTO 리턴
 			service.insertPostLike(postLikeDto);
 			result = postLikeDto;// 게시글 좋아요 번호 리턴
@@ -130,6 +149,35 @@ public class PostController {
 		}
 		return result;
 	}
+	//북마크
+	//게시글 북마크 조회
+	@GetMapping("/bookmark")
+	public List<BookmarkDTO> selectBookmark(HttpServletRequest request, BookmarkDTO bookmarkDto) {		
+		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
+		bookmarkDto.setMemberNo(memberNo);		
+		return service.readBookmark(bookmarkDto);
+	}
+	
+	//게시글 북마크 인서트·삭제
+	@PostMapping("/bookmark")
+	public BookmarkDTO updateBookmark(HttpServletRequest request, @RequestBody BookmarkDTO bookmarkDto) {
+		int memberNo = Integer.parseInt(String.valueOf(request.getAttribute("userId")));
+		int bookmarkId = bookmarkDto.getBookmarkId();
+		
+		System.out.println("북마크아이디:"+bookmarkId);
+		
+		BookmarkDTO result = null;
+		bookmarkDto.setMemberNo(memberNo);
+
+		// 게시글에 북마크를 누르지 않은 경우
+		if (bookmarkId <= 0) {		
+			service.insertBookmark(bookmarkDto);
+			result = bookmarkDto;// 게시글 북마크 번호 리턴
+		} else {
+			service.deleteBookmark(bookmarkId);
+		}
+		return result;
+	}	
 
 	// 검색
 	@GetMapping("/search")
@@ -140,25 +188,6 @@ public class PostController {
 		if (id != null) {
 			result = service.searchUser(id); // 파라미터 아이디로 조회
 		}
-		return result;
-	}
-
-	// 탐색페이지
-	@GetMapping("/explore")
-	public List<ImageDTO> explore(HttpServletRequest request, int toMemberNo) {
-		String fromMemberNo = (String) request.getAttribute("userId");
-		log.info("탐색페이지 호출", fromMemberNo, toMemberNo);
-
-		List<ImageDTO> result = new ArrayList<>();
-
-		if (toMemberNo >= 0) {
-			result = service.searchExploreImage(toMemberNo); // 이미지 조회
-		} else {
-			result = service.searchExploreImage(); // 이미지 조회
-		}
-		System.out.println(result.get(0));
-		System.out.println(result.get(0).getImageSavedName());
-
 		return result;
 	}
 

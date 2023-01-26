@@ -33,25 +33,28 @@ public interface PostService {
 	int insertImage(ImageDTO image);
 	
 	//int insertImage(@RequestPart("image") ImageDTO image, @RequestPart(required = false) MultipartFile photofile, HttpSession session) throws IllegalStateException, IOException;
-	// 좋아요 클릭
-	int insertLike(PostLikeDTO postLike);
+	// 게시글 좋아요 인서트
+	int insertPostLike(PostLikeDTO postLikeDto);	
+
 	// SNS 게시글 해시태그 등록
 	int insertHashtag(PostHashtagDTO postHashtag);
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
 	// 댓글 좋아요 클릭
 	int insertReplyLike(ReplyLikeDTO replyLike);
-	// 북마크 등록
+	
+	// 북마크 등록	
 	int insertBookmark(BookmarkDTO bookmark);
-
+	// 북마크 
+	
+	
 	/* <<<LIST, READ>>> */
 	// POST 전체조회
 	List<SNSFeedDTO> selectAllPost();
-	// List<PostContentDTO> selectPostContent(Map<String,Object> map);
-
-	
-	// 특정 게시물 닉네임으로 조회. 내 파트가 아닌 것으로 보임
-/*	PostDTO findByNickname(String nickName);*/
+	// POST 랜덤조회 [탐색창용]
+	List<SNSFeedDTO> selectPostRandom();
+	// POST 특정 아이디의 게시물 모음 조회
+	List<SNSFeedDTO> selectPostById(Integer memberNo);	
 	
 	// 특정 게시물 상세조회 
 	PostDTO readPost(int postId);	
@@ -65,6 +68,12 @@ public interface PostService {
 	// 댓글 불러오기
 	List<ReadReplyDTO> readReply(int postId);
 	
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
+	
+	//게시글 북마크 조회
+	List<BookmarkDTO> readBookmark(BookmarkDTO bookmarkDto);
+	
 	/* <<UPDATE>> */
 	// SNS 게시물 본문 수정
 	int postUpdate(PostDTO post);
@@ -72,6 +81,7 @@ public interface PostService {
 	int hashtagUpdate(PostHashtagDTO postHashtag);
 	// SNS 댓글 수정
 	int replyUpdate(ReplyDTO reply);
+	
 	/* <<<DELETE>>> */
 	
 	//북마크 삭제
@@ -88,11 +98,6 @@ public interface PostService {
 	int deleteImage(int imageId);	
 	//게시글 삭제
 	int deletePost(int postId);
-	
-	//게시글 좋아요버튼 인서트
-	int insertPostLike(PostLikeDTO postLikeDto);
-	//게시글 좋아요 조회
-	List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
 	
 	//검색
 	List<SearchMemberDTO> searchUser(String id);

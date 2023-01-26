@@ -32,9 +32,6 @@ public interface PostMapper {
 
 	//게시글 좋아요
 	int insertPostLike(PostLikeDTO postLikeDto);
-	// 좋아요 클릭
-	int insertLike(PostLikeDTO postLike);
-
 
 	// 댓글 작성
 	int insertReply(ReplyDTO reply);
@@ -49,8 +46,11 @@ public interface PostMapper {
 	// POST 전체조회
 	List<SNSFeedDTO> selectAllPost();	
 	
-	// 특정 게시물 닉네임으로 조회. 내 파트가 아닌 것으로 보임
-/*	PostDTO findByNickname(String nickName);*/
+	// POST 랜덤조회(탐색창용)
+	List<SNSFeedDTO> selectPostRandom();
+	
+	// POST 특정 아이디의 게시물 모음 조회
+	List<SNSFeedDTO> selectPostById(Integer memberNo);
 	
 	// 특정 게시물 상세조회 
 	PostDTO readPost(int postId);
@@ -60,7 +60,13 @@ public interface PostMapper {
 
 	// 특정 게시물 해시태그로 조회
 	List<PostDTO> findByHashtag(String postHashtag);
-
+	
+	//게시글 좋아요 조회
+	List<PostLikeDTO> readPostLike(PostLikeDTO postDto);	
+	
+	//게시글 북마크 조회
+	List<BookmarkDTO> readBookmark(BookmarkDTO bookmarkDto);
+	
 	// 탐색
 	ImageDTO findImageById(int imageId);
 	
@@ -99,10 +105,6 @@ public interface PostMapper {
 	
 	//게시글 삭제
 	int deletePost(int postId);
-
-	//게시글 좋아요 조회
-	//List<PostLikeDTO> readPostLike(PostLikeDTO postLikeDto);
-	List<PostLikeDTO> readPostLike(PostLikeDTO postDto);
 
 	//검색
 	List<SearchMemberDTO> searchUser(String id);

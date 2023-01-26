@@ -67,7 +67,7 @@
 		<result property="postCreateDate" column="POST_CREATE_DATE"></result>
 		<result property="memberName" column="MEMBER_NAME"></result>
 		<result property="memberId" column="MEMBER_ID"></result>
-		<result property="postShowYn" column="POST_SHOW_YN"></result>
+		<result property="postShowYn" column="POST_SHOWYN"></result>
 		<result property="replyCnt" column="REPLY_CNT"></result>
 		<result property="rowNum" column="ROW_NUM"></result>
 		<result property="totalCnt" column="TOTAL_CNT"></result>
@@ -250,7 +250,7 @@
 		    ,TO_CHAR(A.POST_CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS POST_CREATE_DATE
 		    ,B.MEMBER_NAME AS MEMBER_NAME
 		    ,B.MEMBER_ID AS MEMBER_ID
-		    ,A.POST_SHOW_YN AS POST_SHOW_YN
+		    ,A.POST_SHOWYN AS POST_SHOWYN
 		    ,(SELECT COUNT(C.POST_ID) FROM REPLY C WHERE A.POST_ID = C.POST_ID) AS REPLY_CNT
 		FROM
 		    POST A
@@ -271,7 +271,7 @@
 			</choose>
 		</if>
 		<if test='postShowYn != null and postShowYn != ""'>
-			AND A.POST_SHOW_YN = #{postShowYn}
+			AND A.POST_SHOWYN = #{postShowYn}
 		</if>
 		ORDER BY A.POST_ID DESC
 		<!-- 페이징 하단 -->
@@ -283,7 +283,7 @@
 	</update>
 	
 	<update id="updatePostShowYn" parameterType="AdminDTO">
-		UPDATE POST SET POST_SHOW_YN  = #{postShowYn} WHERE POST_ID = #{postId}
+		UPDATE POST SET POST_SHOWYN  = #{postShowYn} WHERE POST_ID = #{postId}
 	</update>
 	
 	

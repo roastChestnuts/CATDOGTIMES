@@ -33,62 +33,12 @@
     class="lazy_icons btnt4_style_2 zoom_tp_2 css_scrollbar template-index cart_pos_side kalles_toolbar_true hover_img2 swatch_style_rounded swatch_list_size_small label_style_rounded wrapper_full_width header_full_true header_sticky_true hide_scrolld_true des_header_7 h_banner_true top_bar_true prs_bordered_grid_1 search_pos_full lazyload">
 
     <div id="nt_wrapper">
-        <!-- header -->
-        <header id="ntheader" class="ntheader header_7 h_icon_iccl p-3">
-            <div class="ntheader_wrapper pr z_200">
-                <div id="kalles-section-header_7" class="kalles-section sp_header_mid">
-                    <div class="header__mid pl__15 pr__15">
-                        <div class="row al_center">
-                            <div class="col-lg-12 col-3 dn_lg">
-                                <a href="#" data-id="#nt_menu_canvas"
-                                    class="push_side push-menu-btn lh__1 flex al_center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="16" viewBox="0 0 30 16">
-                                        <rect width="30" height="1.5"></rect>
-                                        <rect y="7" width="20" height="1.5"></rect>
-                                        <rect y="14" width="30" height="1.5"></rect>
-                                    </svg>
-                                </a>
-                            </div>
-                            <div class="col-lg-12 col-6 tc">
-                                <div class="branding ts__05 lh__1">
-                                    <a class="dib" href="mypage2.html">멍냥일보</a>
-                                </div>
-                            </div>
-                            
-                            <div class="col-12 dn db_lg mt__10 mb__30 tc">
-                                <nav id="nav_header7" class="nav_header7 nt_navigation center-xs">
-                                    <ul class="nt_mb_menu">
-                                        <li id="item_header_7-0" class="menu-item  ">
-                                            <a href="#"><span class="nav_link_txt flex al_center">HOME</span></a>
-                                        </li>
-                                        <li class="menu-item ">
-                                            <a href="/times/admin/dashboard" class="kalles-lbl__nav-sale"><span>대시보드</span></a>
-                                        </li>
-                                        <li class="menu-item ">
-                                            <a href="/times/admin/usermanage" class="icon_search push_side cb chp"><span>사용자관리</span></a>
-                                        </li>
-                                        <li class="menu-item">
-                                            <a href="/times/admin/boardmanage" class="icon_search push_side cb chp"><span>피드관리</span></a>
-                                        </li>
-                                        <li class="menu-item ">
-                                            <a href="/times/admin/routemanage" class="icon_search push_side cb chp"><span>산책루트관리</span></a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="d-flex flex-column text-center p-3">
-                <a class="button p-3 m-3">관리자페이지</a>
-            </div>
-        </header>
-        <!-- end header -->
-
+    
+    <%@ include file="./adminHeader.jsp"  %> 
+    
         <div id="nt_content" class="mainContent p-5">
             <!-- 메인 콘텐트 -->
+<%--              <span>${loginMember}</span> --%>
              <span style="font-size:30px;font-weight:bold;">대시보드</span><br/>
              <span>멍냥일보 관리자 메인페이지 입니다.</span>
              <br><br>
@@ -178,7 +128,7 @@
                                 </div>
                             </div>
                             </div>
-<!--                             <div class="row" style="padding-top:20px;">
+<!--                     <div class="row" style="padding-top:20px;">
                         	<div class="col-xl-4">
                             	<div class="card mb-3">
                                     <div class="card-header">
@@ -226,57 +176,9 @@
                                   </div>
                                </div>
                          	</div>
-                        </div>
             <!-- end 메인 콘텐트 -->
+                   </div>
 
-        <aside id="ntside" class="ntheader right_side h_icon_iccl p-3">
-            <div class="ntheader_wrapper pr z_200">
-                <div id="kalles-section-header_7" class="kalles-section sp_header_mid">
-                    <div class="header__mid pl__15 pr__15">
-                        <div class="row al_center">
-                            <div class="col-lg-12 col-6 tc">
-                                <div class="branding ts__05 lh__1">
-                                    <a class="dib" href="mypage.html">
-                                        <img class="w__95 logo_normal dn db_lg rounded-circle " src="../images/photo.jpg"
-                                            alt="photo">
-                                        <img class="w__100 logo_sticky dn rounded-circle" src="../images/photo.jpg"
-                                            alt="photo">
-                                        <img class="w__100 logo_mobile dn_lg rounded-circle" src="../images/photo.jpg"
-                                            alt="">
-                                        <span class="nickname pt-3 d-inline-block">미소천사</span>
-                                    </a>
-                                    <div class="myranking pt-2">
-                                        MyRanking (<span class="cnt">999</span>) 
-                                    </div>
-                                </div>
-                                <div class="profile-btns pt-3">
-                                    <a href="#" class="d-inline-block p-3">정보수정</a>
-                                    <a href="#" class="d-inline-block p-3">로그아웃</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 dn db_lg mt__10 mb__30 tc allrank">
-                <div class="widget widget_product_list text-left p-3">
-                    <h5 class="widget-title pt-5">전체랭킹</h5>
-                    <ul class="product_list_widget">
-                        <li class="row mb__10 pb__10">
-                            <div class="col widget_img_pr">
-                                <a class="db pr oh" href="#">
-                                    <img src="../images/profile1.jpg"  class="w__100 ls-is-cached lazyloaded" alt="랭킹 1위">
-                                </a>
-                            </div>
-                            <div class="col widget_if_pr">
-                                <a class="product-title db" href="#">흰둥이</a><span class="money">@white1004</span>
-                            </div>
-                            <div class="col rank al_center"><span class="badge badge-info">1위</span></div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </aside>
 
         <footer id="ntfooter" class="p-5 text-center">
             copyright 멍냥일보 2023
@@ -330,6 +232,9 @@
             </div>
         </div>
     </div>
+    
+     <%@ include file="./adminSide.jsp"  %> 
+    
     <!-- mobile menu -->
     <div id="nt_menu_canvas" class="nt_fk_canvas nt_sleft dn lazyload pt-3">
         <i class="close_pp pegk pe-7s-close ts__03 cd"></i>
@@ -338,8 +243,8 @@
     <!-- end mobile menu -->
 
     <!-- back to top button-->
-    <a id="nt_backtop" class="pf br__50 z__100 des_bt1" href="#"><span class="tc br__50 db cw"><i
-                class="pr pegk pe-7s-angle-up"></i></span></a>
+    <a id="nt_backtop" class="pf br__50 z__100 des_bt1" href="#"><span class="tc br__50 db cw">
+    <i class="pr pegk pe-7s-angle-up"></i></span></a>
 
     <script src="../js/bootstrap/jquery-3.5.1.min.js"></script>
     <script src="../js/bootstrap/jarallax.min.js"></script>
@@ -354,7 +259,6 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
 	    $(document).ready(function(){
-	    	
 	    	var date = new Date();
 	    	var today = dateFormat(date);
 	    	$('#updateTime').text(today);
@@ -430,7 +334,7 @@
 	    						var convertStr = data[i][j].toString();
 	    						var year = convertStr.substr(0,4);
 	    						var month = convertStr.substr(4,2);
-	    						data[i][j] = year + "/" + month;
+	    						data[i][j] = month + "월";
 	    					}
 	    					chartData.push(data[i]);
 	    			}
@@ -493,7 +397,7 @@
 	    						var month = convertStr.substr(4,2);
 	    						console.log(month);
 	    						var day = convertStr.substr(6,2);
-	    						data[i][j] = year + "/" + month + "/" + day;
+	    						data[i][j] = month + "/" + day;
 	    					}
 	    					chartData.push(data[i]);
 	    			}
@@ -517,5 +421,4 @@
 	     
     </script>
 </body>
-
 </html>
