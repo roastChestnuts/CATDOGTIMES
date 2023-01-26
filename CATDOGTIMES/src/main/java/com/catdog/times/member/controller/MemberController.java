@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import com.catdog.times.member.model.service.KaKaoServiceImpl;
 import com.catdog.times.member.model.service.MailSendService;
 import com.catdog.times.member.model.service.MemberService;
 import com.catdog.times.member.model.service.SnsService;
+import com.catdog.times.post.model.dto.PostLikeDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -318,12 +320,15 @@ public class MemberController {
 			return map;
 		}
 	}
-    
+        
     //동물등록조회
-    @GetMapping("/member/animalNumber")
+    @PostMapping("/member/animalNumber")
     @ResponseBody
-	public int updateAnimalNumber(Member member /*int memberNo, String name, String animalRegNo */) throws Exception{
+	public int updateAnimalNumber(@RequestBody Member member, HttpServletRequest request/* int memberNo, String name, String animalRegNo */) throws Exception{
     	int result = 0;
+    	//int memberNo = (int)(request.getAttribute("userId"));
+    	//member.setNo(memberNo);
+    	
     	if(service.checkAnimalNumber(member.getAnimalRegNo()) > 0) { //기 등록된 동물등록 번호라면 리턴
     		return result;
     	}

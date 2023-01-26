@@ -126,14 +126,14 @@ public class MemberServiceImpl implements MemberService {
     //기등록 동물번호인지 체크
 	@Override
 	public int checkAnimalNumber(String animalRegNo) {
-		log.info("snsId:: " + animalRegNo);
+		log.info("animalRegNo:: " + animalRegNo);
         return mapper.checkAnimalNumber(animalRegNo);
 	}
     
 	//동물 등록번호 업데이트
     @Override
     public int updateAnimalNumber(Member member) throws Exception{
-        log.info("snsId:: " + member.getAnimalRegNo());
+        log.info("animalRegNo:: " + member.getAnimalRegNo());
     	
         Map<String, String> animalPageCookie = this.animalPageCookie();
         String WMONID = animalPageCookie.get("WMONID");
