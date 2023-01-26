@@ -46,20 +46,21 @@
 					    'gender':gender,
 					    'snsId':snsId
 				}),
-				//dataType: 'text', //서버에서 리턴받아오는 데이터 타입
+				dataType: 'json', //서버에서 리턴받아오는 데이터 타입
 				contentType: 'application/json',
- 				/* success: function(result) {
-					if(result=='ok') {
+ 				success: function(data) {
+					if(data.result=='ok') {
 						console.log('성공')
-						location.replace("${ path }/") 
-					} else if(result=='no') {
+						//location.replace("${ path }/") 
+						location.replace("http://localhost:3000/post?accessToken="+data.accessToken+"?resfeshToken="+data.refreshToken) 
+					} else if(data.result=='no') {
 						console.log('실패')
 						location.replace("${ path }/member/login")
 					}
 				},
-				error: function(result) {
+				error: function(error) {
 					console.log('오류 발생')
-				} */
+				}
 			})
 	 
 	    } else {

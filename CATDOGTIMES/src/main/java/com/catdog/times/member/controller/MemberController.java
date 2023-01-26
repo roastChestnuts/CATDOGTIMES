@@ -167,7 +167,7 @@ public class MemberController {
 	}
 	
 	@PostMapping("/member/naverSave")
-	public Object naverSave(ModelAndView model, @RequestBody Member memberDto) {
+	public @ResponseBody Map<String, String> naverSave(ModelAndView model, @RequestBody Member memberDto) {
 		String result;
 		//토큰 생성용 객체
 		User user = new User();
@@ -175,11 +175,11 @@ public class MemberController {
 		String nickName = "";
 		int type = 0;
 		
+		//navercallback에 넘겨줄 map
+		Map<String, String> map = new HashMap<>();
+		
 		if(memberDto == null) { //넘어온 값이 null이라면 로그인 실패니까
-			model.addObject("msg", "아이디나 비밀번호가 일치하지 않습니다.");
-			model.addObject("location", "/member/login");
-			model.setViewName("common/msg");
-			return model;
+			map.put("result", "no");
 		}else {
 			String snsId = memberDto.getSnsId();
 			String email = memberDto.getEmail();
@@ -203,7 +203,7 @@ public class MemberController {
 				type = dto.getType();
 				model.addObject("loginMember", dto);
 			}
-			//result = "ok";
+			map.put("result", "ok");
 		}
 		
 		//토큰 객체 세팅
@@ -215,10 +215,16 @@ public class MemberController {
 		Map<String, String> tokenMap = jwtService.createToken(user);
 		String accessToken = tokenMap.get("accessToken");
 		String refreshToken = tokenMap.get("refreshToken");
-	
-		return ResponseEntity.status(HttpStatus.FOUND)
-			    			 .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
-			    			 .body(null);
+		
+		
+		map.put("accessToken", accessToken);
+		map.put("resfeshToken", refreshToken);
+		
+		
+		return map;
+//		return ResponseEntity.status(HttpStatus.FOUND)
+//			    			 .header("Location", "http://localhost:3000/post?accessToken="+accessToken+"?resfeshToken="+refreshToken)
+//			    			 .body(null);
 	}
 	
 	@GetMapping("/member/logout")
